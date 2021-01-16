@@ -3,32 +3,44 @@ import * as Tone from 'tone';
 import he from 'he';
 
 
+// see line 154 to fix chord
+
 export default function Synth() {
   const [noteSwitches, setNoteSwitches] = useState({});
   const [currentBeat, setCurrentBeat] = useState(-1);
   const [prog, setProg] = useState(['I', 'V', 'vi', 'IV'])
 
-  const loopLength = 32;
-  const chords = {
-    I: ['Ab4', 'C5', 'Eb5'],
-    ii: ['Bb4', 'Db5', 'F5'],
-    iii: ['G4', 'C5', 'Eb5'],
-    IV: ['Ab4', 'Db5', 'F5'],
-    V: ['G4', 'Bb4', 'Eb5'],
-    vi: ['Ab4', 'C5', 'F5'],
-    'vii&#x26AC;': ['G5', 'Bb4', 'Db5'],
+  const loopLength = 16;
+
+
+
+  const CHORDS = {
+    I: ['Db', 'F', 'Ab'],
+    ii: ['Eb', 'Gb', 'Bb'],
+    iii: ['C', 'F', 'Ab'],
+    IV: ['Db', 'Gb', 'Bb'],
+    V: ['C', 'Eb', 'Ab'],
+    vi: ['Db', 'F', 'Bb'],
+    'vii&#x26AC;': ['C', 'Eb', 'Gb'],
+  }
+
+  const BASS = {
+    I: ['Db', 'Ab'],
+    ii: ['Eb', 'Bb'],
+    iii: ['F', 'C'],
+    IV: ['Gb', 'Db'],
+    V: ['Ab', 'Eb'],
+    vi: ['Bb', 'F'],
+    'vii&#x26AC;': ['C', 'Gb'],
   }
 
   const notes = {
-    low: [chords[prog[0]][0], chords[prog[1]][0], chords[prog[2]][0], chords[prog[3]][0]],
-    mid: [chords[prog[0]][1], chords[prog[1]][1], chords[prog[2]][1], chords[prog[3]][1]],
-    high: [chords[prog[0]][2], chords[prog[1]][2], chords[prog[2]][2], chords[prog[3]][2]]
+    low: [CHORDS[prog[0]][0], CHORDS[prog[1]][0], CHORDS[prog[2]][0], CHORDS[prog[3]][0]],
+    mid: [CHORDS[prog[0]][1], CHORDS[prog[1]][1], CHORDS[prog[2]][1], CHORDS[prog[3]][1]],
+    high: [CHORDS[prog[0]][2], CHORDS[prog[1]][2], CHORDS[prog[2]][2], CHORDS[prog[3]][2]],
+    bassLow: [BASS[prog[0]][0], BASS[prog[1]][0], BASS[prog[2]][0], BASS[prog[3]][0]],
+    bassHigh: [BASS[prog[0]][1], BASS[prog[1]][1], BASS[prog[2]][1], BASS[prog[3]][1]],
   }
-
-  useEffect(() => {
-    console.log(prog)
-  }, [prog])
-
 
 
   const startAudio = async () => {
@@ -38,15 +50,17 @@ export default function Synth() {
   }
 
   const reset = () => {
+
     for (let loop in noteSwitches) {
       for (let i = 0; i < loopLength; i++) {
         if (noteSwitches[loop][i]) {
+          console.log(noteSwitches[loop][i])
           noteSwitches[loop][i].stop()
         }
       }
     }
     Tone.Transport.stop();
-    const noteObj = { high: {}, mid: {}, low: {} }
+    const noteObj = { high: {}, mid: {}, low: {}, bassLow: {}, bassHigh: {} }
     for (let note in noteObj) {
       for (let i = 0; i < loopLength; i++) noteObj[note][i] = false;
     }
@@ -55,7 +69,7 @@ export default function Synth() {
   }
 
   useEffect(() => {
-    const noteObj = { high: {}, mid: {}, low: {} }
+    const noteObj = { high: {}, mid: {}, low: {}, bassLow: {}, bassHigh: {} }
     for (let note in noteObj) {
       for (let i = 0; i < loopLength; i++) noteObj[note][i] = false;
     }
@@ -66,12 +80,13 @@ export default function Synth() {
         setCurrentBeat(beat => (beat + 1) % loopLength)
       }, time)
     }, '8n').start(0);
+
     return () => loop.cancel();
   }, [])
 
 
-  const addSynth = (beat, note, row) => {
-    if (!noteSwitches[row][beat]) {
+  const addSynth = (beat, note, row, newChord = false) => {
+    if (!noteSwitches[row][beat] || newChord) {
       const arrLoop = new Array(loopLength).fill([])
       arrLoop[beat] = note;
       const synth = makeSynth();
@@ -84,6 +99,74 @@ export default function Synth() {
       setNoteSwitches(obj => ({ ...obj, [row]: { ...obj[row], [beat]: false } }));
     }
   }
+
+  const NoteButtons = ({ noteRow, octave }) => {
+    // console.log(noteSwitches[noteRow])
+    return (
+      <div
+        style={{
+          width: '95%',
+          display: 'flex',
+          justifyContent: 'space-between',
+        }}
+      >
+        {Object.keys(noteSwitches[noteRow]).map((beat, i) =>
+          <span
+            key={beat}
+            style={{
+              boxSizing: 'border-box',
+              backgroundColor: noteSwitches[noteRow][beat] === false ? 'pink'
+                : i === currentBeat ? 'yellow' : 'lightblue',
+              border: i === currentBeat ? '2px solid black' : 'none',
+              width: '30px',
+              height: '30px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '2px',
+              borderRadius: '50%',
+              fontSize: '.9em'
+            }}
+            onClick={() => addSynth(beat, notes[noteRow][Math.floor(i / loopLength * 4)] + octave, noteRow)}
+          >
+            {notes[noteRow][Math.floor(i / loopLength * 4)]}
+          </span>
+        )}
+      </div>
+    )
+  }
+
+  const handleChordChange = (e, i) => {
+    setProg(arr => {
+      const arrCopy = [...arr]
+      arrCopy[i] = he.encode(e.target.value);
+      return arrCopy;
+    });
+
+    let start = i * loopLength / 4;
+    const end = start + loopLength / 4
+    setNoteSwitches(noteObj => {
+      for (let noteRow in noteObj) {
+        for (let i = start; i < end; i++) {
+          if (noteObj[noteRow][i]) {
+            console.log('in chord change loop', noteObj[noteRow][i])
+            noteObj[noteRow][i].dispose();
+            const arrLoop = new Array(loopLength).fill([])
+
+            // fix this to get the correct note
+            arrLoop[i] = 'F#5';
+
+            const synth = makeSynth();
+            noteObj[noteRow][i] = new Tone.Sequence((time, note) => {
+              synth.triggerAttackRelease(note, '8n', time);
+            }, arrLoop).start(0);
+          }
+        }
+      }
+      return noteObj;
+    })
+  }
+
 
   return (
     <div
@@ -116,59 +199,31 @@ export default function Synth() {
           <select
             key={i}
             defaultValue={he.decode(progChord)}
-            onChangeCapture={e => {
-              setProg(arr => {
-                const arrCopy = [...arr]
-                console.log(he.encode(e.target.value))
-                arrCopy[i] = he.encode(e.target.value);
-                return arrCopy;
-              })
-            }}>
-            {Object.keys(chords).map((chord, j) =>
+            onChangeCapture={e => handleChordChange(e, i)}>
+            {Object.keys(CHORDS).map((chord, j) =>
               <option
                 key={j}
-                
+
               >{he.decode(chord)}</option>
             )}
           </select>
         )}
       </div>
 
-      {
-        Object.keys(noteSwitches).map(noteRow =>
-          <div
-            key={noteRow}
-            style={{
-              width: '95%',
-              display: 'flex',
-              justifyContent: 'space-between',
-            }}
-          >
-            {Object.keys(noteSwitches[noteRow]).map((beat, i) =>
-              <span
-                key={beat}
-                style={{
-                  boxSizing: 'border-box',
-                  backgroundColor: noteSwitches[noteRow][beat] === false ? 'pink'
-                    : i === currentBeat ? 'yellow' : 'lightblue',
-                  border: i === currentBeat ? '2px solid black' : 'none',
-                  width: '30px',
-                  height: '30px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  margin: '2px',
-                  borderRadius: '50%',
-                  fontSize: '.9em'
-                }}
-                onClick={() => addSynth(beat, notes[noteRow][Math.floor(i / loopLength * 4)], noteRow)}
-              >
-                {notes[noteRow][Math.floor(i / loopLength * 4)].slice(0, notes[noteRow][Math.floor(i / loopLength * 4)].length - 1)}
-              </span>
-            )}
+      {('high' in noteSwitches) &&
+        <>
+          <div id="chords">
+            <NoteButtons noteRow="high" octave="5" />
+            <NoteButtons noteRow="mid" octave="5" />
+            <NoteButtons noteRow="low" octave="5" />
           </div>
-        )
+          <div id="bass">
+            <NoteButtons noteRow="bassHigh" octave="3" />
+            <NoteButtons noteRow="bassLow" octave="3" />
+          </div>
+        </>
       }
+
       <button
         onClick={() => reset()}
       >Reset</button>
