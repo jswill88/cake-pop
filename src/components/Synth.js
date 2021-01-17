@@ -2,19 +2,11 @@ import { useEffect, useState } from 'react';
 import * as Tone from 'tone';
 import he from 'he';
 
-
-// see line 154 to fix chord
-
 export default function Synth() {
   const [noteSwitches, setNoteSwitches] = useState({});
   const [currentBeat, setCurrentBeat] = useState(-1);
   const [prog, setProg] = useState(['I', 'V', 'vi', 'IV'])
-
-
-
   const [loopLength, setLoopLength] = useState(16);
-
-
 
   const CHORDS = {
     I: ['Db', 'F', 'Ab'],
@@ -25,7 +17,6 @@ export default function Synth() {
     vi: ['Db', 'F', 'Bb'],
     'vii&#x26AC;': ['C', 'Eb', 'Gb'],
   }
-  
 
   const BASS = {
     I: ['Db', 'Ab'],
@@ -45,11 +36,8 @@ export default function Synth() {
     bassLow: [BASS[prog[0]][0], BASS[prog[1]][0], BASS[prog[2]][0], BASS[prog[3]][0]],
   }
 
-  
-
   const startAudio = async () => {
     setCurrentBeat(-1)
-
     await Tone.start();
     Tone.Transport.start('+0.1');
   }
@@ -59,7 +47,6 @@ export default function Synth() {
     for (let loop in noteSwitches) {
       for (let i = 0; i < loopLength; i++) {
         if (noteSwitches[loop][i]) {
-          console.log(noteSwitches[loop][i])
           noteSwitches[loop][i].stop()
         }
       }
@@ -71,9 +58,7 @@ export default function Synth() {
     }
     setNoteSwitches(noteObj)
     setCurrentBeat(-2)
-
   }
-  useEffect(() => console.log(noteSwitches), [noteSwitches])
 
   useEffect(() => {
     const noteObj = { high: {}, mid: {}, low: {}, bassLow: {}, bassHigh: {} }
@@ -95,9 +80,7 @@ export default function Synth() {
   const addSynth = (beat, note, row) => {
     if (!noteSwitches[row][beat]) {
       const arrLoop = new Array(loopLength).fill([])
-      console.log(arrLoop)
       arrLoop[beat] = note;
-      console.log('arrloop', arrLoop, 'beat', beat)
       const synth = makeSynth(row.includes('bass') ? 'bassSynth' : 'chordSynth');
       const loop = new Tone.Sequence((time, note) => {
         synth.triggerAttackRelease(note, '8n', time);
@@ -108,8 +91,6 @@ export default function Synth() {
       setNoteSwitches(obj => ({ ...obj, [row]: { ...obj[row], [beat]: false } }));
     }
   }
-
-  
 
   const handleChordChange = (e, i) => {
     const newChord = he.encode(e.target.value);
@@ -147,8 +128,6 @@ export default function Synth() {
       return noteObj;
     })
   }
-
-
 
   return (
     <div
@@ -196,17 +175,17 @@ export default function Synth() {
         defaultValue={loopLength}
         onChangeCapture={e => {
           reset();
-          console.log(e.target.value)
           setLoopLength(parseInt(e.target.value))
         }}
       >
-      {[8,12,16,20,24,28,32].map(beats => 
-        <option
-          key={beats}
+        {[8, 12, 16, 20, 24, 28, 32].map(beats =>
+          <option
+            key={beats}
           >{beats}</option>
         )}
       </select>
 
+      {/* DON'T MOVE OUT INTO SEPARATE COMPONENTS */}
       {('high' in noteSwitches) &&
         <>
           {Object.keys(notes).map(noteRow =>
@@ -221,12 +200,11 @@ export default function Synth() {
               {Object.keys(noteSwitches[noteRow]).map((beat, i) =>
                 <button
                   onClick={() => {
-                    console.log('in on Click')
                     const note = notes[noteRow][Math.floor(i / loopLength * 4)] + (noteRow.includes('bass') ? 3 : 5)
                     addSynth(beat, note, noteRow)
                   }}
                   key={beat}
-                  style={{margin: '2px'}}
+                  style={{ margin: '2px' }}
                 >
                   <span
                     style={{
@@ -258,7 +236,7 @@ export default function Synth() {
   )
 }
 
-const synths = {
+const SYNTHS = {
   chordSynth: {
     volume: -10,
     detune: 0,
@@ -308,9 +286,9 @@ const synths = {
 
 
 function makeSynth(type) {
-  return new Tone.Synth(synths[type]).toDestination();
+  return new Tone.Synth(SYNTHS[type]).toDestination();
 }
-function makeDrums() {
+// function makeDrums() {
   // Metal Synth
   // Membrane Synth
-}
+// }
