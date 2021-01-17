@@ -136,10 +136,11 @@ export default function Synth() {
     )
   }
 
-  const handleChordChange = (e, i) => {
+  const handleChordChange =  (e, i) => {
+    const newChord = he.encode(e.target.value);
     setProg(arr => {
       const arrCopy = [...arr]
-      arrCopy[i] = he.encode(e.target.value);
+      arrCopy[i] = newChord;
       return arrCopy;
     });
 
@@ -152,9 +153,15 @@ export default function Synth() {
             console.log('in chord change loop', noteObj[noteRow][i])
             noteObj[noteRow][i].dispose();
             const arrLoop = new Array(loopLength).fill([])
-
-            // fix this to get the correct note
-            arrLoop[i] = 'F#5';
+            let note;
+            if(['bassLow', 'bassHigh'].includes(noteRow)) {
+              note = BASS[newChord][noteRow === 'bassLow' ? 0 : 1] + 3;
+            } else {
+              note = CHORDS[newChord][Object.keys(notes).indexOf(noteRow)] + 5;
+            }
+            console.log(i)
+            console.log(note);
+            arrLoop[i] = note || 'F#5';
 
             const synth = makeSynth();
             noteObj[noteRow][i] = new Tone.Sequence((time, note) => {
@@ -166,6 +173,7 @@ export default function Synth() {
       return noteObj;
     })
   }
+
 
 
   return (
