@@ -6,6 +6,7 @@ import { BASS, CHORDS } from '../lib/noteInfo'
 
 export default function Synth() {
   const [noteSwitches, setNoteSwitches] = useState({});
+  const [drumSwitches, setDrumSwitches] = useState({})
   const [currentBeat, setCurrentBeat] = useState(-1);
   const [prog, setProg] = useState(['I', 'V', 'vi', 'IV'])
   const [loopLength, setLoopLength] = useState(16);
@@ -49,6 +50,12 @@ export default function Synth() {
     }
     setNoteSwitches(noteObj)
 
+    const drumObj = {};
+    ['snareDrum', 'bassDrum', 'cymbal']
+      .forEach(drum => drumObj[drum] = new Array(loopLength).fill([]));
+
+    setDrumSwitches(drumObj);
+
     const loop = new Tone.Loop(time => {
       Tone.Draw.schedule(() => {
         setCurrentBeat(beat => (beat + 1) % loopLength)
@@ -73,6 +80,36 @@ export default function Synth() {
       setNoteSwitches(obj => ({ ...obj, [row]: { ...obj[row], [beat]: false } }));
     }
   }
+
+
+  // !!! right now synths are building on top of one another
+  const addDrum = (beat, note, drum) => {
+    console.log(drumSwitches[drum][beat])
+    if (drumSwitches[drum][beat] !== []) {
+      const synth = makeSynth(drum);
+      const drumArray = drumSwitches[drum];
+      drumArray[beat] = note;
+      console.log(drumArray)
+      new Tone.Sequence((time, note) => {
+        if (drum !== 'snareDrum') {
+          synth.triggerAttackRelease(note, '8n', time);
+        } else {
+          synth.triggerAttackRelease('8n', time);
+        }
+      }, drumArray).start(0);
+
+      setDrumSwitches(drumObj => {
+        drumObj[drum][beat] = note;
+        return drumObj;
+      })
+    } else {
+      setDrumSwitches(drumObj => {
+        drumObj[drum][beat] = [];
+        return drumObj;
+      })
+    }
+  }
+
 
   const handleChordChange = (e, i) => {
     const newChord = he.encode(e.target.value);
@@ -197,6 +234,24 @@ export default function Synth() {
               )}
             </div>
           )}
+          {['bassDrum', 'snareDrum', 'cymbal'].map(drum =>
+            <div
+              key={drum}
+              style={{
+                width: '80%',
+                display: 'flex',
+                justifyContent: 'space-between',
+              }}>
+              {drumSwitches.cymbal.map((_, i) =>
+                <button
+                  key={i}
+                  onClick={() => {
+                    addDrum(i, 'G1', drum)
+                  }}
+                >{drum[0].toUpperCase()}</button>
+              )}
+            </div>
+          )}
         </>
       }
 
@@ -252,14 +307,25 @@ const SYNTHS = {
       modulationType: 'sine',
     }
   },
-
+  bassDrum: {},
+  snareDrum: {},
+  hihat: {},
 }
 
+const synthTypes = {
+  bassSynth: 'Synth',
+  chordSynth: 'Synth',
+  bassDrum: 'MembraneSynth',
+  snareDrum: 'NoiseSynth',
+  cymbal: 'MetalSynth',
+}
 
 function makeSynth(type) {
-  return new Tone.Synth(SYNTHS[type]).toDestination();
+  return new Tone[synthTypes[type]](SYNTHS[type]).toDestination();
 }
-// function makeDrums() {
-  // Metal Synth
-  // Membrane Synth
+// function makeDrums(type) {
+//   if (type === 'cymbal') {
+//     return new Tone.MetalSynth().toDestination();
+
+//   }
 // }
