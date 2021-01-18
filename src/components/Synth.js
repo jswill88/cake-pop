@@ -3,10 +3,12 @@ import * as Tone from 'tone';
 import he from 'he';
 import ButtonLabel from './ButtonLabel'
 import { BASS, CHORDS } from '../lib/noteInfo'
+import { SYNTHS, synthTypes} from '../lib/synthInfo'
 
 export default function Synth() {
   const [noteSwitches, setNoteSwitches] = useState({});
-  const [drumSwitches, setDrumSwitches] = useState({})
+  const [drumSwitches, setDrumSwitches] = useState({});
+  const [drumSynths, setDrumSynths] = useState({});
   const [currentBeat, setCurrentBeat] = useState(-1);
   const [prog, setProg] = useState(['I', 'V', 'vi', 'IV'])
   const [loopLength, setLoopLength] = useState(16);
@@ -41,6 +43,12 @@ export default function Synth() {
     }
     setNoteSwitches(noteObj)
     setCurrentBeat(-2)
+    setDrumSwitches(drumObj => {
+      for (let drum in drumObj) {
+        drumObj[drum] = new Array(loopLength).fill(false);
+      }
+      return drumObj;
+    })
   }
 
   useEffect(() => {
@@ -50,11 +58,16 @@ export default function Synth() {
     }
     setNoteSwitches(noteObj)
 
+    const drumTypes = ['snareDrum', 'bassDrum', 'cymbal']
     const drumObj = {};
-    ['snareDrum', 'bassDrum', 'cymbal']
-      .forEach(drum => drumObj[drum] = new Array(loopLength).fill([]));
+    const newDrumSynths = {}
+    drumTypes.forEach(drum => {
+      drumObj[drum] = new Array(loopLength).fill(false);
+      newDrumSynths[drum] = makeSynth(drum)
+    });
 
     setDrumSwitches(drumObj);
+    setDrumSynths(newDrumSynths);
 
     const loop = new Tone.Loop(time => {
       Tone.Draw.schedule(() => {
@@ -64,6 +77,32 @@ export default function Synth() {
 
     return () => loop.cancel();
   }, [loopLength])
+
+  useEffect(() => {
+    // make sure this only happens once
+    if ('bassDrum' in drumSwitches && 'bassDrum' in drumSynths) {
+      const drumArray = []
+      for (let i = 0; i < loopLength; i++) {
+        drumArray.push(i)
+      }
+      console.log(drumArray)
+      const drumLoop = new Tone.Sequence((time, i) => {
+        for (let drum in drumSynths) {
+          if (drumSwitches[drum][i])
+            if (drum !== 'snareDrum') {
+              drumSynths[drum].triggerAttackRelease('C1', '8n', time);
+            } else {
+              drumSynths[drum].triggerAttackRelease('8n', time);
+            }
+        }
+
+      }, drumArray).start(0);
+
+      return () => drumLoop.cancel();
+
+    }
+
+  }, [drumSwitches, drumSynths, loopLength])
 
 
   const addSynth = (beat, note, row) => {
@@ -81,30 +120,15 @@ export default function Synth() {
     }
   }
 
-
-  // !!! right now synths are building on top of one another
-  const addDrum = (beat, note, drum) => {
-    console.log(drumSwitches[drum][beat])
-    if (drumSwitches[drum][beat] !== []) {
-      const synth = makeSynth(drum);
-      const drumArray = drumSwitches[drum];
-      drumArray[beat] = note;
-      console.log(drumArray)
-      new Tone.Sequence((time, note) => {
-        if (drum !== 'snareDrum') {
-          synth.triggerAttackRelease(note, '8n', time);
-        } else {
-          synth.triggerAttackRelease('8n', time);
-        }
-      }, drumArray).start(0);
-
+  const addDrum = (beat, drum) => {
+    if (!drumSwitches[drum][beat]) {
       setDrumSwitches(drumObj => {
-        drumObj[drum][beat] = note;
+        drumObj[drum][beat] = true;
         return drumObj;
       })
     } else {
       setDrumSwitches(drumObj => {
-        drumObj[drum][beat] = [];
+        drumObj[drum][beat] = false;
         return drumObj;
       })
     }
@@ -204,8 +228,7 @@ export default function Synth() {
         )}
       </select>
 
-      {/* DON'T MOVE OUT INTO SEPARATE COMPONENTS */}
-      {('high' in noteSwitches) &&
+      {('high' in noteSwitches && 'bassDrum' in drumSwitches) &&
         <>
           {Object.keys(NOTES).map(noteRow =>
             <div
@@ -242,13 +265,18 @@ export default function Synth() {
                 display: 'flex',
                 justifyContent: 'space-between',
               }}>
-              {drumSwitches.cymbal.map((_, i) =>
+              {drumSwitches.cymbal.map((beat, i) =>
                 <button
                   key={i}
+                  style={{ margin: '2px' }}
                   onClick={() => {
-                    addDrum(i, 'G1', drum)
+                    addDrum(i, drum)
                   }}
-                >{drum[0].toUpperCase()}</button>
+                ><ButtonLabel
+                    beat={drumSwitches[drum][i]}
+                    active={i === currentBeat}
+                    note={'drum'}
+                  /></button>
               )}
             </div>
           )}
@@ -262,70 +290,6 @@ export default function Synth() {
   )
 }
 
-const SYNTHS = {
-  chordSynth: {
-    volume: -10,
-    detune: 0,
-    portamento: 0.05,
-    envelope: {
-      attack: 0.05,
-      attackCurve: 'exponential',
-      decay: 0.2,
-      decayCurve: 'exponential',
-      release: 1,
-      releaseCurve: 'exponential',
-      sustain: 0.2,
-    },
-    oscillator: {
-      partialCount: 0,
-      partials: [],
-      phase: 0,
-      type: 'amsine',
-      harmonicity: 0.5,
-      modulationType: 'sawtooth',
-    }
-  },
-  bassSynth: {
-    volume: -5,
-    detune: 0,
-    portamento: 0.05,
-    envelope: {
-      attack: 0.05,
-      attackCurve: 'exponential',
-      decay: 0.2,
-      decayCurve: 'exponential',
-      release: 1.5,
-      releaseCurve: 'exponential',
-      sustain: 0.2,
-    },
-    oscillator: {
-      partialCount: 0,
-      partials: [],
-      phase: 0,
-      type: 'amtriangle',
-      harmonicity: .5,
-      modulationType: 'sine',
-    }
-  },
-  bassDrum: {},
-  snareDrum: {},
-  hihat: {},
-}
-
-const synthTypes = {
-  bassSynth: 'Synth',
-  chordSynth: 'Synth',
-  bassDrum: 'MembraneSynth',
-  snareDrum: 'NoiseSynth',
-  cymbal: 'MetalSynth',
-}
-
 function makeSynth(type) {
   return new Tone[synthTypes[type]](SYNTHS[type]).toDestination();
 }
-// function makeDrums(type) {
-//   if (type === 'cymbal') {
-//     return new Tone.MetalSynth().toDestination();
-
-//   }
-// }
