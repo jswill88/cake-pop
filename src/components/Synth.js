@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import * as Tone from 'tone';
 import he from 'he';
+import ButtonLabel from './ButtonLabel'
+import { BASS, CHORDS } from '../lib/noteInfo'
 
 export default function Synth() {
   const [noteSwitches, setNoteSwitches] = useState({});
@@ -8,27 +10,7 @@ export default function Synth() {
   const [prog, setProg] = useState(['I', 'V', 'vi', 'IV'])
   const [loopLength, setLoopLength] = useState(16);
 
-  const CHORDS = {
-    I: ['Db', 'F', 'Ab'],
-    ii: ['Eb', 'Gb', 'Bb'],
-    iii: ['C', 'F', 'Ab'],
-    IV: ['Db', 'Gb', 'Bb'],
-    V: ['C', 'Eb', 'Ab'],
-    vi: ['Db', 'F', 'Bb'],
-    'vii&#x26AC;': ['C', 'Eb', 'Gb'],
-  }
-
-  const BASS = {
-    I: ['Db', 'Ab'],
-    ii: ['Eb', 'Bb'],
-    iii: ['F', 'C'],
-    IV: ['Gb', 'Db'],
-    V: ['Ab', 'Eb'],
-    vi: ['Bb', 'F'],
-    'vii&#x26AC;': ['C', 'Gb'],
-  }
-
-  const notes = {
+  const NOTES = {
     high: [CHORDS[prog[0]][2], CHORDS[prog[1]][2], CHORDS[prog[2]][2], CHORDS[prog[3]][2]],
     mid: [CHORDS[prog[0]][1], CHORDS[prog[1]][1], CHORDS[prog[2]][1], CHORDS[prog[3]][1]],
     low: [CHORDS[prog[0]][0], CHORDS[prog[1]][0], CHORDS[prog[2]][0], CHORDS[prog[3]][0]],
@@ -113,7 +95,7 @@ export default function Synth() {
             if (['bassLow', 'bassHigh'].includes(noteRow)) {
               note = BASS[newChord][noteRow === 'bassLow' ? 0 : 1] + 3;
             } else {
-              note = CHORDS[newChord][2 - Object.keys(notes).indexOf(noteRow)] + 5;
+              note = CHORDS[newChord][2 - Object.keys(NOTES).indexOf(noteRow)] + 5;
             }
 
             arrLoop[i] = note;
@@ -188,7 +170,7 @@ export default function Synth() {
       {/* DON'T MOVE OUT INTO SEPARATE COMPONENTS */}
       {('high' in noteSwitches) &&
         <>
-          {Object.keys(notes).map(noteRow =>
+          {Object.keys(NOTES).map(noteRow =>
             <div
               key={noteRow}
               style={{
@@ -200,28 +182,17 @@ export default function Synth() {
               {Object.keys(noteSwitches[noteRow]).map((beat, i) =>
                 <button
                   onClick={() => {
-                    const note = notes[noteRow][Math.floor(i / loopLength * 4)] + (noteRow.includes('bass') ? 3 : 5)
+                    const note = NOTES[noteRow][Math.floor(i / loopLength * 4)] + (noteRow.includes('bass') ? 3 : 5)
                     addSynth(beat, note, noteRow)
                   }}
                   key={beat}
                   style={{ margin: '2px' }}
                 >
-                  <span
-                    style={{
-                      boxSizing: 'border-box',
-                      backgroundColor: noteSwitches[noteRow][beat] === false ? 'pink'
-                        : i === currentBeat ? 'white' : 'lightblue',
-                      border: i === currentBeat ? '2px solid black' : 'none',
-                      width: '30px',
-                      height: '30px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: '.9em'
-                    }}
-                  >
-                    {notes[noteRow][Math.floor(i / loopLength * 4)]}
-                  </span>
+                  <ButtonLabel
+                    beat={noteSwitches[noteRow][beat]}
+                    active={i === currentBeat}
+                    note={NOTES[noteRow][Math.floor(i / loopLength * 4)]}
+                  />
                 </button>
               )}
             </div>
