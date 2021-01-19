@@ -3,12 +3,10 @@ import * as Tone from 'tone';
 import he from 'he';
 import ButtonLabel from './ButtonLabel'
 import { BASS, CHORDS } from '../lib/noteInfo'
-import { SYNTHS, synthTypes} from '../lib/synthInfo'
+import { SYNTHS, synthTypes } from '../lib/synthInfo'
 
 export default function Synth() {
   const [noteSwitches, setNoteSwitches] = useState({});
-  const [drumSwitches, setDrumSwitches] = useState({});
-  const [drumSynths, setDrumSynths] = useState({});
   const [currentBeat, setCurrentBeat] = useState(-1);
   const [prog, setProg] = useState(['I', 'V', 'vi', 'IV'])
   const [loopLength, setLoopLength] = useState(16);
@@ -19,6 +17,9 @@ export default function Synth() {
     low: [CHORDS[prog[0]][0], CHORDS[prog[1]][0], CHORDS[prog[2]][0], CHORDS[prog[3]][0]],
     bassHigh: [BASS[prog[0]][1], BASS[prog[1]][1], BASS[prog[2]][1], BASS[prog[3]][1]],
     bassLow: [BASS[prog[0]][0], BASS[prog[1]][0], BASS[prog[2]][0], BASS[prog[3]][0]],
+    cymbal: ['C1', 'C1', 'C1', 'C1'],
+    snareDrum: ['', '', '', ''],
+    bassDrum: ['C1', 'C1', 'C1', 'C1'],
   }
 
   const startAudio = async () => {
@@ -28,46 +29,33 @@ export default function Synth() {
   }
 
   const reset = () => {
-
     for (let loop in noteSwitches) {
       for (let i = 0; i < loopLength; i++) {
         if (noteSwitches[loop][i]) {
           noteSwitches[loop][i].stop()
+          noteSwitches[loop][i].dispose()
         }
       }
     }
     Tone.Transport.stop();
-    const noteObj = { high: {}, mid: {}, low: {}, bassLow: {}, bassHigh: {} }
+    const noteObj = {
+      high: {}, mid: {}, low: {}, bassHigh: {}, bassLow: {}, cymbal: {}, snareDrum: {}, bassDrum: {}
+    }
     for (let note in noteObj) {
       for (let i = 0; i < loopLength; i++) noteObj[note][i] = false;
     }
     setNoteSwitches(noteObj)
     setCurrentBeat(-2)
-    setDrumSwitches(drumObj => {
-      for (let drum in drumObj) {
-        drumObj[drum] = new Array(loopLength).fill(false);
-      }
-      return drumObj;
-    })
   }
 
   useEffect(() => {
-    const noteObj = { high: {}, mid: {}, low: {}, bassLow: {}, bassHigh: {} }
+    const noteObj = {
+      high: {}, mid: {}, low: {}, bassHigh: {}, bassLow: {}, cymbal: {}, snareDrum: {}, bassDrum: {}
+    }
     for (let note in noteObj) {
       for (let i = 0; i < loopLength; i++) noteObj[note][i] = false;
     }
     setNoteSwitches(noteObj)
-
-    const drumTypes = ['snareDrum', 'bassDrum', 'cymbal']
-    const drumObj = {};
-    const newDrumSynths = {}
-    drumTypes.forEach(drum => {
-      drumObj[drum] = new Array(loopLength).fill(false);
-      newDrumSynths[drum] = makeSynth(drum)
-    });
-
-    setDrumSwitches(drumObj);
-    setDrumSynths(newDrumSynths);
 
     const loop = new Tone.Loop(time => {
       Tone.Draw.schedule(() => {
@@ -78,40 +66,22 @@ export default function Synth() {
     return () => loop.cancel();
   }, [loopLength])
 
-  useEffect(() => {
-    // make sure this only happens once
-    if ('bassDrum' in drumSwitches && 'bassDrum' in drumSynths) {
-      const drumArray = []
-      for (let i = 0; i < loopLength; i++) {
-        drumArray.push(i)
-      }
-      console.log(drumArray)
-      const drumLoop = new Tone.Sequence((time, i) => {
-        for (let drum in drumSynths) {
-          if (drumSwitches[drum][i])
-            if (drum !== 'snareDrum') {
-              drumSynths[drum].triggerAttackRelease('C1', '8n', time);
-            } else {
-              drumSynths[drum].triggerAttackRelease('8n', time);
-            }
-        }
-
-      }, drumArray).start(0);
-
-      return () => drumLoop.cancel();
-
-    }
-
-  }, [drumSwitches, drumSynths, loopLength])
-
 
   const addSynth = (beat, note, row) => {
     if (!noteSwitches[row][beat]) {
+
       const arrLoop = new Array(loopLength).fill([])
       arrLoop[beat] = note;
-      const synth = makeSynth(row.includes('bass') ? 'bassSynth' : 'chordSynth');
+
+      let type;
+      if (['bassHigh', 'bassLow'].includes(row)) type = 'bassSynth'
+      else if (['high', 'mid', 'low'].includes(row)) type = 'chordSynth'
+      else type = row;
+      const synth = makeSynth(type);
+
       const loop = new Tone.Sequence((time, note) => {
-        synth.triggerAttackRelease(note, '8n', time);
+        if (type === 'snareDrum') synth.triggerAttackRelease('8n', time)
+        else synth.triggerAttackRelease(note, '8n', time)
       }, arrLoop).start(0);
       setNoteSwitches(obj => ({ ...obj, [row]: { ...obj[row], [beat]: loop } }));
     } else {
@@ -120,20 +90,7 @@ export default function Synth() {
     }
   }
 
-  const addDrum = (beat, drum) => {
-    if (!drumSwitches[drum][beat]) {
-      setDrumSwitches(drumObj => {
-        drumObj[drum][beat] = true;
-        return drumObj;
-      })
-    } else {
-      setDrumSwitches(drumObj => {
-        drumObj[drum][beat] = false;
-        return drumObj;
-      })
-    }
-  }
-
+  const makeSynth = type => new Tone[synthTypes[type]](SYNTHS[type]).toDestination();
 
   const handleChordChange = (e, i) => {
     const newChord = he.encode(e.target.value);
@@ -143,33 +100,57 @@ export default function Synth() {
       return arrCopy;
     });
 
-    let start = i * loopLength / 4;
+    const start = i * loopLength / 4;
     const end = start + loopLength / 4
     setNoteSwitches(noteObj => {
       for (let noteRow in noteObj) {
-        for (let i = start; i < end; i++) {
-          if (noteObj[noteRow][i]) {
 
-            noteObj[noteRow][i].dispose();
-            const arrLoop = new Array(loopLength).fill([])
-            let note;
-            if (['bassLow', 'bassHigh'].includes(noteRow)) {
-              note = BASS[newChord][noteRow === 'bassLow' ? 0 : 1] + 3;
-            } else {
-              note = CHORDS[newChord][2 - Object.keys(NOTES).indexOf(noteRow)] + 5;
+        if (['high', 'mid', 'low', 'bassHigh', 'bassLow'].includes(noteRow)) {
+          for (let i = start; i < end; i++) {
+            if (noteObj[noteRow][i]) {
+              noteObj[noteRow][i].stop();
+              noteObj[noteRow][i].dispose();
+              const arrLoop = new Array(loopLength).fill([])
+
+              let note;
+              if (['bassLow', 'bassHigh'].includes(noteRow)) {
+                note = BASS[newChord][noteRow === 'bassLow' ? 0 : 1] + 3;
+              } else {
+                note = CHORDS[newChord][2 - Object.keys(NOTES).indexOf(noteRow)] + 5;
+              }
+
+              arrLoop[i] = note;
+
+              const synth = makeSynth(noteRow.includes('bass') ? 'bassSynth' : 'chordSynth');
+              noteObj[noteRow][i] = new Tone.Sequence((time, note) => {
+                synth.triggerAttackRelease(note, '16n', time);
+              }, arrLoop).start(0);
             }
-
-            arrLoop[i] = note;
-
-            const synth = makeSynth(noteRow.includes('bass') ? 'bassSynth' : 'chordSynth');
-            noteObj[noteRow][i] = new Tone.Sequence((time, note) => {
-              synth.triggerAttackRelease(note, '16n', time);
-            }, arrLoop).start(0);
           }
         }
       }
       return noteObj;
     })
+  }
+
+  const getNote = (noteRow, i) => {
+    let note;
+    if (['bassDrum', 'snareDrum', 'cymbal'].includes(noteRow)) {
+      note = NOTES[noteRow][Math.floor(i / loopLength * 4)];
+    } else {
+      note = NOTES[noteRow][Math.floor(i / loopLength * 4)] + (noteRow.includes('bass') ? 3 : 5);
+    }
+    return note;
+  }
+
+  const getNoteName = (noteRow, i) => {
+    let noteName;
+    if (['bassDrum', 'snareDrum', 'cymbal'].includes(noteRow)) {
+      noteName = noteRow[0].toUpperCase() + (noteRow === 'cymbal' ? '' : 'D');
+    } else {
+      noteName = NOTES[noteRow][Math.floor(i / loopLength * 4)]
+    }
+    return noteName;
   }
 
   return (
@@ -193,7 +174,6 @@ export default function Synth() {
           onClick={() => {
             Tone.Transport.stop()
             setCurrentBeat(-2);
-
           }}
           style={{ border: '2px solid black', width: 100, color: 'red', textAlign: 'center' }}
         >Stop</h1>
@@ -228,9 +208,9 @@ export default function Synth() {
         )}
       </select>
 
-      {('high' in noteSwitches && 'bassDrum' in drumSwitches) &&
+      {('high' in noteSwitches) &&
         <>
-          {Object.keys(NOTES).map(noteRow =>
+          {Object.keys(noteSwitches).map(noteRow =>
             <div
               key={noteRow}
               style={{
@@ -242,7 +222,7 @@ export default function Synth() {
               {Object.keys(noteSwitches[noteRow]).map((beat, i) =>
                 <button
                   onClick={() => {
-                    const note = NOTES[noteRow][Math.floor(i / loopLength * 4)] + (noteRow.includes('bass') ? 3 : 5)
+                    const note = getNote(noteRow, i)
                     addSynth(beat, note, noteRow)
                   }}
                   key={beat}
@@ -251,32 +231,9 @@ export default function Synth() {
                   <ButtonLabel
                     beat={noteSwitches[noteRow][beat]}
                     active={i === currentBeat}
-                    note={NOTES[noteRow][Math.floor(i / loopLength * 4)]}
+                    note={getNoteName(noteRow,i)}
                   />
                 </button>
-              )}
-            </div>
-          )}
-          {['bassDrum', 'snareDrum', 'cymbal'].map(drum =>
-            <div
-              key={drum}
-              style={{
-                width: '80%',
-                display: 'flex',
-                justifyContent: 'space-between',
-              }}>
-              {drumSwitches.cymbal.map((beat, i) =>
-                <button
-                  key={i}
-                  style={{ margin: '2px' }}
-                  onClick={() => {
-                    addDrum(i, drum)
-                  }}
-                ><ButtonLabel
-                    beat={drumSwitches[drum][i]}
-                    active={i === currentBeat}
-                    note={'drum'}
-                  /></button>
               )}
             </div>
           )}
@@ -290,6 +247,5 @@ export default function Synth() {
   )
 }
 
-function makeSynth(type) {
-  return new Tone[synthTypes[type]](SYNTHS[type]).toDestination();
-}
+
+
