@@ -25,7 +25,6 @@ export default function Synth() {
   const startAudio = async () => {
     setCurrentBeat(-1)
     await Tone.start();
-    // setAudioStarted(true)
     Tone.Transport.start('+0.1');
   }
 
@@ -91,7 +90,7 @@ export default function Synth() {
     }
   }
 
-
+  const makeSynth = type => new Tone[synthTypes[type]](SYNTHS[type]).toDestination();
 
   const handleChordChange = (e, i) => {
     const newChord = he.encode(e.target.value);
@@ -248,6 +247,5 @@ export default function Synth() {
   )
 }
 
-function makeSynth(type) {
-  return new Tone[synthTypes[type]](SYNTHS[type]).toDestination();
-}
+
+
