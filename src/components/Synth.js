@@ -201,7 +201,7 @@ export default function Synth() {
           </select>
         )}
       </div>
-
+      <label>Number of beats:{' '}
       <select
         defaultValue={loopLength}
         onChangeCapture={e => {
@@ -215,7 +215,10 @@ export default function Synth() {
           >{beats}</option>
         )}
       </select>
+      </label>
 
+      <label>
+          Tempo:{' '}
       <input
         type="number"
         min={50}
@@ -223,6 +226,7 @@ export default function Synth() {
         defaultValue={tempo}
         onChangeCapture={e => handleTempoChange(e.target.value)}
       />
+      </label>
 
       {('high' in noteSwitches) &&
         <>
