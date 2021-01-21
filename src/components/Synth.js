@@ -10,6 +10,7 @@ export default function Synth() {
   const [currentBeat, setCurrentBeat] = useState(-1);
   const [prog, setProg] = useState(['I', 'V', 'vi', 'IV'])
   const [loopLength, setLoopLength] = useState(16);
+  const [tempo, setTempo] = useState(120);
 
   const NOTES = {
     high: [CHORDS[prog[0]][2], CHORDS[prog[1]][2], CHORDS[prog[2]][2], CHORDS[prog[3]][2]],
@@ -25,6 +26,7 @@ export default function Synth() {
   const startAudio = async () => {
     setCurrentBeat(-1)
     await Tone.start();
+    Tone.Transport.bpm.value = tempo;
     Tone.Transport.start('+0.1');
   }
 
@@ -133,6 +135,12 @@ export default function Synth() {
     })
   }
 
+  const handleTempoChange = newTempo => {
+    const tempo = newTempo < 50 ? 50 : Math.min(350, newTempo)
+    Tone.Transport.bpm.value = tempo;
+    setTempo(tempo)
+  }
+
   const getNote = (noteRow, i) => {
     let note;
     if (['bassDrum', 'snareDrum', 'cymbal'].includes(noteRow)) {
@@ -208,6 +216,14 @@ export default function Synth() {
         )}
       </select>
 
+      <input
+        type="number"
+        min={50}
+        max={300}
+        defaultValue={tempo}
+        onChangeCapture={e => handleTempoChange(e.target.value)}
+      />
+
       {('high' in noteSwitches) &&
         <>
           {Object.keys(noteSwitches).map(noteRow =>
@@ -231,7 +247,7 @@ export default function Synth() {
                   <ButtonLabel
                     beat={noteSwitches[noteRow][beat]}
                     active={i === currentBeat}
-                    note={getNoteName(noteRow,i)}
+                    note={getNoteName(noteRow, i)}
                   />
                 </button>
               )}
