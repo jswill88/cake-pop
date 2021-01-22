@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import * as Tone from 'tone';
 import he from 'he';
 import ButtonLabel from './ButtonLabel'
+import PrimaryButtons from './PrimaryButtons'
 import { BASS, CHORDS } from '../lib/noteInfo'
 import { SYNTHS, synthTypes } from '../lib/synthInfo'
 
@@ -10,13 +11,12 @@ export default function Synth() {
   const [currentBeat, setCurrentBeat] = useState(-1);
   const [prog, setProg] = useState(['I', 'V', 'vi', 'IV'])
   const [loopLength, setLoopLength] = useState(12);
-  const [tempo, setTempo] = useState(120);
 
+  const [tempo, setTempo] = useState(120);
   const [degrees, setDegrees] = useState(70);
   const [down, setDown] = useState(false);
   const [showTempoInput, setShowTempoInput] = useState(false);
 
-  // change mouse positions to ref
   const mousePositions = useRef({});
   const dynaTempo = useRef(120)
 
@@ -29,33 +29,6 @@ export default function Synth() {
     cymbal: ['C1', 'C1', 'C1', 'C1'],
     snareDrum: ['', '', '', ''],
     bassDrum: ['C1', 'C1', 'C1', 'C1'],
-  }
-
-  const startAudio = async () => {
-    setCurrentBeat(-1)
-    await Tone.start();
-    Tone.Transport.bpm.value = tempo;
-    Tone.Transport.start('+0.1');
-  }
-
-  const reset = () => {
-    for (let loop in noteSwitches) {
-      for (let i = 0; i < loopLength; i++) {
-        if (noteSwitches[loop][i]) {
-          noteSwitches[loop][i].stop()
-          noteSwitches[loop][i].dispose()
-        }
-      }
-    }
-    Tone.Transport.stop();
-    const noteObj = {
-      high: {}, mid: {}, low: {}, bassHigh: {}, bassLow: {}, cymbal: {}, snareDrum: {}, bassDrum: {}
-    }
-    for (let note in noteObj) {
-      for (let i = 0; i < loopLength; i++) noteObj[note][i] = false;
-    }
-    setNoteSwitches(noteObj)
-    setCurrentBeat(-2)
   }
 
   useEffect(() => {
@@ -76,6 +49,25 @@ export default function Synth() {
     return () => loop.cancel();
   }, [loopLength])
 
+  const reset = () => {
+    for (let loop in noteSwitches) {
+      for (let i = 0; i < loopLength; i++) {
+        if (noteSwitches[loop][i]) {
+          noteSwitches[loop][i].stop()
+          noteSwitches[loop][i].dispose()
+        }
+      }
+    }
+    Tone.Transport.stop();
+    const noteObj = {
+      high: {}, mid: {}, low: {}, bassHigh: {}, bassLow: {}, cymbal: {}, snareDrum: {}, bassDrum: {}
+    }
+    for (let note in noteObj) {
+      for (let i = 0; i < loopLength; i++) noteObj[note][i] = false;
+    }
+    setNoteSwitches(noteObj)
+    setCurrentBeat(-2)
+  }
 
   const addSynth = (beat, note, row) => {
     if (!noteSwitches[row][beat]) {
@@ -214,21 +206,11 @@ export default function Synth() {
       onMouseUpCapture={() => endChanging()}
       onMouseUp={() => endChanging()}
     >
-      <section>
-        <h1
-          onClick={() => {
-            startAudio()
-          }}
-          style={{ border: '2px solid black', width: '100px', color: 'limegreen', textAlign: 'center' }}
-        >Start</h1>
-        <h1
-          onClick={() => {
-            Tone.Transport.stop()
-            setCurrentBeat(-2);
-          }}
-          style={{ border: '2px solid black', width: 100, color: 'red', textAlign: 'center' }}
-        >Stop</h1>
-      </section>
+      <PrimaryButtons
+        Tone={Tone}
+        setCurrentBeat={setCurrentBeat}
+        tempo={tempo}
+      />
 
       <div style={{ display: 'flex' }}>
         {prog.map((progChord, i) =>
@@ -361,6 +343,3 @@ export default function Synth() {
     </div >
   )
 }
-
-
-
