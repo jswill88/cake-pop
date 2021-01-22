@@ -210,6 +210,7 @@ export default function Synth() {
         Tone={Tone}
         setCurrentBeat={setCurrentBeat}
         tempo={tempo}
+        reset={reset}
       />
 
       <div style={{ display: 'flex' }}>
@@ -336,10 +337,6 @@ export default function Synth() {
           )}
         </>
       }
-
-      <button
-        onClick={() => reset()}
-      >Reset</button>
     </div >
   )
 }

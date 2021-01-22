@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function PrimaryButtons({ Tone, setCurrentBeat, tempo }) {
+export default function PrimaryButtons({ Tone, setCurrentBeat, tempo, reset }) {
 
   const [playStatus, setPlayStatus] = useState('stop')
 
@@ -50,6 +50,12 @@ export default function PrimaryButtons({ Tone, setCurrentBeat, tempo }) {
         onClick={() => stopAudio()}
         style={{ ...styles, color: 'red' }}
       >Stop</h1>
+      <h1
+        onClick={() => {
+          reset();
+          setPlayStatus('stop') }}
+        style={{ ...styles, color: 'orange' }}
+      >Reset</h1>
     </section>
   )
 }
