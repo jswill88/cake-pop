@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import * as Tone from 'tone';
 import he from 'he';
 import ButtonLabel from './ButtonLabel'
@@ -9,8 +9,16 @@ export default function Synth() {
   const [noteSwitches, setNoteSwitches] = useState({});
   const [currentBeat, setCurrentBeat] = useState(-1);
   const [prog, setProg] = useState(['I', 'V', 'vi', 'IV'])
-  const [loopLength, setLoopLength] = useState(16);
+  const [loopLength, setLoopLength] = useState(12);
   const [tempo, setTempo] = useState(120);
+
+  const [degrees, setDegrees] = useState(70);
+  const [down, setDown] = useState(false);
+  const [showTempoInput, setShowTempoInput] = useState(false);
+
+  // change mouse positions to ref
+  const mousePositions = useRef({});
+  const dynaTempo = useRef(120)
 
   const NOTES = {
     high: [CHORDS[prog[0]][2], CHORDS[prog[1]][2], CHORDS[prog[2]][2], CHORDS[prog[3]][2]],
@@ -135,6 +143,7 @@ export default function Synth() {
     })
   }
 
+
   const handleTempoChange = newTempo => {
     const tempo = newTempo < 50 ? 50 : Math.min(350, newTempo)
     Tone.Transport.bpm.value = tempo;
@@ -161,6 +170,33 @@ export default function Synth() {
     return noteName;
   }
 
+  const changeDegree = (e) => {
+    if (down) {
+      const yPos = e.nativeEvent.y;
+      if (!mousePositions.current.bottom) {
+        const topDiff = Math.floor(degrees / 2.7);
+        const bottomDiff = 100 - topDiff;
+        const top = yPos + topDiff;
+        const bottom = yPos - bottomDiff;
+        mousePositions.current = { bottom, top };
+      } else {
+        if (yPos <= mousePositions.current.bottom) setDegrees(270);
+        else if (yPos >= mousePositions.current.top) setDegrees(0);
+        else {
+          const pct = (100 - (yPos - mousePositions.current.bottom)) / 100;
+          setDegrees(Math.floor(270 * pct));
+        }
+      }
+    }
+  };
+
+  const endChanging = () => {
+    setDown(false);
+    mousePositions.current = {};
+    handleTempoChange(degrees + 50)
+  };
+
+
   return (
     <div
       style={{
@@ -169,7 +205,14 @@ export default function Synth() {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+
+        cursor: !down ? 'auto' : 'ns-resize',
       }}
+
+      onMouseMove={(e) => changeDegree(e)}
+      onMouseLeave={() => setDown(false)}
+      onMouseUpCapture={() => endChanging()}
+      onMouseUp={() => endChanging()}
     >
       <section>
         <h1
@@ -202,33 +245,85 @@ export default function Synth() {
         )}
       </div>
       <label>Number of beats:{' '}
-      <select
-        defaultValue={loopLength}
-        onChangeCapture={e => {
-          reset();
-          setLoopLength(parseInt(e.target.value))
+        <select
+          defaultValue={loopLength}
+          onChangeCapture={e => {
+            reset();
+            setLoopLength(parseInt(e.target.value))
+          }}
+        >
+          {[8, 12, 16, 20, 24, 28, 32].map(beats =>
+            <option
+              key={beats}
+            >{beats}</option>
+          )}
+        </select>
+      </label>
+      <div
+        id="knob"
+        style={{
+          height: '100px',
+          width: '100px',
+          backgroundColor: 'black',
+          borderRadius: '50%',
+          position: 'relative',
+          transform: `rotate(${degrees}deg)`,
         }}
+        onMouseDown={(e) => setDown(true)}
+        onMouseUp={(e) => endChanging()}
       >
-        {[8, 12, 16, 20, 24, 28, 32].map(beats =>
-          <option
-            key={beats}
-          >{beats}</option>
-        )}
-      </select>
-      </label>
+        <div
+          id="dot"
+          style={{
+            height: '7px',
+            width: '7px',
+            backgroundColor: 'tan',
+            borderRadius: '50%',
+            position: 'absolute',
+            left: '20%',
+            bottom: '20%',
+          }}
+        ></div>
+      </div>
 
-      <label>
-          Tempo:{' '}
-      <input
-        type="number"
-        min={50}
-        max={300}
-        defaultValue={tempo}
-        onChangeCapture={e => handleTempoChange(e.target.value)}
-      />
-      </label>
+      <span>
+        Tempo:{' '}
+      </span>
+      {showTempoInput ?
+        <>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault()
+              handleTempoChange(dynaTempo.current)
+              setDegrees(dynaTempo.current - 50)
+              setShowTempoInput(false);
+            }}
+          >
+            <input
+              type="number"
+              min={50}
+              max={320}
+              defaultValue={tempo}
+              onChangeCapture={e => {
+                dynaTempo.current = e.target.value
+              }}
+            />
+            <input
+              type="submit"
+              value="Set"
+            />
+          </form>
+        </> :
+        <span
+          onClick={() => setShowTempoInput(true)}
+          style={{ border: '1px solid black', width: '50px', textAlign: 'center' }}
+        >
+          {degrees + 50}
+        </span>
+      }
 
-      {('high' in noteSwitches) &&
+      {
+        ('high' in noteSwitches) &&
         <>
           {Object.keys(noteSwitches).map(noteRow =>
             <div
