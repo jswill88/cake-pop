@@ -8,13 +8,13 @@ export const LoginContext = createContext();
   const fetchApi = useFetch();
   
   const signIn = async () => {
-    const result = await fetchApi('/test','get')
+    const result = await fetchApi('/test','post')
     console.log(result)
     setLoggedIn(loginState => !loginState)
   }
   // const logout = () => {}
   const signUp = async (userData) => {
-    const result = await fetchApi('/signup','post', userData);
+    const result = await fetchApi('/signup','post', {username:'jo', password: 'whatsup'});
     console.log(result)
   }
 

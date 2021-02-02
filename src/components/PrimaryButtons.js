@@ -61,7 +61,7 @@ export default function PrimaryButtons({ Tone, setCurrentBeat, tempo, reset }) {
       >Reset</h1>
       <h1
         onClick={() => {
-          context.signIn();
+          context.signIn({test:'ing'});
         }}
         style={{ ...styles, color: 'black' }}
       >
