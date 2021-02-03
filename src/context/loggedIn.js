@@ -5,12 +5,22 @@ export const LoginContext = createContext();
 
  function LoginProvider (props) {
   const [loggedIn, setLoggedIn] = useState(false);
+  const [user, setUser] = useState('');
+  const [songs, setSongs] = useState([]);
+
   const fetchApi = useFetch();
   
-  const signIn = async () => {
-    const result = await fetchApi('/test','post')
-    console.log(result)
-    setLoggedIn(loginState => !loginState)
+  const signIn = async (userData) => {
+    const result = await fetchApi('/signin','post', userData)
+    
+    if(result !== 'error') {
+      setLoggedIn(true)
+      setUser(result.data.username);
+      setSongs(result.data.songs);
+      return 'success';
+    } else {
+      return 'error';
+    }
   }
   // const logout = () => {}
   const signUp = async (userData) => {
@@ -18,10 +28,24 @@ export const LoginContext = createContext();
     console.log(result)
   }
 
+  const logout = async () => {
+    const result = await fetchApi('/logout', 'get')
+    if(result !== 'error') {
+      setLoggedIn(false)
+      setUser('')
+      setSongs([])
+    } else {
+      return 'error';
+    }
+  }
+
   const state = {
-    loggedIn: loggedIn,
+    loggedIn,
     signIn,
-    signUp
+    signUp,
+    logout,
+    songs,
+    user,
   }
 
   return (

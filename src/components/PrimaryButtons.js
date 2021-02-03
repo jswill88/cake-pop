@@ -1,10 +1,10 @@
-import { useState, useContext } from 'react';
-import { LoginContext } from '../context/loggedIn';
+import { useState } from 'react';
+
 
 export default function PrimaryButtons({ Tone, setCurrentBeat, tempo, reset }) {
 
   const [playStatus, setPlayStatus] = useState('stop');
-  const context = useContext(LoginContext);
+
 
   const startAudio = async () => {
     if (playStatus === 'stop') setCurrentBeat(-1)
@@ -59,14 +59,7 @@ export default function PrimaryButtons({ Tone, setCurrentBeat, tempo, reset }) {
         }}
         style={{ ...styles, color: 'orange' }}
       >Reset</h1>
-      <h1
-        onClick={() => {
-          context.signIn({test:'ing'});
-        }}
-        style={{ ...styles, color: 'black' }}
-      >
-        {context.loggedIn ? 'Welcome' : 'Sign In'}
-      </h1>
+      
     </section>
   )
 }
