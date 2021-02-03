@@ -1,13 +1,16 @@
 import './App.css';
-import Synth from './components/Synth'
-import Header from './components/Header'
+import Synth from './components/Synth';
+import Header from './components/Header';
+import LoginProvider from './context/loggedIn';
 
 function App() {
   return (
-    <div>
-      <Header />  
-      <Synth />
-    </div>
+    <LoginProvider>
+      <div>
+        <Header />
+        <Synth />
+      </div>
+    </LoginProvider>
   );
 }
 
