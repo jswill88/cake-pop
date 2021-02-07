@@ -1,10 +1,11 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useContext } from 'react';
 import * as Tone from 'tone';
 import he from 'he';
-import NoteRow from './NoteRow'
-import PrimaryButtons from './PrimaryButtons'
-import { BASS, CHORDS } from '../lib/noteInfo'
-import { SYNTHS, synthTypes } from '../lib/synthInfo'
+import NoteRow from './NoteRow';
+import PrimaryButtons from './PrimaryButtons';
+import { BASS, CHORDS } from '../lib/noteInfo';
+import { SYNTHS, synthTypes } from '../lib/synthInfo';
+import { LoginContext } from '../context/loggedIn';
 
 
 export default function Synth() {
@@ -17,6 +18,11 @@ export default function Synth() {
   const [degrees, setDegrees] = useState(70);
   const [down, setDown] = useState(false);
   const [showTempoInput, setShowTempoInput] = useState(false);
+
+  const {
+    songs,
+    loggedIn
+  } = useContext(LoginContext)
 
   const mousePositions = useRef({});
   const dynaTempo = useRef(120)
@@ -164,6 +170,7 @@ export default function Synth() {
       onMouseUpCapture={() => endChanging()}
       onMouseUp={() => endChanging()}
     >
+
       <PrimaryButtons
         Tone={Tone}
         setCurrentBeat={setCurrentBeat}
@@ -185,6 +192,23 @@ export default function Synth() {
           </select>
         )}
       </div>
+      {loggedIn &&
+        <>
+          <label>Your Songs: </label>
+          <select>
+            {songs.map(({ title, id }, i) =>
+              <option
+                key={i}
+                value={id}
+              >
+                {title}
+
+              </option>
+            )}
+
+          </select>
+        </>
+      }
       <label>Number of beats:{' '}
         <select
           defaultValue={loopLength}
@@ -268,7 +292,7 @@ export default function Synth() {
         <>
           {Object.keys(noteSwitches).map(noteRow =>
             <NoteRow
-            key={noteRow}
+              key={noteRow}
               noteRow={noteRow}
               noteSwitches={noteSwitches}
               currentBeat={currentBeat}
