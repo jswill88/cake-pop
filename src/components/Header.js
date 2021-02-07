@@ -44,7 +44,7 @@ export default function Header() {
             style={{ ...styles, color: 'black' }}
           >Sign In
          </h1> :
-          <SignInForm />
+          <SignInForm setShowForm={setShowForm} />
          }
         </>
         :

@@ -24,8 +24,14 @@ export const LoginContext = createContext();
   }
   // const logout = () => {}
   const signUp = async (userData) => {
-    const result = await fetchApi('/signup','post', {username:'jo', password: 'whatsup'});
-    console.log(result)
+    const result = await fetchApi('/signup','post', userData);
+    if(result !== 'error') {
+      setLoggedIn(true)
+      setUser(userData.username);
+      return 'success';
+    } else {
+      return 'error';
+    }
   }
 
   const logout = async () => {
