@@ -15,6 +15,7 @@ export default function Header() {
   const {
     // signIn,
     // signUp,
+    saveSong,
     logout,
     user,
     loggedIn,
@@ -48,9 +49,15 @@ export default function Header() {
          }
         </>
         :
+        <>
         <h1
         onClick={() => logout()}
         >Log Out</h1>
+        <h1
+        onClick={() => saveSong()}
+        >Save</h1>
+        </>
+
       }
     </header>
   )

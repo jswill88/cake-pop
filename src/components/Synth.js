@@ -9,19 +9,23 @@ import { LoginContext } from '../context/loggedIn';
 
 
 export default function Synth() {
-  const [noteSwitches, setNoteSwitches] = useState({});
+  
   const [currentBeat, setCurrentBeat] = useState(-1);
-  const [prog, setProg] = useState(['I', 'V', 'vi', 'IV'])
-  const [loopLength, setLoopLength] = useState(12);
-
-  const [tempo, setTempo] = useState(120);
   const [degrees, setDegrees] = useState(70);
   const [down, setDown] = useState(false);
   const [showTempoInput, setShowTempoInput] = useState(false);
 
   const {
     songs,
-    loggedIn
+    loggedIn,
+    noteSwitches,
+    setNoteSwitches,
+    prog,
+    setProg,
+    loopLength,
+    setLoopLength,
+    tempo,
+    setTempo,
   } = useContext(LoginContext)
 
   const mousePositions = useRef({});
@@ -39,6 +43,8 @@ export default function Synth() {
   }
 
   useEffect(() => {
+
+    console.log('noteswitch useEffect called')
     const noteObj = {
       high: {}, mid: {}, low: {}, bassHigh: {}, bassLow: {}, cymbal: {}, snareDrum: {}, bassDrum: {}
     }
@@ -54,7 +60,7 @@ export default function Synth() {
     }, '8n').start(0);
 
     return () => loop.cancel();
-  }, [loopLength])
+  }, [loopLength, setNoteSwitches])
 
   const reset = () => {
     for (let loop in noteSwitches) {

@@ -4,6 +4,10 @@ import useFetch from '../hooks/ajax'
 export const LoginContext = createContext();
 
  function LoginProvider (props) {
+  const [prog, setProg] = useState(['I', 'V', 'vi', 'IV'])
+  const [tempo, setTempo] = useState(120);
+  const [noteSwitches, setNoteSwitches] = useState({});
+  const [loopLength, setLoopLength] = useState(12);
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState('');
   const [songs, setSongs] = useState([]);
@@ -22,7 +26,7 @@ export const LoginContext = createContext();
       return 'error';
     }
   }
-  // const logout = () => {}
+
   const signUp = async (userData) => {
     const result = await fetchApi('/signup','post', userData);
     if(result !== 'error') {
@@ -45,13 +49,49 @@ export const LoginContext = createContext();
     }
   }
 
+  const saveSong = async () => {
+    const noteObj = {};
+    for(let row in noteSwitches) {
+      noteObj[row] = {}
+      for (let beat in noteSwitches[row]) {
+        if(!noteSwitches[row][beat])
+          noteObj[row][beat] = false;
+        else noteObj[row][beat] = true;
+      }
+    }
+
+    const songObj = {
+      title: 'practice',
+      buttonsPressed: noteObj,
+      bpm: tempo || 120,
+      numberOfBeats: loopLength,
+      chordProgression: prog,
+    }
+    const result = await fetchApi('/save','post', songObj)
+    console.log(result);
+    if(result !== 'error') {
+      return 'success'
+    } else {
+      return 'error';
+    }
+  }
+
   const state = {
     loggedIn,
     signIn,
     signUp,
     logout,
+    saveSong,
     songs,
     user,
+    noteSwitches,
+    setNoteSwitches,
+    prog,
+    setProg,
+    loopLength,
+    setLoopLength,
+    tempo,
+    setTempo,
   }
 
   return (
