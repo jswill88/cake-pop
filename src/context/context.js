@@ -116,7 +116,34 @@ function LoginProvider(props) {
     } else {
       return 'error';
     }
-    // need to construct song ased on result data
+  }
+
+  const rename = async newTitle => {
+    if (songs.length) {
+      let songInList = songs.filter(({title: titleInList}) => titleInList === title )
+      if (songInList.length) {
+        const { id: songId } = songInList[0];
+        const result = await fetchApi('/rename', 'patch', { newTitle, songId });
+        if(result === 'error') {
+          return 'error';
+        } else {
+          setTitle(result.data.newTitle)
+          setSongs(songs => {
+            return [...songs.map((song, { id }) => {
+              if(id === songId){
+                return { id, title: newTitle }
+              }
+              else return song;
+            }) ];
+          })
+        }
+      } else {
+        setTitle(newTitle);
+      }
+    } else {
+      setTitle(newTitle);
+    }
+
   }
 
   const updateButtons = ({ chordProgression, buttonsPressed, numberOfBeats }) => {
@@ -135,7 +162,7 @@ function LoginProvider(props) {
           }
 
           arrLoop[i] = note;
-          
+
           const synth = makeSynth(noteRow.includes('bass') ? 'bassSynth' : 'chordSynth');
           buttonsPressed[noteRow][i] = new Tone.Sequence((time, note) => {
             synth.triggerAttackRelease(note, '16n', time);
@@ -206,6 +233,7 @@ function LoginProvider(props) {
     reset,
     NOTES,
     makeSynth,
+    rename
   }
 
   return (

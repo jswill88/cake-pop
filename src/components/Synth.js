@@ -28,12 +28,13 @@ export default function Synth() {
     degrees,
     setDegrees,
     title,
-    setTitle,
+    // setTitle,
     currentBeat,
     setCurrentBeat,
     reset,
     NOTES,
     makeSynth,
+    rename
   } = useContext(Context)
 
 
@@ -234,7 +235,7 @@ export default function Synth() {
       <form
         onSubmit={e => {
           e.preventDefault();
-          setTitle(titleForm.current);
+          rename(titleForm.current);
         }}
       >
         <input
