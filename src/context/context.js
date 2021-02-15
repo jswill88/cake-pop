@@ -1,16 +1,19 @@
 import { createContext, useState } from 'react';
 import useFetch from '../hooks/ajax'
+import * as Tone from 'tone';
 
-export const LoginContext = createContext();
+export const Context = createContext();
 
  function LoginProvider (props) {
   const [prog, setProg] = useState(['I', 'V', 'vi', 'IV'])
   const [tempo, setTempo] = useState(120);
+  const [title, setTitle] = useState('Untitled')
   const [noteSwitches, setNoteSwitches] = useState({});
   const [loopLength, setLoopLength] = useState(12);
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState('');
   const [songs, setSongs] = useState([]);
+  const [degrees, setDegrees] = useState(70);
 
   const fetchApi = useFetch();
   
@@ -68,12 +71,37 @@ export const LoginContext = createContext();
       chordProgression: prog,
     }
     const result = await fetchApi('/save','post', songObj)
-    console.log(result);
+    console.log(result.data);
     if(result !== 'error') {
+      setSongs(arr => [...arr, result.data])
       return 'success'
     } else {
       return 'error';
     }
+  }
+
+  const open = async (songId) => {
+    const result = await fetchApi('/open', 'post',{ songId })
+    if(result !== 'error') {
+      const { data: songObj } = result
+      console.log('hello')
+      console.log('data', songObj )
+      console.log('tempo', songObj.bpm)
+      setProg(songObj.chordProgression);
+      handleTempoChange(songObj.bpm)
+      setDegrees(songObj.bpm - 50)
+      setTitle(songObj.title)
+
+      return 'success'
+    } else {
+      return 'error';
+    }
+    // need to construct song ased on result data
+  }
+  const handleTempoChange = newTempo => {
+    const tempo = newTempo < 50 ? 50 : Math.min(350, newTempo)
+    Tone.Transport.bpm.value = tempo;
+    setTempo(tempo)
   }
 
   const state = {
@@ -92,12 +120,19 @@ export const LoginContext = createContext();
     setLoopLength,
     tempo,
     setTempo,
+    open,
+    handleTempoChange,
+    Tone,
+    degrees,
+    setDegrees,
+    title,
+    setTitle
   }
 
   return (
-    <LoginContext.Provider value={state}>
+    <Context.Provider value={state}>
       {props.children}
-    </LoginContext.Provider>
+    </Context.Provider>
   )
 }
 export default LoginProvider

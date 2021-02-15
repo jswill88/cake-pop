@@ -1,7 +1,7 @@
 import './App.css';
 import Synth from './components/Synth';
 import Header from './components/Header';
-import LoginProvider from './context/loggedIn';
+import LoginProvider from './context/context';
 
 function App() {
   return (

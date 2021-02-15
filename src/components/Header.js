@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { LoginContext } from '../context/loggedIn';
+import { Context } from '../context/context';
 
 import SignInForm from './SignInForm';
 
@@ -19,7 +19,8 @@ export default function Header() {
     logout,
     user,
     loggedIn,
-  } = useContext(LoginContext);
+    title,
+  } = useContext(Context);
 
   return (
     <header>
@@ -29,6 +30,9 @@ export default function Header() {
       }}>
         32 Beat Processor
       </h1>
+      <h2>
+        {title}
+      </h2>
       {loggedIn && <p>hi {user}</p>}
       {!loggedIn ?
         <>

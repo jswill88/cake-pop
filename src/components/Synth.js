@@ -1,17 +1,15 @@
 import { useEffect, useState, useRef, useContext } from 'react';
-import * as Tone from 'tone';
 import he from 'he';
 import NoteRow from './NoteRow';
 import PrimaryButtons from './PrimaryButtons';
 import { BASS, CHORDS } from '../lib/noteInfo';
 import { SYNTHS, synthTypes } from '../lib/synthInfo';
-import { LoginContext } from '../context/loggedIn';
+import { Context } from '../context/context';
 
 
 export default function Synth() {
-  
+
   const [currentBeat, setCurrentBeat] = useState(-1);
-  const [degrees, setDegrees] = useState(70);
   const [down, setDown] = useState(false);
   const [showTempoInput, setShowTempoInput] = useState(false);
 
@@ -25,9 +23,18 @@ export default function Synth() {
     loopLength,
     setLoopLength,
     tempo,
-    setTempo,
-  } = useContext(LoginContext)
+    // setTempo,
+    open,
+    handleTempoChange,
+    Tone,
+    degrees,
+    setDegrees,
+    title,
+    setTitle
+  } = useContext(Context)
 
+
+  const titleForm = useRef(title)
   const mousePositions = useRef({});
   const dynaTempo = useRef(120)
 
@@ -41,10 +48,9 @@ export default function Synth() {
     snareDrum: ['', '', '', ''],
     bassDrum: ['C1', 'C1', 'C1', 'C1'],
   }
+  useEffect(() => console.log(prog), [prog])
 
   useEffect(() => {
-
-    console.log('noteswitch useEffect called')
     const noteObj = {
       high: {}, mid: {}, low: {}, bassHigh: {}, bassLow: {}, cymbal: {}, snareDrum: {}, bassDrum: {}
     }
@@ -60,7 +66,7 @@ export default function Synth() {
     }, '8n').start(0);
 
     return () => loop.cancel();
-  }, [loopLength, setNoteSwitches])
+  }, [loopLength, setNoteSwitches, Tone.Draw, Tone.Loop])
 
   const reset = () => {
     for (let loop in noteSwitches) {
@@ -123,13 +129,6 @@ export default function Synth() {
       }
       return noteObj;
     })
-  }
-
-
-  const handleTempoChange = newTempo => {
-    const tempo = newTempo < 50 ? 50 : Math.min(350, newTempo)
-    Tone.Transport.bpm.value = tempo;
-    setTempo(tempo)
   }
 
   const changeDegree = (e) => {
@@ -201,7 +200,9 @@ export default function Synth() {
       {loggedIn &&
         <>
           <label>Your Songs: </label>
-          <select>
+          <select
+            onChange={(e) => open(e.target.value)}
+          >
             {songs.map(({ title, id }, i) =>
               <option
                 key={i}
@@ -256,6 +257,21 @@ export default function Synth() {
           }}
         ></div>
       </div>
+
+      <label>Title:</label>
+      <form
+        onSubmit={e => {
+          e.preventDefault();
+          setTitle(titleForm.current);
+        }}
+      >
+        <input
+          type="text"
+          defaultValue={title}
+          onChange={e => titleForm.current = e.target.value}
+        />
+        <button type="submit">Rename</button>
+      </form>
 
       <span>
         Tempo:{' '}
