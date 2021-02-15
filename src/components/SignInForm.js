@@ -1,5 +1,5 @@
 import { useState, useContext } from 'react';
-import { LoginContext } from '../context/loggedIn'
+import { Context } from '../context/context'
 
 export default function SignInForm({ setShowForm }) {
   const [showSignUp, setShowSignUp] = useState(false)
@@ -8,7 +8,7 @@ export default function SignInForm({ setShowForm }) {
   const [passwordVerify, setPasswordVerify] = useState('');
   const [username, setUsername] = useState('')
 
-  const { signIn, signUp } = useContext(LoginContext)
+  const { signIn, signUp } = useContext(Context)
 
   return (
     <div>
