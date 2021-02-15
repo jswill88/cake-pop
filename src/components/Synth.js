@@ -3,13 +3,11 @@ import he from 'he';
 import NoteRow from './NoteRow';
 import PrimaryButtons from './PrimaryButtons';
 import { BASS, CHORDS } from '../lib/noteInfo';
-import { SYNTHS, synthTypes } from '../lib/synthInfo';
 import { Context } from '../context/context';
 
 
 export default function Synth() {
 
-  const [currentBeat, setCurrentBeat] = useState(-1);
   const [down, setDown] = useState(false);
   const [showTempoInput, setShowTempoInput] = useState(false);
 
@@ -30,7 +28,12 @@ export default function Synth() {
     degrees,
     setDegrees,
     title,
-    setTitle
+    setTitle,
+    currentBeat,
+    setCurrentBeat,
+    reset,
+    NOTES,
+    makeSynth,
   } = useContext(Context)
 
 
@@ -38,16 +41,7 @@ export default function Synth() {
   const mousePositions = useRef({});
   const dynaTempo = useRef(120)
 
-  const NOTES = {
-    high: [CHORDS[prog[0]][2], CHORDS[prog[1]][2], CHORDS[prog[2]][2], CHORDS[prog[3]][2]],
-    mid: [CHORDS[prog[0]][1], CHORDS[prog[1]][1], CHORDS[prog[2]][1], CHORDS[prog[3]][1]],
-    low: [CHORDS[prog[0]][0], CHORDS[prog[1]][0], CHORDS[prog[2]][0], CHORDS[prog[3]][0]],
-    bassHigh: [BASS[prog[0]][1], BASS[prog[1]][1], BASS[prog[2]][1], BASS[prog[3]][1]],
-    bassLow: [BASS[prog[0]][0], BASS[prog[1]][0], BASS[prog[2]][0], BASS[prog[3]][0]],
-    cymbal: ['C1', 'C1', 'C1', 'C1'],
-    snareDrum: ['', '', '', ''],
-    bassDrum: ['C1', 'C1', 'C1', 'C1'],
-  }
+
   useEffect(() => console.log(prog), [prog])
 
   useEffect(() => {
@@ -66,29 +60,7 @@ export default function Synth() {
     }, '8n').start(0);
 
     return () => loop.cancel();
-  }, [loopLength, setNoteSwitches, Tone.Draw, Tone.Loop])
-
-  const reset = () => {
-    for (let loop in noteSwitches) {
-      for (let i = 0; i < loopLength; i++) {
-        if (noteSwitches[loop][i]) {
-          noteSwitches[loop][i].stop()
-          noteSwitches[loop][i].dispose()
-        }
-      }
-    }
-    Tone.Transport.stop();
-    const noteObj = {
-      high: {}, mid: {}, low: {}, bassHigh: {}, bassLow: {}, cymbal: {}, snareDrum: {}, bassDrum: {}
-    }
-    for (let note in noteObj) {
-      for (let i = 0; i < loopLength; i++) noteObj[note][i] = false;
-    }
-    setNoteSwitches(noteObj)
-    setCurrentBeat(-2)
-  }
-
-  const makeSynth = type => new Tone[synthTypes[type]](SYNTHS[type]).toDestination();
+  }, [loopLength, setNoteSwitches, Tone.Draw, Tone.Loop, setCurrentBeat])
 
   const handleChordChange = (e, i) => {
     const newChord = he.encode(e.target.value);

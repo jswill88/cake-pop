@@ -1,16 +1,18 @@
 import ButtonLabel from './ButtonLabel'
+import { Context } from '../context/context'
+import { useContext } from 'react'
 
 
 export default function NoteRow({
   noteRow,
   noteSwitches,
   currentBeat,
-  Tone,
   setNoteSwitches,
   loopLength,
   makeSynth,
   NOTES
 }) {
+  const { Tone } = useContext(Context)
 
   const addSynth = (beat, note, row) => {
     if (!noteSwitches[row][beat]) {
