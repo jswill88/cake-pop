@@ -28,12 +28,13 @@ export default function Synth() {
     degrees,
     setDegrees,
     title,
-    setTitle,
+    // setTitle,
     currentBeat,
     setCurrentBeat,
     reset,
     NOTES,
     makeSynth,
+    rename
   } = useContext(Context)
 
 
@@ -79,6 +80,7 @@ export default function Synth() {
           for (let i = start; i < end; i++) {
             if (noteObj[noteRow][i]) {
               noteObj[noteRow][i].stop();
+              noteObj[noteRow][i].cancel();
               noteObj[noteRow][i].dispose();
               const arrLoop = new Array(loopLength).fill([])
 
@@ -234,7 +236,7 @@ export default function Synth() {
       <form
         onSubmit={e => {
           e.preventDefault();
-          setTitle(titleForm.current);
+          rename(titleForm.current);
         }}
       >
         <input

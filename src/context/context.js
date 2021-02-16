@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import useFetch from '../hooks/ajax'
 import * as Tone from 'tone';
 import { BASS, CHORDS } from '../lib/noteInfo';
@@ -17,6 +17,7 @@ function LoginProvider(props) {
   const [songs, setSongs] = useState([]);
   const [degrees, setDegrees] = useState(70);
   const [currentBeat, setCurrentBeat] = useState(-1);
+  const [openSongId, setOpenSongId] = useState(false);
 
   const fetchApi = useFetch();
 
@@ -63,6 +64,7 @@ function LoginProvider(props) {
       setLoggedIn(false)
       setUser('')
       setSongs([])
+      setOpenSongId(false)
     } else {
       return 'error';
     }
@@ -80,16 +82,17 @@ function LoginProvider(props) {
     }
 
     const songObj = {
-      title: 'practice',
+      title: title,
       buttonsPressed: noteObj,
-      bpm: tempo || 120,
+      bpm: tempo,
       numberOfBeats: loopLength,
       chordProgression: prog,
     }
     const result = await fetchApi('/save', 'post', songObj)
-    console.log(result.data);
+
     if (result !== 'error') {
       setSongs(arr => [...arr, result.data])
+      setOpenSongId(result.data.id)
       return 'success'
     } else {
       return 'error';
@@ -100,23 +103,68 @@ function LoginProvider(props) {
     const result = await fetchApi('/open', 'post', { songId })
     if (result !== 'error') {
       const { data: songObj } = result
-      console.log('hello')
-      console.log('data', songObj)
-      console.log('tempo', songObj.bpm);
-      reset();
-      setLoopLength(songObj.numberOfBeats);
       setProg(songObj.chordProgression);
+      reset(true);
       handleTempoChange(songObj.bpm)
       setDegrees(songObj.bpm - 50)
+      setLoopLength(songObj.numberOfBeats);
       setTitle(songObj.title)
-      updateButtons(songObj)
-
+      setOpenSongId(songObj._id)
+      setNoteSwitches(updateButtons(songObj));
 
       return 'success'
     } else {
       return 'error';
     }
-    // need to construct song ased on result data
+  }
+
+  useEffect(() => console.log('note switches use effect', noteSwitches), [noteSwitches])
+  
+
+  const rename = async newTitle => {
+    if (songs.length) {
+      let songInList = songs.filter(({ title: titleInList }) => titleInList === title)
+      if (songInList.length) {
+        const { id: songId } = songInList[0];
+        const result = await fetchApi('/rename', 'patch', { newTitle, songId });
+        if (result === 'error') {
+          return 'error';
+        } else {
+          setTitle(result.data.newTitle)
+          setSongs(songs => {
+            return [...songs.map((song, { id }) => {
+              if (id === songId) {
+                return { id, title: newTitle }
+              }
+              else return song;
+            })];
+          })
+        }
+      } else {
+        setTitle(newTitle);
+      }
+    } else {
+      setTitle(newTitle);
+    }
+
+  }
+
+  const deleteSong = async () => {
+    const result = await fetchApi('/deletesong', 'delete', {
+      songIdToDelete: openSongId
+    })
+    if (result !== 'error') {
+      reset();
+      setSongs(arr => arr.filter(({ id }) => id !== openSongId))
+      setOpenSongId(false);
+      setTitle('Untitled');
+      handleTempoChange(120);
+      setDegrees(70);
+      setProg(['I', 'V', 'vi', 'IV']);
+      return 'success';
+    } else {
+      return 'error'
+    }
   }
 
   const updateButtons = ({ chordProgression, buttonsPressed, numberOfBeats }) => {
@@ -126,19 +174,30 @@ function LoginProvider(props) {
     for (let noteRow in buttonsPressed) {
       for (let i = 0; i < numberOfBeats; i++) {
         if (buttonsPressed[noteRow][i]) {
-          const arrLoop = new Array(loopLength).fill([])
+          console.log(buttonsPressed[noteRow][i])
+          const arrLoop = new Array(numberOfBeats).fill([])
           let note;
-          if (['bassLow', 'bassHigh'].includes(noteRow)) {
+          if (['bassDrum', 'snareDrum', 'cymbal'].includes(noteRow)) {
+            note = NOTES[noteRow][0];
+          } else if (['bassLow', 'bassHigh'].includes(noteRow)) {
             note = BASS[chordProgression[chord]][noteRow === 'bassLow' ? 0 : 1] + 3;
           } else {
             note = CHORDS[chordProgression[chord]][2 - Object.keys(NOTES).indexOf(noteRow)] + 5;
           }
 
           arrLoop[i] = note;
-          
-          const synth = makeSynth(noteRow.includes('bass') ? 'bassSynth' : 'chordSynth');
+
+          let type;
+          if (['bassHigh', 'bassLow'].includes(noteRow)) type = 'bassSynth'
+          else if (['high', 'mid', 'low'].includes(noteRow)) type = 'chordSynth'
+          else type = noteRow;
+
+
+
+          const synth = makeSynth(type);
           buttonsPressed[noteRow][i] = new Tone.Sequence((time, note) => {
-            synth.triggerAttackRelease(note, '16n', time);
+            if (type === 'snareDrum') synth.triggerAttackRelease('8n', time)
+            else synth.triggerAttackRelease(note, '8n', time)
           }, arrLoop).start(0);
         }
         counter++;
@@ -150,7 +209,9 @@ function LoginProvider(props) {
       chord = 0;
       counter = 0;
     }
-    setNoteSwitches(buttonsPressed);
+    console.log('buttons pressed', buttonsPressed)
+    // setNoteSwitches(buttonsPressed);
+    return buttonsPressed;
   }
 
   const handleTempoChange = newTempo => {
@@ -158,23 +219,27 @@ function LoginProvider(props) {
     Tone.Transport.bpm.value = tempo;
     setTempo(tempo)
   }
-  const reset = () => {
+
+  const reset = (skip) => {
     for (let loop in noteSwitches) {
       for (let i = 0; i < loopLength; i++) {
         if (noteSwitches[loop][i]) {
           noteSwitches[loop][i].stop()
+          noteSwitches[loop][i].cancel()
           noteSwitches[loop][i].dispose()
         }
       }
     }
     Tone.Transport.stop();
-    const noteObj = {
-      high: {}, mid: {}, low: {}, bassHigh: {}, bassLow: {}, cymbal: {}, snareDrum: {}, bassDrum: {}
+    if(!skip) {
+      const noteObj = {
+        high: {}, mid: {}, low: {}, bassHigh: {}, bassLow: {}, cymbal: {}, snareDrum: {}, bassDrum: {}
+      }
+      for (let note in noteObj) {
+        for (let i = 0; i < loopLength; i++) noteObj[note][i] = false;
+      }
+      setNoteSwitches(noteObj)
     }
-    for (let note in noteObj) {
-      for (let i = 0; i < loopLength; i++) noteObj[note][i] = false;
-    }
-    setNoteSwitches(noteObj)
     setCurrentBeat(-2)
   }
 
@@ -206,6 +271,9 @@ function LoginProvider(props) {
     reset,
     NOTES,
     makeSynth,
+    rename,
+    openSongId,
+    deleteSong
   }
 
   return (
