@@ -80,6 +80,7 @@ export default function Synth() {
           for (let i = start; i < end; i++) {
             if (noteObj[noteRow][i]) {
               noteObj[noteRow][i].stop();
+              noteObj[noteRow][i].cancel();
               noteObj[noteRow][i].dispose();
               const arrLoop = new Array(loopLength).fill([])
 

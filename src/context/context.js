@@ -109,8 +109,8 @@ function LoginProvider(props) {
       setDegrees(songObj.bpm - 50)
       setLoopLength(songObj.numberOfBeats);
       setTitle(songObj.title)
-      updateButtons(songObj)
       setOpenSongId(songObj._id)
+      setNoteSwitches(updateButtons(songObj));
 
       return 'success'
     } else {
@@ -210,7 +210,8 @@ function LoginProvider(props) {
       counter = 0;
     }
     console.log('buttons pressed', buttonsPressed)
-    setNoteSwitches(buttonsPressed);
+    // setNoteSwitches(buttonsPressed);
+    return buttonsPressed;
   }
 
   const handleTempoChange = newTempo => {
@@ -224,6 +225,7 @@ function LoginProvider(props) {
       for (let i = 0; i < loopLength; i++) {
         if (noteSwitches[loop][i]) {
           noteSwitches[loop][i].stop()
+          noteSwitches[loop][i].cancel()
           noteSwitches[loop][i].dispose()
         }
       }

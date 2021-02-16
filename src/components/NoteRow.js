@@ -33,6 +33,7 @@ export default function NoteRow({
       setNoteSwitches(obj => ({ ...obj, [row]: { ...obj[row], [beat]: loop } }));
     } else {
       noteSwitches[row][beat].stop();
+      noteSwitches[row][beat].cancel();
       setNoteSwitches(obj => ({ ...obj, [row]: { ...obj[row], [beat]: false } }));
     }
   }
