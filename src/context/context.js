@@ -69,8 +69,11 @@ function LoginProvider(props) {
       return 'error';
     }
   }
-
-  const saveSong = async () => {
+  /**
+   * 
+   * @param {String} type Should be 'new' or 'update'
+   */
+  const saveSong = async (type) => {
     const noteObj = {};
     for (let row in noteSwitches) {
       noteObj[row] = {}
@@ -88,15 +91,44 @@ function LoginProvider(props) {
       numberOfBeats: loopLength,
       chordProgression: prog,
     }
-    const result = await fetchApi('/save', 'post', songObj)
+    const result = await fetchApi(
+      type === 'update' ? '/update': '/save',
+      type === 'update' ? 'put': 'post',
+      songObj)
 
     if (result !== 'error') {
-      setSongs(arr => [...arr, result.data])
-      setOpenSongId(result.data.id)
+      if(type === 'new') {
+        setSongs(arr => [...arr, result.data])
+        setOpenSongId(result.data.id)
+      }
       return 'success'
     } else {
       return 'error';
     }
+  }
+
+  const newSong = async () => {
+    const result = await fetchApi('/close','get')
+    if(result !== 'error') {
+      reset();
+      setOpenSongId(false);
+      handleTempoChange(120);
+      setDegrees(70);
+      setProg(['I', 'V', 'vi', 'IV']);
+      const titles = songs.map(({title}) => title)
+      let newTitle = 'New Song'
+      let i = 1;
+      while(titles.includes(newTitle)) {
+        newTitle = `New Song ${i}`;
+        i++;
+      }
+      
+      setTitle(newTitle);
+      return 'success';
+    } else {
+      return 'error';
+    }
+
   }
 
   const open = async (songId) => {
@@ -273,7 +305,8 @@ function LoginProvider(props) {
     makeSynth,
     rename,
     openSongId,
-    deleteSong
+    deleteSong,
+    newSong
   }
 
   return (

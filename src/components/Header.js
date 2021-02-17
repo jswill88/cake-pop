@@ -13,13 +13,13 @@ const styles = {
 export default function Header() {
   const [showForm, setShowForm] = useState(false);
   const {
-    // signIn,
-    // signUp,
     saveSong,
     logout,
     user,
     loggedIn,
     title,
+    openSongId,
+    newSong
   } = useContext(Context);
 
   return (
@@ -44,22 +44,33 @@ export default function Header() {
           >Sign Up
           </h1> */}
           {!showForm ?
-          <h1
-          onClick={() => setShowForm(true)}
-            style={{ ...styles, color: 'black' }}
-          >Sign In
+            <h1
+              onClick={() => setShowForm(true)}
+              style={{ ...styles, color: 'black' }}
+            >Sign In
          </h1> :
-          <SignInForm setShowForm={setShowForm} />
-         }
+            <SignInForm setShowForm={setShowForm} />
+          }
         </>
         :
         <>
-        <h1
-        onClick={() => logout()}
-        >Log Out</h1>
-        <h1
-        onClick={() => saveSong()}
-        >Save</h1>
+          <h1
+            onClick={() => logout()}
+          >Log Out</h1>
+          <h1
+            onClick={() => saveSong('new')}
+          >Save{openSongId && ' As'}</h1>
+          {openSongId &&
+            <>
+              <h1
+                onClick={() => saveSong('update')}
+              >Save Changes</h1>
+              <h1
+                onClick={() => newSong()}
+              >Start New Song</h1>
+            </>
+          }
+
         </>
 
       }
