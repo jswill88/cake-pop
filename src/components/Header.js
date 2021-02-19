@@ -1,30 +1,20 @@
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { Context } from '../context/context';
 import SignInForm from './SignInForm';
 
-import { Row, Col, Typography, Layout, Button } from 'antd';
+import { Row, Col, Typography, Button } from 'antd';
 
-// const { Header } = Layout;
 const { Title } = Typography;
 
-const styles = {
-  border: '2px solid black',
-  width: '200px',
-  fontSize: '1em',
-  textAlign: 'center'
-}
-
 export default function Heading() {
-  // const [showForm, setShowForm] = useState(false);
+
   const {
     saveSong,
     logout,
     user,
     loggedIn,
-    title,
     openSongId,
     newSong,
-    showForm,
     setShowForm
   } = useContext(Context);
 
@@ -49,16 +39,9 @@ export default function Heading() {
       span={4}
       offset={8}
       >Next Col</Col> */}
-      {loggedIn && <p>hi {user}</p>}
+      {loggedIn && <p>Hi {user}</p>}
       {!loggedIn ?
         <>
-          {/* <h1
-            onClick={() => {
-              // signUp({ test: 'ing' });
-            }}
-            style={{ ...styles, color: 'black' }}
-          >Sign Up
-          </h1> */}
           <Col span={2}>
             <Button
               type="primary"
@@ -71,14 +54,6 @@ export default function Heading() {
             </Button>
             <SignInForm />
           </Col>
-          {/* {!showForm ?
-            <h1
-              onClick={() => setShowForm(true)}
-              style={{ ...styles, color: 'black' }}
-            >Sign In
-         </h1> :
-            <SignInForm setShowForm={setShowForm} />
-          } */}
         </>
         :
         <>

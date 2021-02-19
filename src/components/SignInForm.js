@@ -6,23 +6,24 @@ const { Link } = Typography;
 
 export default function SignInForm() {
   const [showSignUp, setShowSignUp] = useState(false)
-  const [form] = Form.useForm();
+  const [signInForm] = Form.useForm();
   const [signUpForm] = Form.useForm();
 
   const { signIn, signUp, showForm, setShowForm } = useContext(Context)
 
   const signInHandler = async () => {
     try {
-      const { email, password } = await form.validateFields();
+      const { email, password } = await signInForm.validateFields();
       let result = await signIn({ email, password })
       if (result !== 'error') closeModal();
     } catch (e) {
-      console.log(e)
+      console.log(e.code)
     }
   }
   const signUpHandler = async () => {
     try {
-      const { email, username, password, passwordVerify } = await form.validateFields();
+      const { email, username, password, passwordVerify } = await signUpForm.validateFields();
+      console.log(email, username)
       const result = await signUp({
         email, username, password, passwordVerify
       });
@@ -33,9 +34,33 @@ export default function SignInForm() {
   }
 
   const closeModal = () => {
-    form.resetFields();
+    signInForm.resetFields();
     setShowForm(false)
   }
+
+  const passwordRules = [
+    {
+      required: true,
+      message: 'Please enter your password'
+    },
+    {
+      min: 8,
+      max: 32,
+      message: 'Password must be between 8 and 32 characters'
+    },
+    {
+      pattern:/[a-z]/g,
+      message: 'Password must contain a lowercase letter'
+    },
+    {
+      pattern:/[A-Z]/g,
+      message: 'Password must contain an uppercase letter'
+    },
+    {
+      pattern:/[0-9]/g,
+      message: 'Password must contain a number'
+    },
+  ]
 
   return (
     <Modal
@@ -48,7 +73,7 @@ export default function SignInForm() {
       {!showSignUp ?
         <Form
           layout="vertical"
-          form={form}
+          form={signInForm}
           preserve={false}
         >
           <Form.Item
@@ -64,7 +89,6 @@ export default function SignInForm() {
                 message: 'Email required to sign in'
               }
             ]}
-            required={true}
           >
 
             <Input />
@@ -76,15 +100,13 @@ export default function SignInForm() {
               {
                 required: true,
                 message: 'Please enter your password'
-              },
-              // {
-              //   type:
-              // }
+              }
             ]}
-            required={true}
-            hasFeedback
           >
-            <Input.Password />
+            <Input.Password
+              minLength={8}
+              maxLength={32}
+            />
           </Form.Item>
           <Link
             onClick={() => {
@@ -111,7 +133,6 @@ export default function SignInForm() {
                 message: 'Email required to sign in'
               }
             ]}
-            required={true}
           >
             <Input />
           </Form.Item>
@@ -126,16 +147,14 @@ export default function SignInForm() {
           <Form.Item
             label="Password"
             name="password"
-            rules={[
-              {
-                required: true,
-                message: 'Please enter your password'
-              }
-            ]}
-            required={true}
+            rules={passwordRules}
             hasFeedback
+
           >
-            <Input.Password />
+            <Input.Password
+              minLength={8}
+              maxLength={32}
+            />
           </Form.Item>
           <Form.Item
             label="Confirm Password"
@@ -143,8 +162,16 @@ export default function SignInForm() {
             rules={[
               {
                 required: true,
-                message: 'Please enter your password again'
-              }
+                message: 'Please re-enter your password'
+              },
+              ({ getFieldValue }) => ({
+                validator(_, password) {
+                  if (!password || getFieldValue('password') === password) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject('Passwords must match');
+                },
+              }),
             ]}
             required={true}
             hasFeedback
