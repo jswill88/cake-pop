@@ -23,15 +23,19 @@ export default function Heading() {
       className="header"
       justify="space-between"
       align="middle"
+      // style={{height: '100%'}}
 
     >
-      <Col span={4}>
+      <Col span={6}
+        // justify="center"
+        // align="middle"
+      
+      >
         <Title
-          level={4}
-          style={{ color: '#FFFFFF' }}
+          level={3}
+          style={{ color: '#FFFFFF', margin:0 }}
         >
-          32 Beat Processor
-
+          🎂 Cake Mix 
         </Title>
       </Col>
 
