@@ -1,15 +1,24 @@
-import './App.css';
 import Synth from './components/Synth';
-import Header from './components/Header';
+import Heading from './components/Header';
+// import SignInForm from './components/SignInForm'
 import LoginProvider from './context/context';
+import { Layout } from 'antd';
+import "antd/dist/antd.css";
+const { Header, Footer } = Layout;
 
 function App() {
   return (
     <LoginProvider>
-      <div>
-        <Header />
+      <Layout>
+        <Header>
+          <Heading />
+        </Header>
+        {/* <SignInForm /> */}
         <Synth />
-      </div>
+        <Footer>
+
+        </Footer>
+      </Layout>
     </LoginProvider>
   );
 }

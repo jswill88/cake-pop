@@ -1,7 +1,11 @@
 import { useContext, useState } from 'react';
 import { Context } from '../context/context';
-
 import SignInForm from './SignInForm';
+
+import { Row, Col, Typography, Layout, Button } from 'antd';
+
+// const { Header } = Layout;
+const { Title } = Typography;
 
 const styles = {
   border: '2px solid black',
@@ -10,8 +14,8 @@ const styles = {
   textAlign: 'center'
 }
 
-export default function Header() {
-  const [showForm, setShowForm] = useState(false);
+export default function Heading() {
+  // const [showForm, setShowForm] = useState(false);
   const {
     saveSong,
     logout,
@@ -19,38 +23,62 @@ export default function Header() {
     loggedIn,
     title,
     openSongId,
-    newSong
+    newSong,
+    showForm,
+    setShowForm
   } = useContext(Context);
 
   return (
-    <header>
-      <h1 style={{
-        fontFamily: 'monospace',
-        textAlign: 'center',
-      }}>
-        32 Beat Processor
-      </h1>
-      <h2>
-        {title}
-      </h2>
+    <Row
+      className="header"
+      justify="space-between"
+      align="middle"
+
+    >
+      <Col span={4}>
+        <Title
+          level={4}
+          style={{ color: '#FFFFFF' }}
+        >
+          32 Beat Processor
+
+        </Title>
+      </Col>
+
+      {/* <Col
+      span={4}
+      offset={8}
+      >Next Col</Col> */}
       {loggedIn && <p>hi {user}</p>}
       {!loggedIn ?
         <>
           {/* <h1
             onClick={() => {
-              signUp({ test: 'ing' });
+              // signUp({ test: 'ing' });
             }}
             style={{ ...styles, color: 'black' }}
           >Sign Up
           </h1> */}
-          {!showForm ?
+          <Col span={2}>
+            <Button
+              type="primary"
+              onClick={(e) => {
+                e.preventDefault()
+                setShowForm(true)}
+              }
+            >
+              Sign In
+            </Button>
+            <SignInForm />
+          </Col>
+          {/* {!showForm ?
             <h1
               onClick={() => setShowForm(true)}
               style={{ ...styles, color: 'black' }}
             >Sign In
          </h1> :
             <SignInForm setShowForm={setShowForm} />
-          }
+          } */}
         </>
         :
         <>
@@ -74,6 +102,6 @@ export default function Header() {
         </>
 
       }
-    </header>
+    </Row>
   )
 }
