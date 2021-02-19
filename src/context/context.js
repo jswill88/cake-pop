@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState } from 'react';
 import useFetch from '../hooks/ajax'
+import axios from 'axios';
 import * as Tone from 'tone';
 import { BASS, CHORDS } from '../lib/noteInfo';
 import { SYNTHS, synthTypes } from '../lib/synthInfo';
@@ -18,6 +19,7 @@ function LoginProvider(props) {
   const [degrees, setDegrees] = useState(70);
   const [currentBeat, setCurrentBeat] = useState(-1);
   const [openSongId, setOpenSongId] = useState(false);
+  const [showForm, setShowForm] = useState(false);
 
   const fetchApi = useFetch();
 
@@ -33,6 +35,19 @@ function LoginProvider(props) {
     snareDrum: ['', '', '', ''],
     bassDrum: ['C1', 'C1', 'C1', 'C1'],
   }
+
+
+  useEffect(() => {
+    const checkLoggedIn = async () => {
+      const result = await axios.get(process.env.REACT_APP_URL + '/api/v1/loggedIn')
+      if (result.data) {
+        setSongs(result.data.songList);
+        setUser(result.data.username);
+        setLoggedIn(true);
+      }
+    }
+    checkLoggedIn();
+  }, []);
 
   const signIn = async (userData) => {
     const result = await fetchApi('/signin', 'post', userData)
@@ -92,12 +107,12 @@ function LoginProvider(props) {
       chordProgression: prog,
     }
     const result = await fetchApi(
-      type === 'update' ? '/update': '/save',
-      type === 'update' ? 'put': 'post',
+      type === 'update' ? '/update' : '/save',
+      type === 'update' ? 'put' : 'post',
       songObj)
 
     if (result !== 'error') {
-      if(type === 'new') {
+      if (type === 'new') {
         setSongs(arr => [...arr, result.data])
         setOpenSongId(result.data.id)
       }
@@ -108,21 +123,21 @@ function LoginProvider(props) {
   }
 
   const newSong = async () => {
-    const result = await fetchApi('/close','get')
-    if(result !== 'error') {
+    const result = await fetchApi('/close', 'get')
+    if (result !== 'error') {
       reset();
       setOpenSongId(false);
       handleTempoChange(120);
       setDegrees(70);
       setProg(['I', 'V', 'vi', 'IV']);
-      const titles = songs.map(({title}) => title)
+      const titles = songs.map(({ title }) => title)
       let newTitle = 'New Song'
       let i = 1;
-      while(titles.includes(newTitle)) {
+      while (titles.includes(newTitle)) {
         newTitle = `New Song ${i}`;
         i++;
       }
-      
+
       setTitle(newTitle);
       return 'success';
     } else {
@@ -151,7 +166,7 @@ function LoginProvider(props) {
   }
 
   useEffect(() => console.log('note switches use effect', noteSwitches), [noteSwitches])
-  
+
 
   const rename = async newTitle => {
     if (songs.length) {
@@ -263,7 +278,7 @@ function LoginProvider(props) {
       }
     }
     Tone.Transport.stop();
-    if(!skip) {
+    if (!skip) {
       const noteObj = {
         high: {}, mid: {}, low: {}, bassHigh: {}, bassLow: {}, cymbal: {}, snareDrum: {}, bassDrum: {}
       }
@@ -306,7 +321,9 @@ function LoginProvider(props) {
     rename,
     openSongId,
     deleteSong,
-    newSong
+    newSong,
+    showForm,
+    setShowForm
   }
 
   return (

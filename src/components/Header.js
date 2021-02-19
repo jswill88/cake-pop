@@ -1,56 +1,59 @@
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { Context } from '../context/context';
-
 import SignInForm from './SignInForm';
 
-const styles = {
-  border: '2px solid black',
-  width: '200px',
-  fontSize: '1em',
-  textAlign: 'center'
-}
+import { Row, Col, Typography, Button } from 'antd';
 
-export default function Header() {
-  const [showForm, setShowForm] = useState(false);
+const { Title } = Typography;
+
+export default function Heading() {
+
   const {
     saveSong,
     logout,
     user,
     loggedIn,
-    title,
     openSongId,
-    newSong
+    newSong,
+    setShowForm
   } = useContext(Context);
 
   return (
-    <header>
-      <h1 style={{
-        fontFamily: 'monospace',
-        textAlign: 'center',
-      }}>
-        32 Beat Processor
-      </h1>
-      <h2>
-        {title}
-      </h2>
-      {loggedIn && <p>hi {user}</p>}
+    <Row
+      className="header"
+      justify="space-between"
+      align="middle"
+
+    >
+      <Col span={4}>
+        <Title
+          level={4}
+          style={{ color: '#FFFFFF' }}
+        >
+          32 Beat Processor
+
+        </Title>
+      </Col>
+
+      {/* <Col
+      span={4}
+      offset={8}
+      >Next Col</Col> */}
+      {loggedIn && <p>Hi {user}</p>}
       {!loggedIn ?
         <>
-          {/* <h1
-            onClick={() => {
-              signUp({ test: 'ing' });
-            }}
-            style={{ ...styles, color: 'black' }}
-          >Sign Up
-          </h1> */}
-          {!showForm ?
-            <h1
-              onClick={() => setShowForm(true)}
-              style={{ ...styles, color: 'black' }}
-            >Sign In
-         </h1> :
-            <SignInForm setShowForm={setShowForm} />
-          }
+          <Col span={2}>
+            <Button
+              type="primary"
+              onClick={(e) => {
+                e.preventDefault()
+                setShowForm(true)}
+              }
+            >
+              Sign In
+            </Button>
+            <SignInForm />
+          </Col>
         </>
         :
         <>
@@ -74,6 +77,6 @@ export default function Header() {
         </>
 
       }
-    </header>
+    </Row>
   )
 }

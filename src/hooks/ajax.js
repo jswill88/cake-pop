@@ -15,7 +15,7 @@ export default function useFetch() {
       return result
 
     } catch (e) {
-      console.log(e)
+      console.log(e.name)
       return 'error'
     }
   }
