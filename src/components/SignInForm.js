@@ -6,7 +6,6 @@ const { Link } = Typography;
 
 export default function SignInForm() {
   const [showSignUp, setShowSignUp] = useState(false)
-  // const [signInForm] = Form.useForm();
   const [form] = Form.useForm();
 
   const { signIn, signUp, showForm, setShowForm } = useContext(Context)

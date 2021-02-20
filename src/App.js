@@ -1,10 +1,11 @@
 import Synth from './components/Synth';
 import Heading from './components/Header';
-// import SignInForm from './components/SignInForm'
+
 import LoginProvider from './context/context';
 import { Layout } from 'antd';
 import "antd/dist/antd.css";
-const { Header, Footer } = Layout;
+import SubHeader from './components/SubHeader';
+const { Header, Footer, Content } = Layout;
 
 function App() {
   return (
@@ -13,8 +14,13 @@ function App() {
         <Header>
           <Heading />
         </Header>
-        {/* <SignInForm /> */}
-        <Synth />
+        <Content
+          style={{padding: '1rem'}}
+        >
+          <SubHeader />
+          <Synth />
+        </Content>
+
         <Footer>
 
         </Footer>

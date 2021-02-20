@@ -21,24 +21,20 @@ export default function Synth() {
     loopLength,
     setLoopLength,
     tempo,
-    // setTempo,
     open,
     handleTempoChange,
     Tone,
     degrees,
     setDegrees,
-    title,
-    // setTitle,
     currentBeat,
     setCurrentBeat,
     reset,
     NOTES,
     makeSynth,
-    rename
   } = useContext(Context)
 
 
-  const titleForm = useRef(title)
+
   const mousePositions = useRef({});
   const dynaTempo = useRef(120)
 
@@ -231,21 +227,6 @@ export default function Synth() {
           }}
         ></div>
       </div>
-
-      <label>Title:</label>
-      <form
-        onSubmit={e => {
-          e.preventDefault();
-          rename(titleForm.current);
-        }}
-      >
-        <input
-          type="text"
-          defaultValue={title}
-          onChange={e => titleForm.current = e.target.value}
-        />
-        <button type="submit">Rename</button>
-      </form>
 
       <span>
         Tempo:{' '}
