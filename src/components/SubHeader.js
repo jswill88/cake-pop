@@ -14,6 +14,7 @@ import {
 import { DeleteOutlined } from '@ant-design/icons';
 import { Context } from '../context/context';
 import SongDropDown from './SongDropDown';
+import PrimaryButtons from './PrimaryButtons';
 
 const { Title, Paragraph } = Typography;
 
@@ -48,9 +49,11 @@ export default function SubHeader() {
     <>
       <Row
         gutter={8}
+        align="middle"
       >
         <Col
           span={8}
+        // style={{backgroundColor: 'lightblue'}}
         >
           <Title
             level={3}
@@ -65,16 +68,17 @@ export default function SubHeader() {
             {title}
           </Title>
 
+          <Paragraph>
+            {loggedIn ? `Hi, ${user}` : 'Sign in to save'}
+          </Paragraph>
           {loggedIn &&
             <>
-              <Paragraph>
-                Hi, {user}
-              </Paragraph>
               <SongDropDown />
               {!openSongId ?
                 <Button
                   onClick={() => saveSong('new')}
                   size="small"
+                  type="link"
                 >
                   Save
                 </Button>
@@ -83,13 +87,14 @@ export default function SubHeader() {
                   <Button
                     onClick={() => saveSong('update')}
                     size="small"
+                    type="link"
                   >
                     Save
                   </Button>
                   <Button
-                    // onClick={() => saveSong('new')}
                     onClick={() => setShowSaveAsModal(true)}
                     size="small"
+                    type="link"
                   >
                     Save As
                   </Button>
@@ -117,7 +122,7 @@ export default function SubHeader() {
                         ]}
                       >
                         <Input
-                        placeholder={`Copy of ${title}`}
+                          placeholder={`Copy of ${title}`}
                         />
                       </Form.Item>
 
@@ -137,6 +142,7 @@ export default function SubHeader() {
                   >
                     <Button
                       size="small"
+                      type="link"
                     >
                       New
                   </Button>
@@ -150,6 +156,7 @@ export default function SubHeader() {
                       size="small"
                       icon={<DeleteOutlined />}
                       danger
+                      type="link"
                     />
                   </Popconfirm>
                 </>
@@ -157,9 +164,13 @@ export default function SubHeader() {
             </>
           }
         </Col>
+        <Col
+          span={8}
+        >
+          <PrimaryButtons />
+        </Col>
       </Row>
       <Divider />
     </>
-
   );
 }

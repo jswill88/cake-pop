@@ -15,7 +15,7 @@ function App() {
           <Heading />
         </Header>
         <Content
-          style={{padding: '1rem'}}
+          style={{padding: '1rem 3rem'}}
         >
           <SubHeader />
           <Synth />

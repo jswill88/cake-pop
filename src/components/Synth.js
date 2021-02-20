@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef, useContext } from 'react';
 import he from 'he';
 import NoteRow from './NoteRow';
-import PrimaryButtons from './PrimaryButtons';
 import { BASS, CHORDS } from '../lib/noteInfo';
 import { Context } from '../context/context';
 
@@ -138,13 +137,6 @@ export default function Synth() {
       onMouseUpCapture={() => endChanging()}
       onMouseUp={() => endChanging()}
     >
-
-      <PrimaryButtons
-        Tone={Tone}
-        setCurrentBeat={setCurrentBeat}
-        tempo={tempo}
-        reset={reset}
-      />
 
       <div style={{ display: 'flex' }}>
         {prog.map((progChord, i) =>

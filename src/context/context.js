@@ -11,7 +11,7 @@ export const Context = createContext();
 function LoginProvider(props) {
   const [prog, setProg] = useState(['I', 'V', 'vi', 'IV'])
   const [tempo, setTempo] = useState(120);
-  const [title, setTitle] = useState('Untitled')
+  const [title, setTitle] = useState('New Song')
   const [noteSwitches, setNoteSwitches] = useState({});
   const [loopLength, setLoopLength] = useState(12);
   const [loggedIn, setLoggedIn] = useState(false);
@@ -85,6 +85,8 @@ function LoginProvider(props) {
       setUser('')
       setSongs([])
       setOpenSongId(false)
+      setTitle('New Song')
+      reset();
     } else {
       message.error(result.message)
       return 'error';
