@@ -1,16 +1,8 @@
-import { useState, useContext } from 'react';
-import { Context } from '../context/context'
-
+import { useState } from 'react';
 
 export default function PrimaryButtons({ Tone, setCurrentBeat, tempo, reset }) {
 
   const [playStatus, setPlayStatus] = useState('stop');
-
-  const {
-    openSongId,
-    deleteSong,
-  } = useContext(Context);
-
 
   const startAudio = async () => {
     if (playStatus === 'stop') setCurrentBeat(-1)
@@ -65,14 +57,6 @@ export default function PrimaryButtons({ Tone, setCurrentBeat, tempo, reset }) {
         }}
         style={{ ...styles, color: 'orange' }}
       >Reset</h1>
-      {openSongId && 
-       <h1
-       onClick={() => {
-        deleteSong();
-       }}
-       style={{ ...styles, color: 'grey' }}
-     >Delete Song</h1>
-      }
       
     </section>
   )

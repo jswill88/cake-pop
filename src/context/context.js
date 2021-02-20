@@ -4,6 +4,7 @@ import axios from 'axios';
 import * as Tone from 'tone';
 import { BASS, CHORDS } from '../lib/noteInfo';
 import { SYNTHS, synthTypes } from '../lib/synthInfo';
+import { message } from 'antd';
 
 export const Context = createContext();
 
@@ -40,6 +41,7 @@ function LoginProvider(props) {
   useEffect(() => {
     const checkLoggedIn = async () => {
       const result = await axios.get(process.env.REACT_APP_URL + '/api/v1/loggedIn')
+      console.log(result)
       if (result.data) {
         setSongs(result.data.songList);
         setUser(result.data.username);
@@ -51,36 +53,40 @@ function LoginProvider(props) {
 
   const signIn = async (userData) => {
     const result = await fetchApi('/signin', 'post', userData)
-
-    if (result !== 'error') {
+    console.log(result)
+    if (!result.error) {
+      console.log('success')
       setLoggedIn(true)
       setUser(result.data.username);
       setSongs(result.data.songs);
       return 'success';
     } else {
+      message.error(result.message)
       return 'error';
     }
   }
 
   const signUp = async (userData) => {
     const result = await fetchApi('/signup', 'post', userData);
-    if (result !== 'error') {
+    if (!result.error) {
       setLoggedIn(true)
       setUser(userData.username);
       return 'success';
     } else {
+      message.error(result.message)
       return 'error';
     }
   }
 
   const logout = async () => {
     const result = await fetchApi('/logout', 'get')
-    if (result !== 'error') {
+    if (!result.error) {
       setLoggedIn(false)
       setUser('')
       setSongs([])
       setOpenSongId(false)
     } else {
+      message.error(result.message)
       return 'error';
     }
   }
@@ -111,20 +117,21 @@ function LoginProvider(props) {
       type === 'update' ? 'put' : 'post',
       songObj)
 
-    if (result !== 'error') {
+    if (!result.error) {
       if (type === 'new') {
         setSongs(arr => [...arr, result.data])
         setOpenSongId(result.data.id)
       }
       return 'success'
     } else {
+      message.error(result.message)
       return 'error';
     }
   }
 
   const newSong = async () => {
     const result = await fetchApi('/close', 'get')
-    if (result !== 'error') {
+    if (!result.error) {
       reset();
       setOpenSongId(false);
       handleTempoChange(120);
@@ -141,6 +148,7 @@ function LoginProvider(props) {
       setTitle(newTitle);
       return 'success';
     } else {
+      message.error(result.message)
       return 'error';
     }
 
@@ -148,7 +156,7 @@ function LoginProvider(props) {
 
   const open = async (songId) => {
     const result = await fetchApi('/open', 'post', { songId })
-    if (result !== 'error') {
+    if (!result.error) {
       const { data: songObj } = result
       setProg(songObj.chordProgression);
       reset(true);
@@ -161,6 +169,7 @@ function LoginProvider(props) {
 
       return 'success'
     } else {
+      message.error(result.message)
       return 'error';
     }
   }
@@ -174,7 +183,8 @@ function LoginProvider(props) {
       if (songInList.length) {
         const { id: songId } = songInList[0];
         const result = await fetchApi('/rename', 'patch', { newTitle, songId });
-        if (result === 'error') {
+        if (result.error) {
+          message.error(result.message)
           return 'error';
         } else {
           setTitle(result.data.newTitle)
@@ -200,7 +210,7 @@ function LoginProvider(props) {
     const result = await fetchApi('/deletesong', 'delete', {
       songIdToDelete: openSongId
     })
-    if (result !== 'error') {
+    if (!result.error) {
       reset();
       setSongs(arr => arr.filter(({ id }) => id !== openSongId))
       setOpenSongId(false);
@@ -210,6 +220,7 @@ function LoginProvider(props) {
       setProg(['I', 'V', 'vi', 'IV']);
       return 'success';
     } else {
+      message.error(result.message)
       return 'error'
     }
   }
@@ -256,8 +267,7 @@ function LoginProvider(props) {
       chord = 0;
       counter = 0;
     }
-    console.log('buttons pressed', buttonsPressed)
-    // setNoteSwitches(buttonsPressed);
+
     return buttonsPressed;
   }
 

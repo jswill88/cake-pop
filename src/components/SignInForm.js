@@ -6,24 +6,23 @@ const { Link } = Typography;
 
 export default function SignInForm() {
   const [showSignUp, setShowSignUp] = useState(false)
-  const [signInForm] = Form.useForm();
-  const [signUpForm] = Form.useForm();
+  const [form] = Form.useForm();
 
   const { signIn, signUp, showForm, setShowForm } = useContext(Context)
 
   const signInHandler = async () => {
     try {
-      const { email, password } = await signInForm.validateFields();
+      const { email, password } = await form.validateFields();
       let result = await signIn({ email, password })
       if (result !== 'error') closeModal();
     } catch (e) {
-      console.log(e.code)
+      console.log(e)
     }
   }
   const signUpHandler = async () => {
     try {
-      const { email, username, password, passwordVerify } = await signUpForm.validateFields();
-      console.log(email, username)
+      const { email, username, signUpPassword: password, passwordVerify } = await form.validateFields();
+      console.log(email, username, password, passwordVerify)
       const result = await signUp({
         email, username, password, passwordVerify
       });
@@ -34,7 +33,7 @@ export default function SignInForm() {
   }
 
   const closeModal = () => {
-    signInForm.resetFields();
+    form.resetFields();
     setShowForm(false)
   }
 
@@ -73,7 +72,7 @@ export default function SignInForm() {
       {!showSignUp ?
         <Form
           layout="vertical"
-          form={signInForm}
+          form={form}
           preserve={false}
         >
           <Form.Item
@@ -116,7 +115,7 @@ export default function SignInForm() {
         </Form>
         :
         <Form
-          form={signUpForm}
+          form={form}
           layout="vertical"
           preserve={false}
         >
@@ -146,7 +145,7 @@ export default function SignInForm() {
           </Form.Item>
           <Form.Item
             label="Password"
-            name="password"
+            name="signUpPassword"
             rules={passwordRules}
             hasFeedback
 
@@ -166,7 +165,7 @@ export default function SignInForm() {
               },
               ({ getFieldValue }) => ({
                 validator(_, password) {
-                  if (!password || getFieldValue('password') === password) {
+                  if (!password || getFieldValue('signUpPassword') === password) {
                     return Promise.resolve();
                   }
                   return Promise.reject('Passwords must match');

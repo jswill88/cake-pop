@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { Context } from '../context/context';
 import SignInForm from './SignInForm';
+import './Header.css'
 
 import { Row, Col, Typography, Button } from 'antd';
 
@@ -9,12 +10,12 @@ const { Title } = Typography;
 export default function Heading() {
 
   const {
-    saveSong,
+    // saveSong,
     logout,
-    user,
+    // user,
     loggedIn,
-    openSongId,
-    newSong,
+    // openSongId,
+    // newSong,
     setShowForm
   } = useContext(Context);
 
@@ -23,60 +24,51 @@ export default function Heading() {
       className="header"
       justify="space-between"
       align="middle"
-
     >
-      <Col span={4}>
+      <Col span={6}
+      >
         <Title
-          level={4}
-          style={{ color: '#FFFFFF' }}
+          level={2}
+          style={{
+            color: '#FFFFFF',
+            margin: 0,
+            fontFamily: '\'Sniglet\', cursive'
+          }}
         >
-          32 Beat Processor
-
+          🎂 Cake Mix
         </Title>
       </Col>
-
-      {/* <Col
-      span={4}
-      offset={8}
-      >Next Col</Col> */}
-      {loggedIn && <p>Hi {user}</p>}
-      {!loggedIn ?
-        <>
-          <Col span={2}>
+      <>
+        <Col
+        span={3}
+        >
+          {!loggedIn ?
+            <>
+              <Button
+                style={{ width: '100%' }}
+                type="primary"
+                onClick={() => {
+                  setShowForm(true)
+                }}
+              >
+                Sign In
+            </Button>
+              <SignInForm />
+            </>
+            :
             <Button
+              style={{ width: '100%' }}
               type="primary"
-              onClick={(e) => {
-                e.preventDefault()
-                setShowForm(true)}
+              onClick={() => {
+                logout();
+              }
               }
             >
-              Sign In
+              Log Out
             </Button>
-            <SignInForm />
-          </Col>
-        </>
-        :
-        <>
-          <h1
-            onClick={() => logout()}
-          >Log Out</h1>
-          <h1
-            onClick={() => saveSong('new')}
-          >Save{openSongId && ' As'}</h1>
-          {openSongId &&
-            <>
-              <h1
-                onClick={() => saveSong('update')}
-              >Save Changes</h1>
-              <h1
-                onClick={() => newSong()}
-              >Start New Song</h1>
-            </>
           }
-
-        </>
-
-      }
+        </Col>
+      </>
     </Row>
   )
 }

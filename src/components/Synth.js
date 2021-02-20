@@ -5,15 +5,12 @@ import PrimaryButtons from './PrimaryButtons';
 import { BASS, CHORDS } from '../lib/noteInfo';
 import { Context } from '../context/context';
 
-
 export default function Synth() {
 
   const [down, setDown] = useState(false);
   const [showTempoInput, setShowTempoInput] = useState(false);
 
   const {
-    songs,
-    loggedIn,
     noteSwitches,
     setNoteSwitches,
     prog,
@@ -21,27 +18,19 @@ export default function Synth() {
     loopLength,
     setLoopLength,
     tempo,
-    // setTempo,
-    open,
     handleTempoChange,
     Tone,
     degrees,
     setDegrees,
-    title,
-    // setTitle,
     currentBeat,
     setCurrentBeat,
     reset,
     NOTES,
     makeSynth,
-    rename
   } = useContext(Context)
 
-
-  const titleForm = useRef(title)
   const mousePositions = useRef({});
   const dynaTempo = useRef(120)
-
 
   useEffect(() => console.log(prog), [prog])
 
@@ -171,25 +160,6 @@ export default function Synth() {
           </select>
         )}
       </div>
-      {loggedIn &&
-        <>
-          <label>Your Songs: </label>
-          <select
-            onChange={(e) => open(e.target.value)}
-          >
-            {songs.map(({ title, id }, i) =>
-              <option
-                key={i}
-                value={id}
-              >
-                {title}
-
-              </option>
-            )}
-
-          </select>
-        </>
-      }
       <label>Number of beats:{' '}
         <select
           defaultValue={loopLength}
@@ -231,21 +201,6 @@ export default function Synth() {
           }}
         ></div>
       </div>
-
-      <label>Title:</label>
-      <form
-        onSubmit={e => {
-          e.preventDefault();
-          rename(titleForm.current);
-        }}
-      >
-        <input
-          type="text"
-          defaultValue={title}
-          onChange={e => titleForm.current = e.target.value}
-        />
-        <button type="submit">Rename</button>
-      </form>
 
       <span>
         Tempo:{' '}
