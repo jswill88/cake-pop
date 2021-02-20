@@ -38,12 +38,6 @@ export default function Heading() {
           🎂 Cake Mix
         </Title>
       </Col>
-
-      {/* <Col
-      span={4}
-      offset={8}
-      >Next Col</Col> */}
-      {/* {loggedIn && <p>Hi {user}</p>} */}
       <>
         <Col
         span={3}
@@ -75,27 +69,6 @@ export default function Heading() {
           }
         </Col>
       </>
-      <>
-        {/* <h1
-          onClick={() => logout()}
-        >Log Out</h1> */}
-        {/* <h1
-            onClick={() => saveSong('new')}
-          >Save{openSongId && ' As'}</h1>
-          {openSongId &&
-            <>
-              <h1
-                onClick={() => saveSong('update')}
-              >Save Changes</h1>
-              <h1
-                onClick={() => newSong()}
-              >Start New Song</h1>
-            </>
-          } */}
-
-      </>
-
-      {/* } */}
     </Row>
   )
 }

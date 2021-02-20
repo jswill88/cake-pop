@@ -41,6 +41,7 @@ function LoginProvider(props) {
   useEffect(() => {
     const checkLoggedIn = async () => {
       const result = await axios.get(process.env.REACT_APP_URL + '/api/v1/loggedIn')
+      console.log(result)
       if (result.data) {
         setSongs(result.data.songList);
         setUser(result.data.username);

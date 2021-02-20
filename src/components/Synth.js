@@ -5,15 +5,12 @@ import PrimaryButtons from './PrimaryButtons';
 import { BASS, CHORDS } from '../lib/noteInfo';
 import { Context } from '../context/context';
 
-
 export default function Synth() {
 
   const [down, setDown] = useState(false);
   const [showTempoInput, setShowTempoInput] = useState(false);
 
   const {
-    songs,
-    loggedIn,
     noteSwitches,
     setNoteSwitches,
     prog,
@@ -21,7 +18,6 @@ export default function Synth() {
     loopLength,
     setLoopLength,
     tempo,
-    open,
     handleTempoChange,
     Tone,
     degrees,
@@ -33,11 +29,8 @@ export default function Synth() {
     makeSynth,
   } = useContext(Context)
 
-
-
   const mousePositions = useRef({});
   const dynaTempo = useRef(120)
-
 
   useEffect(() => console.log(prog), [prog])
 
@@ -167,25 +160,6 @@ export default function Synth() {
           </select>
         )}
       </div>
-      {loggedIn &&
-        <>
-          <label>Your Songs: </label>
-          <select
-            onChange={(e) => open(e.target.value)}
-          >
-            {songs.map(({ title, id }, i) =>
-              <option
-                key={i}
-                value={id}
-              >
-                {title}
-
-              </option>
-            )}
-
-          </select>
-        </>
-      }
       <label>Number of beats:{' '}
         <select
           defaultValue={loopLength}
