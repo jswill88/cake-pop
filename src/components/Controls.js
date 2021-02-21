@@ -1,8 +1,10 @@
 import { useContext } from 'react';
 import { Context } from '../context/context';
-import { Button, Select } from 'antd';
+import { Button, Select, Typography } from 'antd';
+
 
 const { Option } = Select;
+const { Text } = Typography
 
 export default function Controls() {
 
@@ -20,10 +22,11 @@ export default function Controls() {
           reset();
           setPlayStatus('stop')
         }}
+        size="small"
       >Reset</Button>
-      {/* <label>Number of beats:{' '} */}
+      <Text>Loop Length: </Text>
         <Select
-          title="Loop Length"
+        size="small"
           defaultValue={loopLength}
           onChange={val => {
             reset();
