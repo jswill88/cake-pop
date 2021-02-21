@@ -25,6 +25,7 @@ export default function Controls() {
   } = useContext(Context)
 
   const [editTempo, setEditTempo] = useState(false);
+  const [tempoError, setTempoError]  = useState(false);
 
 
   const [form] = Form.useForm();
@@ -32,9 +33,18 @@ export default function Controls() {
   const updateTempo = async () => {
     try {
       const { tempo } = await form.validateFields();
-      console.log(tempo)
       handleTempoChange(tempo)
       setEditTempo(false)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  const checkTempoErrors = async () => {
+    try {
+      const { tempo } = await form.validateFields();
+      if (!/^\d+$/.test(tempo) || tempo < 50 || tempo > 320) setTempoError(true)
+      else setTempoError(false)
     } catch (e) {
       console.log(e)
     }
@@ -57,16 +67,13 @@ export default function Controls() {
             title: "Enter a number between 50 and 320",
             placement: "bottom"
           }}
-          // messageVariables={{ another: 'good' }}
+          validateStatus={tempoError ? 'error' : 'success'}
+
           initialValue={tempo}
-          rules={[{
-            type: 'number',
-            // transform: true,
-            // min: 50,
-            // max: 320,
-            // message: "Out of range",
-          }
-          ]}
+          // rules={[{
+          //   type: 'number',
+          // }
+          // ]}
         >
           {!editTempo ?
             <Text
@@ -75,6 +82,7 @@ export default function Controls() {
             >{tempo}</Text> :
             <InputNumber
               size="small"
+              onChange={() => checkTempoErrors()}
             />
 
           }
