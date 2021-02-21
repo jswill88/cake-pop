@@ -278,7 +278,7 @@ function LoginProvider(props) {
   }
 
   const handleTempoChange = newTempo => {
-    const tempo = newTempo < 50 ? 50 : Math.min(350, newTempo)
+    const tempo = newTempo < 50 ? 50 : Math.min(320, newTempo)
     Tone.Transport.bpm.value = tempo;
     setTempo(tempo)
   }

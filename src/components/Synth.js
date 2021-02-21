@@ -7,7 +7,6 @@ import { Context } from '../context/context';
 export default function Synth() {
 
   const [down, setDown] = useState(false);
-  const [showTempoInput, setShowTempoInput] = useState(false);
 
   const {
     noteSwitches,
@@ -15,7 +14,6 @@ export default function Synth() {
     prog,
     setProg,
     loopLength,
-    tempo,
     handleTempoChange,
     Tone,
     degrees,
@@ -27,7 +25,6 @@ export default function Synth() {
   } = useContext(Context)
 
   const mousePositions = useRef({});
-  const dynaTempo = useRef(120)
 
   useEffect(() => console.log(prog), [prog])
 
@@ -176,42 +173,6 @@ export default function Synth() {
           }}
         ></div>
       </div>
-
-      <span>
-        Tempo:{' '}
-      </span>
-      {showTempoInput ?
-        <>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault()
-              handleTempoChange(dynaTempo.current)
-              setDegrees(dynaTempo.current - 50)
-              setShowTempoInput(false);
-            }}
-          >
-            <input
-              type="number"
-              min={50}
-              max={320}
-              defaultValue={tempo}
-              onChangeCapture={e => {
-                dynaTempo.current = e.target.value
-              }}
-            />
-            <input
-              type="submit"
-              value="Set"
-            />
-          </form>
-        </> :
-        <span
-          onClick={() => setShowTempoInput(true)}
-          style={{ border: '1px solid black', width: '50px', textAlign: 'center' }}
-        >
-          {degrees + 50}
-        </span>
-      }
 
       {
         ('high' in noteSwitches) &&
