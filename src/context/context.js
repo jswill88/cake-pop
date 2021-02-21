@@ -11,7 +11,7 @@ export const Context = createContext();
 function LoginProvider(props) {
   const [prog, setProg] = useState(['I', 'V', 'vi', 'IV'])
   const [tempo, setTempo] = useState(120);
-  const [title, setTitle] = useState('Untitled')
+  const [title, setTitle] = useState('New Song')
   const [noteSwitches, setNoteSwitches] = useState({});
   const [loopLength, setLoopLength] = useState(12);
   const [loggedIn, setLoggedIn] = useState(false);
@@ -21,6 +21,7 @@ function LoginProvider(props) {
   const [currentBeat, setCurrentBeat] = useState(-1);
   const [openSongId, setOpenSongId] = useState(false);
   const [showForm, setShowForm] = useState(false);
+  const [playStatus, setPlayStatus] = useState('stop');
 
   const fetchApi = useFetch();
 
@@ -85,6 +86,8 @@ function LoginProvider(props) {
       setUser('')
       setSongs([])
       setOpenSongId(false)
+      setTitle('New Song')
+      reset();
     } else {
       message.error(result.message)
       return 'error';
@@ -94,7 +97,7 @@ function LoginProvider(props) {
    * 
    * @param {String} type Should be 'new' or 'update'
    */
-  const saveSong = async (type) => {
+  const saveSong = async (type, newTitle) => {
     const noteObj = {};
     for (let row in noteSwitches) {
       noteObj[row] = {}
@@ -106,7 +109,7 @@ function LoginProvider(props) {
     }
 
     const songObj = {
-      title: title,
+      title: newTitle || title,
       buttonsPressed: noteObj,
       bpm: tempo,
       numberOfBeats: loopLength,
@@ -121,7 +124,9 @@ function LoginProvider(props) {
       if (type === 'new') {
         setSongs(arr => [...arr, result.data])
         setOpenSongId(result.data.id)
+        setTitle(result.data.title)
       }
+      message.success(`${result.data.title} successfully saved`)
       return 'success'
     } else {
       message.error(result.message)
@@ -218,6 +223,7 @@ function LoginProvider(props) {
       handleTempoChange(120);
       setDegrees(70);
       setProg(['I', 'V', 'vi', 'IV']);
+      message.success(`${result.data.title} successfullly deleted`)
       return 'success';
     } else {
       message.error(result.message)
@@ -333,7 +339,9 @@ function LoginProvider(props) {
     deleteSong,
     newSong,
     showForm,
-    setShowForm
+    setShowForm,
+    playStatus,
+    setPlayStatus,
   }
 
   return (

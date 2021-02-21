@@ -1,8 +1,22 @@
-import { useState } from 'react';
+import { useContext } from 'react';
+import { Context } from '../context/context';
+import { Button, Space, Row } from 'antd';
 
-export default function PrimaryButtons({ Tone, setCurrentBeat, tempo, reset }) {
+import {
+  CaretRightOutlined,
+  BorderOutlined,
+  PauseOutlined,
+} from '@ant-design/icons';
 
-  const [playStatus, setPlayStatus] = useState('stop');
+export default function PrimaryButtons() {
+
+  const {
+    Tone,
+    setCurrentBeat,
+    tempo,
+    playStatus,
+    setPlayStatus
+  } = useContext(Context);
 
   const startAudio = async () => {
     if (playStatus === 'stop') setCurrentBeat(-1)
@@ -23,41 +37,41 @@ export default function PrimaryButtons({ Tone, setCurrentBeat, tempo, reset }) {
     setCurrentBeat(-2);
   }
 
-  const styles = {
-    border: '2px solid black',
-    width: '200px',
-    height: '30px',
-    textAlign: 'center'
-  }
-
   return (
-    <section>
-      {['pause', 'stop'].includes(playStatus) ?
-        <h1
-          onClick={() => startAudio()}
-          style={{ ...styles, color: 'limegreen' }}
-        >
-          Play
-      </h1> :
-        <h1
-          onClick={() => pauseAudio()}
-          style={{ ...styles, color: 'blue' }}
-        >
-          Pause
-        </h1>
-      }
-      <h1
-        onClick={() => stopAudio()}
-        style={{ ...styles, color: 'red' }}
-      >Stop</h1>
-      <h1
-        onClick={() => {
-          reset();
-          setPlayStatus('stop')
-        }}
-        style={{ ...styles, color: 'orange' }}
-      >Reset</h1>
-      
-    </section>
+    <Row
+      justify="center"
+    >
+      <Space
+        size="large"
+      >
+        {['pause', 'stop'].includes(playStatus) ?
+          <ControlButton
+            callback={startAudio}
+            icon={<CaretRightOutlined />}
+          />
+          :
+
+          <ControlButton
+            callback={pauseAudio}
+            icon={<PauseOutlined />}
+          />
+        }
+        <ControlButton
+            callback={stopAudio}
+            icon={<BorderOutlined />}
+            danger={true}
+          />
+      </Space>
+    </Row>
   )
+}
+
+function ControlButton({ icon, callback, danger }) {
+  return <Button
+    size="large"
+    onClick={() => callback()}
+    icon={icon}
+    danger={danger ? true : false}
+    shape="round"
+  />
 }

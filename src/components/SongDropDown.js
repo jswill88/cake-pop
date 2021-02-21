@@ -27,9 +27,12 @@ export default function SongDropDown() {
 
   return (
 
-    <Dropdown overlay={menu}>
+    <Dropdown
+    overlay={menu}
+    trigger="click"
+    >
       <Button
-        // type="link"
+        type="link"
         size="small"
       >
         Open<DownOutlined />

@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef, useContext } from 'react';
 import he from 'he';
 import NoteRow from './NoteRow';
-import PrimaryButtons from './PrimaryButtons';
 import { BASS, CHORDS } from '../lib/noteInfo';
 import { Context } from '../context/context';
 
@@ -16,7 +15,6 @@ export default function Synth() {
     prog,
     setProg,
     loopLength,
-    setLoopLength,
     tempo,
     handleTempoChange,
     Tone,
@@ -24,7 +22,6 @@ export default function Synth() {
     setDegrees,
     currentBeat,
     setCurrentBeat,
-    reset,
     NOTES,
     makeSynth,
   } = useContext(Context)
@@ -139,13 +136,6 @@ export default function Synth() {
       onMouseUp={() => endChanging()}
     >
 
-      <PrimaryButtons
-        Tone={Tone}
-        setCurrentBeat={setCurrentBeat}
-        tempo={tempo}
-        reset={reset}
-      />
-
       <div style={{ display: 'flex' }}>
         {prog.map((progChord, i) =>
           <select
@@ -160,21 +150,6 @@ export default function Synth() {
           </select>
         )}
       </div>
-      <label>Number of beats:{' '}
-        <select
-          defaultValue={loopLength}
-          onChangeCapture={e => {
-            reset();
-            setLoopLength(parseInt(e.target.value))
-          }}
-        >
-          {[8, 12, 16, 20, 24, 28, 32].map(beats =>
-            <option
-              key={beats}
-            >{beats}</option>
-          )}
-        </select>
-      </label>
       <div
         id="knob"
         style={{

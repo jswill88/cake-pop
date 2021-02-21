@@ -10,12 +10,8 @@ const { Title } = Typography;
 export default function Heading() {
 
   const {
-    // saveSong,
     logout,
-    // user,
     loggedIn,
-    // openSongId,
-    // newSong,
     setShowForm
   } = useContext(Context);
 
@@ -35,12 +31,12 @@ export default function Heading() {
             fontFamily: '\'Sniglet\', cursive'
           }}
         >
-          🎂 Cake Mix
+          🎂 Cake Pop
         </Title>
       </Col>
       <>
         <Col
-        span={3}
+          span={3}
         >
           {!loggedIn ?
             <>
@@ -52,7 +48,7 @@ export default function Heading() {
                 }}
               >
                 Sign In
-            </Button>
+              </Button>
               <SignInForm />
             </>
             :
