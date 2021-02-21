@@ -31,7 +31,7 @@ export default function Heading() {
             fontFamily: '\'Sniglet\', cursive'
           }}
         >
-          🎂 Cake Mix
+          🎂 Cake Pop
         </Title>
       </Col>
       <>

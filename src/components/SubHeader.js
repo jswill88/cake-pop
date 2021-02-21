@@ -15,9 +15,9 @@ import { DeleteOutlined } from '@ant-design/icons';
 import { Context } from '../context/context';
 import SongDropDown from './SongDropDown';
 import PrimaryButtons from './PrimaryButtons';
+import Controls from './Controls';
 
 const { Title, Paragraph } = Typography;
-
 
 export default function SubHeader() {
   const {
@@ -168,6 +168,11 @@ export default function SubHeader() {
           span={8}
         >
           <PrimaryButtons />
+        </Col>
+        <Col
+          span={8}
+        >
+          <Controls />
         </Col>
       </Row>
       <Divider />

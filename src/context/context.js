@@ -21,6 +21,7 @@ function LoginProvider(props) {
   const [currentBeat, setCurrentBeat] = useState(-1);
   const [openSongId, setOpenSongId] = useState(false);
   const [showForm, setShowForm] = useState(false);
+  const [playStatus, setPlayStatus] = useState('stop');
 
   const fetchApi = useFetch();
 
@@ -338,7 +339,9 @@ function LoginProvider(props) {
     deleteSong,
     newSong,
     showForm,
-    setShowForm
+    setShowForm,
+    playStatus,
+    setPlayStatus,
   }
 
   return (

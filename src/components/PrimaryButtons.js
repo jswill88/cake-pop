@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useContext } from 'react';
 import { Context } from '../context/context';
 import { Button, Space, Row } from 'antd';
 
@@ -14,9 +14,9 @@ export default function PrimaryButtons() {
     Tone,
     setCurrentBeat,
     tempo,
+    playStatus,
+    setPlayStatus
   } = useContext(Context);
-
-  const [playStatus, setPlayStatus] = useState('stop');
 
   const startAudio = async () => {
     if (playStatus === 'stop') setCurrentBeat(-1)
@@ -61,13 +61,6 @@ export default function PrimaryButtons() {
             icon={<BorderOutlined />}
             danger={true}
           />
-        {/* <h1
-        onClick={() => {
-          reset();
-          setPlayStatus('stop')
-        }}
-        style={{ ...styles, color: 'orange' }}
-      >Reset</h1> */}
       </Space>
     </Row>
   )
