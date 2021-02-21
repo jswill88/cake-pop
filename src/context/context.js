@@ -52,6 +52,24 @@ function LoginProvider(props) {
     checkLoggedIn();
   }, []);
 
+  useEffect(() => {
+    const noteObj = {
+      high: {}, mid: {}, low: {}, bassHigh: {}, bassLow: {}, cymbal: {}, snareDrum: {}, bassDrum: {}
+    }
+    for (let note in noteObj) {
+      for (let i = 0; i < loopLength; i++) noteObj[note][i] = false;
+    }
+    setNoteSwitches(noteObj)
+
+    const loop = new Tone.Loop(time => {
+      Tone.Draw.schedule(() => {
+        setCurrentBeat(beat => (beat + 1) % loopLength)
+      }, time)
+    }, '8n').start(0);
+
+    return () => loop.cancel();
+  }, [loopLength])
+
   const signIn = async (userData) => {
     const result = await fetchApi('/signin', 'post', userData)
     console.log(result)

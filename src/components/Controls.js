@@ -22,7 +22,6 @@ export default function Controls() {
     setLoopLength,
     tempo,
     handleTempoChange
-
   } = useContext(Context)
 
   const [editTempo, setEditTempo] = useState(false);

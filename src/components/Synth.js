@@ -17,9 +17,7 @@ export default function Synth() {
     handleTempoChange,
     Tone,
     degrees,
-    setDegrees,
-    currentBeat,
-    setCurrentBeat,
+    // setDegrees,
     NOTES,
     makeSynth,
   } = useContext(Context)
@@ -27,24 +25,6 @@ export default function Synth() {
   const mousePositions = useRef({});
 
   useEffect(() => console.log(prog), [prog])
-
-  useEffect(() => {
-    const noteObj = {
-      high: {}, mid: {}, low: {}, bassHigh: {}, bassLow: {}, cymbal: {}, snareDrum: {}, bassDrum: {}
-    }
-    for (let note in noteObj) {
-      for (let i = 0; i < loopLength; i++) noteObj[note][i] = false;
-    }
-    setNoteSwitches(noteObj)
-
-    const loop = new Tone.Loop(time => {
-      Tone.Draw.schedule(() => {
-        setCurrentBeat(beat => (beat + 1) % loopLength)
-      }, time)
-    }, '8n').start(0);
-
-    return () => loop.cancel();
-  }, [loopLength, setNoteSwitches, Tone.Draw, Tone.Loop, setCurrentBeat])
 
   const handleChordChange = (e, i) => {
     const newChord = he.encode(e.target.value);
@@ -88,25 +68,25 @@ export default function Synth() {
     })
   }
 
-  const changeDegree = (e) => {
-    if (down) {
-      const yPos = e.nativeEvent.y;
-      if (!mousePositions.current.bottom) {
-        const topDiff = Math.floor(degrees / 2.7);
-        const bottomDiff = 100 - topDiff;
-        const top = yPos + topDiff;
-        const bottom = yPos - bottomDiff;
-        mousePositions.current = { bottom, top };
-      } else {
-        if (yPos <= mousePositions.current.bottom) setDegrees(270);
-        else if (yPos >= mousePositions.current.top) setDegrees(0);
-        else {
-          const pct = (100 - (yPos - mousePositions.current.bottom)) / 100;
-          setDegrees(Math.floor(270 * pct));
-        }
-      }
-    }
-  };
+  // const changeDegree = (e) => {
+  //   if (down) {
+  //     const yPos = e.nativeEvent.y;
+  //     if (!mousePositions.current.bottom) {
+  //       const topDiff = Math.floor(degrees / 2.7);
+  //       const bottomDiff = 100 - topDiff;
+  //       const top = yPos + topDiff;
+  //       const bottom = yPos - bottomDiff;
+  //       mousePositions.current = { bottom, top };
+  //     } else {
+  //       if (yPos <= mousePositions.current.bottom) setDegrees(270);
+  //       else if (yPos >= mousePositions.current.top) setDegrees(0);
+  //       else {
+  //         const pct = (100 - (yPos - mousePositions.current.bottom)) / 100;
+  //         setDegrees(Math.floor(270 * pct));
+  //       }
+  //     }
+  //   }
+  // };
 
   const endChanging = () => {
     setDown(false);
@@ -127,10 +107,10 @@ export default function Synth() {
         cursor: !down ? 'auto' : 'ns-resize',
       }}
 
-      onMouseMove={(e) => changeDegree(e)}
-      onMouseLeave={() => setDown(false)}
-      onMouseUpCapture={() => endChanging()}
-      onMouseUp={() => endChanging()}
+      // onMouseMove={(e) => changeDegree(e)}
+      // onMouseLeave={() => setDown(false)}
+      // onMouseUpCapture={() => endChanging()}
+      // onMouseUp={() => endChanging()}
     >
 
       <div style={{ display: 'flex' }}>
@@ -181,13 +161,6 @@ export default function Synth() {
             <NoteRow
               key={noteRow}
               noteRow={noteRow}
-              noteSwitches={noteSwitches}
-              currentBeat={currentBeat}
-              Tone={Tone}
-              setNoteSwitches={setNoteSwitches}
-              loopLength={loopLength}
-              NOTES={NOTES}
-              makeSynth={makeSynth}
             />
           )}
         </>

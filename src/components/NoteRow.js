@@ -5,14 +5,16 @@ import { useContext } from 'react'
 
 export default function NoteRow({
   noteRow,
-  noteSwitches,
-  currentBeat,
-  setNoteSwitches,
-  loopLength,
-  makeSynth,
-  NOTES
 }) {
-  const { Tone } = useContext(Context)
+  const {
+    Tone,
+    currentBeat,
+    NOTES,
+    makeSynth,
+    loopLength,
+    noteSwitches,
+    setNoteSwitches
+  } = useContext(Context)
 
   const addSynth = (beat, note, row) => {
     if (!noteSwitches[row][beat]) {
