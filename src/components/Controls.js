@@ -1,12 +1,17 @@
 import { useContext, useState } from 'react';
+import he from 'he';
 import { Context } from '../context/context';
+import { CHORDS } from '../lib/noteInfo';
 import {
   Button,
   Select,
   Typography,
   InputNumber,
   Form,
-  Tooltip
+  Tooltip,
+  Row,
+  Space,
+  Card
 } from 'antd';
 
 import { QuestionCircleOutlined } from '@ant-design/icons'
@@ -22,12 +27,13 @@ export default function Controls() {
     loopLength,
     setLoopLength,
     tempo,
-    handleTempoChange
+    handleTempoChange,
+    prog,
+    handleChordChange
   } = useContext(Context)
 
   const [editTempo, setEditTempo] = useState(false);
   const [tempoError, setTempoError] = useState(false);
-
 
   const [form] = Form.useForm();
 
@@ -52,12 +58,19 @@ export default function Controls() {
   }
 
   return (
-    <>
+    <Card
+    size="small"
+    draggable={true}
+    >
+      <Row
+      style={{...rowStyle, justifyContent:'space-between'}}
+      >
+
       <Form
         layout="inline"
         component="span"
         colon
-        style={{ lineHeight: 1 }}
+        style={{ lineHeight: 1, alignItems: 'center', justifyContent:'space-between' }}
         form={form}
       >
 
@@ -70,6 +83,7 @@ export default function Controls() {
           }}
           validateStatus={tempoError ? 'error' : 'success'}
           initialValue={tempo}
+          // style={{justifyContent: 'flex-end'}}
         >
           {!editTempo ?
             <Text
@@ -94,49 +108,91 @@ export default function Controls() {
           </Form.Item>
 
         }
-
-
       </Form>
-      <Text>
-        Loop Length&nbsp;
-        <Tooltip
-        title="Changes how many beats are in the loop. Changing the loop length will discard all progress"
-        placement="bottom"
-        
+      <Button
+          onClick={() => {
+            reset();
+            setPlayStatus('stop')
+          }}
+          size="small"
+          danger
         >
-          <QuestionCircleOutlined
-            style={{ color : 'rgba(0, 0, 0, 0.45)'}}
-          />
-        </Tooltip>&nbsp;:&nbsp;
+          Reset
+      </Button>
+      </Row>
+      <Row
+        style={rowStyle}
+      >
+        <Text>
+          Loop Length&nbsp;
+        <Tooltip
+            title="Changes how many beats are in the loop. Changing the loop length will discard all progress"
+            placement="bottom"
+          >
+            <QuestionCircleOutlined
+              style={{ color: 'rgba(0, 0, 0, 0.45)' }}
+            />
+          </Tooltip>&nbsp;:&nbsp;
         </Text>
 
-      <Select
-        size="small"
-        defaultValue={loopLength}
-        onChange={val => {
-          reset();
-          setLoopLength(parseInt(val))
-        }}
-      >
-        {[8, 12, 16, 20, 24, 28, 32].map((beats, i) =>
-          <Option
-            key={i}
-            value={beats}
-          >
-            {beats}
+        <Select
+          size="small"
+          value={loopLength}
+          onChange={val => {
+            reset();
+            setLoopLength(parseInt(val))
+          }}
+        >
+          {[8, 12, 16, 20, 24, 28, 32].map((beats, i) =>
+            <Option
+              key={i}
+              value={beats}
+            >
+              {beats}
             </Option>
-        )}
-      </Select>
-      <br />
-      <Button
-        onClick={() => {
-          reset();
-          setPlayStatus('stop')
-        }}
-        size="small"
+          )}
+        </Select>
+
+      </Row>
+      <Row
+        style={rowStyle}
       >
-        Reset
-      </Button>
-    </>
+        <Text>Chords:&nbsp;</Text>
+        <Space>
+          {prog.map((progChord, i) =>
+            <Select
+              key={i}
+              value={he.decode(progChord)}
+              onChange={val => handleChordChange(val, i)}
+              size="small"
+            >
+              {CHORDS && Object.keys(CHORDS).map((chord, j) =>
+                <Option
+                  key={j}
+                  value={chord}
+                >{he.decode(chord)}</Option>
+              )}
+            </Select>
+          )}
+        </Space>
+      </Row>
+      {/* <Row
+      style={{...rowStyle, justifyContent:'flex-end'}}
+      > */}
+
+        {/* <Button
+          onClick={() => {
+            reset();
+            setPlayStatus('stop')
+          }}
+          size="small"
+          danger
+        >
+          Reset
+      </Button> */}
+      {/* </Row> */}
+    </Card>
   )
 }
+
+const rowStyle = { height: '32px', alignItems: 'center' }

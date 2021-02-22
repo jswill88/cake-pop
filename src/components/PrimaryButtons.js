@@ -39,7 +39,7 @@ export default function PrimaryButtons() {
 
   return (
     <Row
-      justify="center"
+      justify="start"
     >
       <Space
         size="large"

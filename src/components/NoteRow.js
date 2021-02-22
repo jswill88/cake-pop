@@ -2,6 +2,21 @@ import ButtonLabel from './ButtonLabel'
 import { Context } from '../context/context'
 import { useContext } from 'react'
 
+import { InlineIcon } from '@iconify/react';
+import musicClefTreble from '@iconify-icons/mdi/music-clef-treble';
+import musicClefBass from '@iconify-icons/mdi/music-clef-bass';
+import drumIcon from '@iconify-icons/la/drum';
+
+
+
+
+
+import {
+  Row,
+  Button,
+  Divider
+} from 'antd'
+
 
 export default function NoteRow({
   noteRow,
@@ -60,33 +75,66 @@ export default function NoteRow({
     return noteName;
   }
 
-
-
   return (
-    <div
+    <Row
       key={noteRow}
-      style={{
-        width: '80%',
-        display: 'flex',
-        justifyContent: 'space-between',
-      }}
+      justify="space-between"
+      align="middle"
     >
+      <Icon
+      noteRow={noteRow}
+      />
       {Object.keys(noteSwitches[noteRow]).map((beat, i) =>
-        <button
-          onClick={() => {
-            const note = getNote(noteRow, i)
-            addSynth(beat, note, noteRow)
-          }}
-          key={beat}
-          style={{ margin: '2px' }}
-        >
-          <ButtonLabel
-            beat={noteSwitches[noteRow][beat]}
-            active={i === currentBeat}
-            note={getNoteName(noteRow, i)}
-          />
-        </button>
+        <>
+          <Button
+            shape="circle"
+            onClick={() => {
+              const note = getNote(noteRow, i)
+              addSynth(beat, note, noteRow)
+            }}
+            key={beat}
+            style={{ overflow: 'hidden' }}
+          >
+            <ButtonLabel
+              beat={noteSwitches[noteRow][beat]}
+              active={i === currentBeat}
+              note={getNoteName(noteRow, i)}
+            />
+          </Button>
+          {!((parseInt(beat) + 1) % (loopLength / 4)) && ((parseInt(beat) + 1) !== loopLength) &&
+            <Divider
+              type="vertical"
+            />
+          }
+        </>
       )}
-    </div>
+      {['low', 'bassLow', 'bassDrum'].includes(noteRow) && <Divider />}
+    </Row>
   )
 }
+
+function Icon({noteRow}) {
+  switch (noteRow) {
+    case 'high':
+    case 'low':
+    case 'mid':
+      return <InlineIcon
+        style={{ fontSize: '1.5rem' }}
+        icon={musicClefTreble} />
+    case 'bassHigh':
+    case 'bassLow':
+      return <InlineIcon
+        style={{ fontSize: '1.5rem' }}
+        icon={musicClefBass} />
+    case 'bassDrum':
+    case 'snareDrum':
+    case 'cymbal':
+      return <InlineIcon
+        style={{ fontSize: '1.5rem' }}
+        icon={drumIcon} />
+    default:
+      return null
+  }
+}
+
+// make component for each subset of row
