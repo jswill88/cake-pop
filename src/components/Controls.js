@@ -5,10 +5,11 @@ import {
   Select,
   Typography,
   InputNumber,
-  Form
+  Form,
+  Tooltip
 } from 'antd';
 
-
+import { QuestionCircleOutlined } from '@ant-design/icons'
 
 const { Option } = Select;
 const { Text } = Typography
@@ -25,7 +26,7 @@ export default function Controls() {
   } = useContext(Context)
 
   const [editTempo, setEditTempo] = useState(false);
-  const [tempoError, setTempoError]  = useState(false);
+  const [tempoError, setTempoError] = useState(false);
 
 
   const [form] = Form.useForm();
@@ -68,17 +69,12 @@ export default function Controls() {
             placement: "bottom"
           }}
           validateStatus={tempoError ? 'error' : 'success'}
-
           initialValue={tempo}
-          // rules={[{
-          //   type: 'number',
-          // }
-          // ]}
         >
           {!editTempo ?
             <Text
-            editable
-            onClick={() => setEditTempo(true)}
+              editable
+              onClick={() => setEditTempo(true)}
             >{tempo}</Text> :
             <InputNumber
               size="small"
@@ -101,7 +97,19 @@ export default function Controls() {
 
 
       </Form>
-      <Text>Loop Length: </Text>
+      <Text>
+        Loop Length&nbsp;
+        <Tooltip
+        title="Changes how many beats are in the loop. Changing the loop length will discard all progress"
+        placement="bottom"
+        
+        >
+          <QuestionCircleOutlined
+            style={{ color : 'rgba(0, 0, 0, 0.45)'}}
+          />
+        </Tooltip>&nbsp;:&nbsp;
+        </Text>
+
       <Select
         size="small"
         defaultValue={loopLength}
@@ -115,7 +123,7 @@ export default function Controls() {
             key={i}
             value={beats}
           >
-            {beats} Beats
+            {beats}
             </Option>
         )}
       </Select>
