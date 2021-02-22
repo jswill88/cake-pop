@@ -178,6 +178,7 @@ function ContextProvider(props) {
   }
 
   const open = async (songId) => {
+    stopAudio()
     const result = await fetchApi('/open', 'post', { songId })
     if (!result.error) {
       const { data: songObj } = result
@@ -359,6 +360,14 @@ function ContextProvider(props) {
       setNoteSwitches(noteObj)
     }
     setCurrentBeat(-2)
+    setPlayStatus('stop')
+  }
+
+
+  const stopAudio = () => {
+    setPlayStatus('stop')
+    Tone.Transport.stop()
+    setCurrentBeat(-2);
   }
 
   const state = {
@@ -397,7 +406,8 @@ function ContextProvider(props) {
     setShowForm,
     playStatus,
     setPlayStatus,
-    handleChordChange
+    handleChordChange,
+    stopAudio
   }
 
   return (

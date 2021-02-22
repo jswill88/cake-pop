@@ -19,7 +19,7 @@ import {
 
 
 export default function NoteRow({
-  noteRow,
+  // noteRow,
 }) {
   const {
     Tone,
@@ -76,42 +76,48 @@ export default function NoteRow({
   }
 
   return (
-    <Row
-      key={noteRow}
-      justify="space-between"
-      align="middle"
-    >
-      <Icon
-      noteRow={noteRow}
-      />
-      {Object.keys(noteSwitches[noteRow]).map((beat, i) =>
-        <>
-          <Button
-            shape="circle"
-            onClick={() => {
-              const note = getNote(noteRow, i)
-              addSynth(beat, note, noteRow)
-            }}
-            key={beat}
-            style={{ overflow: 'hidden' }}
-          >
-            <ButtonLabel
-              beat={noteSwitches[noteRow][beat]}
-              active={i === currentBeat}
-              note={getNoteName(noteRow, i)}
-            />
-          </Button>
-          {!((parseInt(beat) + 1) % (loopLength / 4)) && ((parseInt(beat) + 1) !== loopLength) &&
-            <Divider
-              type="vertical"
-            />
-          }
-        </>
-      )}
-      {['low', 'bassLow', 'bassDrum'].includes(noteRow) && <Divider />}
+    <Row>
+
     </Row>
   )
+    // <Row
+    //   key={noteRow}
+    //   justify="space-between"
+    //   align="middle"
+    // >
+    //   <Icon
+    //   noteRow={noteRow}
+    //   />
+    //   {Object.keys(noteSwitches[noteRow]).map((beat, i) =>
+    //     <>
+    //       <Button
+    //         shape="circle"
+    //         onClick={() => {
+    //           const note = getNote(noteRow, i)
+    //           addSynth(beat, note, noteRow)
+    //         }}
+    //         key={beat}
+    //         style={{ overflow: 'hidden' }}
+    //       >
+    //         <ButtonLabel
+    //           beat={noteSwitches[noteRow][beat]}
+    //           active={i === currentBeat}
+    //           note={getNoteName(noteRow, i)}
+    //         />
+    //       </Button>
+    //       {!((parseInt(beat) + 1) % (loopLength / 4)) && ((parseInt(beat) + 1) !== loopLength) &&
+    //         <Divider
+    //           type="vertical"
+    //         />
+    //       }
+    //     </>
+    //   )}
+    //   {['low', 'bassLow', 'bassDrum'].includes(noteRow) && <Divider />}
+    // </Row>
+
 }
+
+
 
 function Icon({noteRow}) {
   switch (noteRow) {
