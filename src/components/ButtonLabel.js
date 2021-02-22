@@ -1,20 +1,21 @@
 export default function ButtonLabel ({ beat, note, active }) {
   return (
-    <span
+    <div
       style={{
         boxSizing: 'border-box',
         backgroundColor: !beat ? 'pink'
           : active ? 'white' : 'lightblue',
         border: active ? '2px solid black' : 'none',
-        width: '30px',
-        height: '30px',
+        width: '100%',
+        height: '100%',
+        borderRadius:'50%',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        fontSize: '.9em'
+        fontSize: '.7em'
       }}
     >
       {note}
-    </span>
+    </div>
   )
 }

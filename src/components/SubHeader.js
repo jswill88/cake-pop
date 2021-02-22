@@ -51,8 +51,7 @@ export default function SubHeader() {
         gutter={8}
         align="middle"
       >
-        <Col
-          span={8}
+        <Col span={7} 
         // style={{backgroundColor: 'lightblue'}}
         >
           <Title
@@ -165,12 +164,13 @@ export default function SubHeader() {
           }
         </Col>
         <Col
-          span={8}
+          span={7}
         >
           <PrimaryButtons />
         </Col>
         <Col
-          span={8}
+          span={10}
+          // offset={2}
         >
           <Controls />
         </Col>

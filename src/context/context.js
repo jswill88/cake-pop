@@ -8,7 +8,7 @@ import { message } from 'antd';
 
 export const Context = createContext();
 
-function LoginProvider(props) {
+function ContextProvider(props) {
   const [prog, setProg] = useState(['I', 'V', 'vi', 'IV'])
   const [tempo, setTempo] = useState(120);
   const [title, setTitle] = useState('New Song')
@@ -51,6 +51,24 @@ function LoginProvider(props) {
     }
     checkLoggedIn();
   }, []);
+
+  useEffect(() => {
+    const noteObj = {
+      high: {}, mid: {}, low: {}, bassHigh: {}, bassLow: {}, cymbal: {}, snareDrum: {}, bassDrum: {}
+    }
+    for (let note in noteObj) {
+      for (let i = 0; i < loopLength; i++) noteObj[note][i] = false;
+    }
+    setNoteSwitches(noteObj)
+
+    const loop = new Tone.Loop(time => {
+      Tone.Draw.schedule(() => {
+        setCurrentBeat(beat => (beat + 1) % loopLength)
+      }, time)
+    }, '8n').start(0);
+
+    return () => loop.cancel();
+  }, [loopLength])
 
   const signIn = async (userData) => {
     const result = await fetchApi('/signin', 'post', userData)
@@ -179,8 +197,46 @@ function LoginProvider(props) {
     }
   }
 
-  useEffect(() => console.log('note switches use effect', noteSwitches), [noteSwitches])
+  const handleChordChange = (newChord, i) => {
+    setProg(arr => {
+      const arrCopy = [...arr]
+      arrCopy[i] = newChord;
+      return arrCopy;
+    });
 
+    const start = i * loopLength / 4;
+    const end = start + loopLength / 4
+    setNoteSwitches(noteObj => {
+      for (let noteRow in noteObj) {
+
+        if (['high', 'mid', 'low', 'bassHigh', 'bassLow'].includes(noteRow)) {
+          for (let i = start; i < end; i++) {
+            if (noteObj[noteRow][i]) {
+              noteObj[noteRow][i].stop();
+              noteObj[noteRow][i].cancel();
+              noteObj[noteRow][i].dispose();
+              const arrLoop = new Array(loopLength).fill([])
+
+              let note;
+              if (['bassLow', 'bassHigh'].includes(noteRow)) {
+                note = BASS[newChord][noteRow === 'bassLow' ? 0 : 1] + 3;
+              } else {
+                note = CHORDS[newChord][2 - Object.keys(NOTES).indexOf(noteRow)] + 5;
+              }
+
+              arrLoop[i] = note;
+
+              const synth = makeSynth(noteRow.includes('bass') ? 'bassSynth' : 'chordSynth');
+              noteObj[noteRow][i] = new Tone.Sequence((time, note) => {
+                synth.triggerAttackRelease(note, '16n', time);
+              }, arrLoop).start(0);
+            }
+          }
+        }
+      }
+      return noteObj;
+    })
+  }
 
   const rename = async newTitle => {
     if (songs.length) {
@@ -238,7 +294,6 @@ function LoginProvider(props) {
     for (let noteRow in buttonsPressed) {
       for (let i = 0; i < numberOfBeats; i++) {
         if (buttonsPressed[noteRow][i]) {
-          console.log(buttonsPressed[noteRow][i])
           const arrLoop = new Array(numberOfBeats).fill([])
           let note;
           if (['bassDrum', 'snareDrum', 'cymbal'].includes(noteRow)) {
@@ -278,7 +333,7 @@ function LoginProvider(props) {
   }
 
   const handleTempoChange = newTempo => {
-    const tempo = newTempo < 50 ? 50 : Math.min(350, newTempo)
+    const tempo = newTempo < 50 ? 50 : Math.min(320, newTempo)
     Tone.Transport.bpm.value = tempo;
     setTempo(tempo)
   }
@@ -342,6 +397,7 @@ function LoginProvider(props) {
     setShowForm,
     playStatus,
     setPlayStatus,
+    handleChordChange
   }
 
   return (
@@ -350,4 +406,4 @@ function LoginProvider(props) {
     </Context.Provider>
   )
 }
-export default LoginProvider
+export default ContextProvider;
