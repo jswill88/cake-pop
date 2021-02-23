@@ -30,11 +30,16 @@ export default function NoteColumns() {
       const loop = new Tone.Sequence((time, note) => {
         if (type === 'snareDrum') synth.triggerAttackRelease('8n', time)
         else synth.triggerAttackRelease(note, '8n', time)
-      }, arrLoop).start('+0.1');
+      }, arrLoop).start(0);
 
-      // console.log(loop.events)
-      // loop.events = ['Ab4',[],[],[],[],[],[],[]]
-      // console.log(loop.events)
+
+// /********************* */
+      console.log(loop.events)
+      loop.events[0] = 'Ab5'
+      console.log(loop.events)
+ /*********************** */
+
+
 
       setNoteSwitches(obj => ({ ...obj, [row]: { ...obj[row], [beat]: loop } }));
     } else {

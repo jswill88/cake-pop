@@ -30,7 +30,7 @@ export default function PrimaryButtons() {
       // Tone.setContext(toneContext)
       // setStarted(true)
     // }
-    // await Tone.start();
+    await Tone.start();
     // toneContext.resume();
     Tone.Transport.bpm.value = tempo;
     Tone.Transport.start('+0.1');
