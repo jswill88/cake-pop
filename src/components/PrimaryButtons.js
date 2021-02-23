@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { Context } from '../context/context';
 import { Button, Space, Row } from 'antd';
 
@@ -9,6 +9,9 @@ import {
 } from '@ant-design/icons';
 
 export default function PrimaryButtons() {
+
+  const [toneContext, setToneContext] = useState(null)
+  const [started, setStarted] = useState(false)
 
   const {
     Tone,
@@ -22,20 +25,30 @@ export default function PrimaryButtons() {
   const startAudio = async () => {
     if (playStatus === 'stop') setCurrentBeat(-1)
     setPlayStatus('start')
-    await Tone.start();
+    // if(!started) {
+      // const toneContext = new Tone.Context({ latencyHint : "interactive" })
+      // Tone.setContext(toneContext)
+      // setStarted(true)
+    // }
+    // await Tone.start();
+    // toneContext.resume();
     Tone.Transport.bpm.value = tempo;
     Tone.Transport.start('+0.1');
+    // setToneContext(toneContext)
   }
 
   const pauseAudio = () => {
-    Tone.Transport.pause();
+    Tone.Transport.pause('+0.1');
     setPlayStatus('pause')
   }
 
   const stopAudio = () => {
-    setPlayStatus('stop')
     Tone.Transport.stop('+0.1')
+    setPlayStatus('stop')
     setCurrentBeat(-2);
+    // toneContext.dispose();
+    // toneContext.close();
+    // setToneContext(null)
   }
 
 

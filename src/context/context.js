@@ -5,8 +5,10 @@ import * as Tone from 'tone';
 import { BASS, CHORDS } from '../lib/noteInfo';
 import { SYNTHS, synthTypes } from '../lib/synthInfo';
 import { message } from 'antd';
+import StartAudioContext from 'startaudiocontext';
 
 export const Context = createContext();
+const audioContext = new AudioContext();
 
 function ContextProvider(props) {
   const [prog, setProg] = useState(['I', 'V', 'vi', 'IV'])
@@ -40,6 +42,9 @@ function ContextProvider(props) {
 
 
   useEffect(() => {
+    // StartAudioContext(new Tone.Context());
+    // StartAudioContext(audioContext)
+   
     const checkLoggedIn = async () => {
       const result = await axios.get(process.env.REACT_APP_URL + '/api/v1/loggedIn')
       console.log(result)
@@ -50,6 +55,7 @@ function ContextProvider(props) {
       }
     }
     checkLoggedIn();
+
   }, []);
 
   useEffect(() => {
@@ -65,7 +71,7 @@ function ContextProvider(props) {
       Tone.Draw.schedule(() => {
         setCurrentBeat(beat => (beat + 1) % loopLength)
       }, time)
-    }, '8n').start(0);
+    }, '8n').start('+0.1');
 
     return () => loop.cancel();
   }, [loopLength])
@@ -230,7 +236,7 @@ function ContextProvider(props) {
               const synth = makeSynth(noteRow.includes('bass') ? 'bassSynth' : 'chordSynth');
               noteObj[noteRow][i] = new Tone.Sequence((time, note) => {
                 synth.triggerAttackRelease(note, '16n', time);
-              }, arrLoop).start(0);
+              }, arrLoop).start('+0.1');
             }
           }
         }
@@ -318,7 +324,7 @@ function ContextProvider(props) {
           buttonsPressed[noteRow][i] = new Tone.Sequence((time, note) => {
             if (type === 'snareDrum') synth.triggerAttackRelease('8n', time)
             else synth.triggerAttackRelease(note, '8n', time)
-          }, arrLoop).start(0);
+          }, arrLoop).start('+0.1');
         }
         counter++;
         if (counter >= numPerChord) {

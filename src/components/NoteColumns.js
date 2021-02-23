@@ -2,7 +2,6 @@ import ButtonLabel from './ButtonLabel'
 import { Context } from '../context/context'
 import { useContext } from 'react'
 import { Row, Button, Divider, Col } from 'antd';
-// const { Text } = Typography;
 
 export default function NoteColumns() {
   const {
@@ -31,7 +30,12 @@ export default function NoteColumns() {
       const loop = new Tone.Sequence((time, note) => {
         if (type === 'snareDrum') synth.triggerAttackRelease('8n', time)
         else synth.triggerAttackRelease(note, '8n', time)
-      }, arrLoop).start(0);
+      }, arrLoop).start('+0.1');
+
+      // console.log(loop.events)
+      // loop.events = ['Ab4',[],[],[],[],[],[],[]]
+      // console.log(loop.events)
+
       setNoteSwitches(obj => ({ ...obj, [row]: { ...obj[row], [beat]: loop } }));
     } else {
       noteSwitches[row][beat].stop();
