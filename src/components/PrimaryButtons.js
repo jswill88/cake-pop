@@ -16,7 +16,7 @@ export default function PrimaryButtons() {
     tempo,
     playStatus,
     setPlayStatus,
-    stopAudio
+    // stopAudio
   } = useContext(Context);
 
   const startAudio = async () => {
@@ -30,6 +30,12 @@ export default function PrimaryButtons() {
   const pauseAudio = () => {
     Tone.Transport.pause();
     setPlayStatus('pause')
+  }
+
+  const stopAudio = () => {
+    setPlayStatus('stop')
+    Tone.Transport.stop('+0.1')
+    setCurrentBeat(-2);
   }
 
 

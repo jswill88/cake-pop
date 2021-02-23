@@ -178,7 +178,7 @@ function ContextProvider(props) {
   }
 
   const open = async (songId) => {
-    stopAudio()
+    // stopAudio()
     const result = await fetchApi('/open', 'post', { songId })
     if (!result.error) {
       const { data: songObj } = result
@@ -213,9 +213,9 @@ function ContextProvider(props) {
         if (['high', 'mid', 'low', 'bassHigh', 'bassLow'].includes(noteRow)) {
           for (let i = start; i < end; i++) {
             if (noteObj[noteRow][i]) {
-              noteObj[noteRow][i].stop();
-              noteObj[noteRow][i].cancel();
-              noteObj[noteRow][i].dispose();
+              noteObj[noteRow][i].stop('+0.1');
+              noteObj[noteRow][i].cancel('+0.2');
+              noteObj[noteRow][i].dispose('+0.3');
               const arrLoop = new Array(loopLength).fill([])
 
               let note;
@@ -340,6 +340,7 @@ function ContextProvider(props) {
   }
 
   const reset = (skip) => {
+    Tone.Transport.stop('+0.1');
     for (let loop in noteSwitches) {
       for (let i = 0; i < loopLength; i++) {
         if (noteSwitches[loop][i]) {
@@ -349,7 +350,7 @@ function ContextProvider(props) {
         }
       }
     }
-    Tone.Transport.stop();
+    
     if (!skip) {
       const noteObj = {
         high: {}, mid: {}, low: {}, bassHigh: {}, bassLow: {}, cymbal: {}, snareDrum: {}, bassDrum: {}
@@ -359,16 +360,16 @@ function ContextProvider(props) {
       }
       setNoteSwitches(noteObj)
     }
-    setCurrentBeat(-2)
     setPlayStatus('stop')
+    setCurrentBeat(-1)
   }
 
 
-  const stopAudio = () => {
-    setPlayStatus('stop')
-    Tone.Transport.stop()
-    setCurrentBeat(-2);
-  }
+  // const stopAudio = () => {
+  //   setPlayStatus('stop')
+  //   Tone.Transport.stop()
+  //   setCurrentBeat(-2);
+  // }
 
   const state = {
     loggedIn,
@@ -407,7 +408,7 @@ function ContextProvider(props) {
     playStatus,
     setPlayStatus,
     handleChordChange,
-    stopAudio
+    // stopAudio
   }
 
   return (

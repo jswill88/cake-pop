@@ -1,8 +1,8 @@
 import ButtonLabel from './ButtonLabel'
 import { Context } from '../context/context'
 import { useContext } from 'react'
-import { Row, Button, Divider, Col, Typography } from 'antd';
-const { Text } = Typography;
+import { Row, Button, Divider, Col } from 'antd';
+// const { Text } = Typography;
 
 export default function NoteColumns() {
   const {
@@ -77,13 +77,16 @@ export default function NoteColumns() {
         < Col
           // title={prog[i]}
           // type="inner"
+          key={i}
           style={{
             marginBottom: '1rem',
             boxShadow: '.1rem .1rem .2rem grey'
           }}
         >
-          {Object.keys(noteSwitches).map(noteRow =>
-            <Row>
+          {Object.keys(noteSwitches).map((noteRow, j) =>
+            <Row
+              key={j}
+            >
               {/* {Object.keys(noteSwitches[noteRow])
                 .filter((beat) => beat >= i * loopLength / 4 && beat < i * loopLength / 4 + loopLength / 4) */}
                 {chordLength(i).map(beat =>

@@ -1,11 +1,11 @@
-import ButtonLabel from './ButtonLabel'
-import { Context } from '../context/context'
-import { useContext } from 'react'
+// import ButtonLabel from './ButtonLabel'
+// import { Context } from '../context/context'
+// import { useContext } from 'react'
 
-import { InlineIcon } from '@iconify/react';
-import musicClefTreble from '@iconify-icons/mdi/music-clef-treble';
-import musicClefBass from '@iconify-icons/mdi/music-clef-bass';
-import drumIcon from '@iconify-icons/la/drum';
+// import { InlineIcon } from '@iconify/react';
+// import musicClefTreble from '@iconify-icons/mdi/music-clef-treble';
+// import musicClefBass from '@iconify-icons/mdi/music-clef-bass';
+// import drumIcon from '@iconify-icons/la/drum';
 
 
 
@@ -13,67 +13,65 @@ import drumIcon from '@iconify-icons/la/drum';
 
 import {
   Row,
-  Button,
-  Divider
+  // Button,
+  // Divider
 } from 'antd'
 
 
-export default function NoteRow({
-  // noteRow,
-}) {
-  const {
-    Tone,
-    currentBeat,
-    NOTES,
-    makeSynth,
-    loopLength,
-    noteSwitches,
-    setNoteSwitches
-  } = useContext(Context)
+export default function NoteRow({noteRow}) {
+  // const {
+    // Tone,
+    // currentBeat,
+    // NOTES,
+    // makeSynth,
+    // loopLength,
+    // noteSwitches,
+    // setNoteSwitches
+  // } = useContext(Context)
 
-  const addSynth = (beat, note, row) => {
-    if (!noteSwitches[row][beat]) {
+  // const addSynth = (beat, note, row) => {
+  //   if (!noteSwitches[row][beat]) {
 
-      const arrLoop = new Array(loopLength).fill([])
-      arrLoop[beat] = note;
+  //     const arrLoop = new Array(loopLength).fill([])
+  //     arrLoop[beat] = note;
 
-      let type;
-      if (['bassHigh', 'bassLow'].includes(row)) type = 'bassSynth'
-      else if (['high', 'mid', 'low'].includes(row)) type = 'chordSynth'
-      else type = row;
-      const synth = makeSynth(type);
+  //     let type;
+  //     if (['bassHigh', 'bassLow'].includes(row)) type = 'bassSynth'
+  //     else if (['high', 'mid', 'low'].includes(row)) type = 'chordSynth'
+  //     else type = row;
+  //     const synth = makeSynth(type);
 
-      const loop = new Tone.Sequence((time, note) => {
-        if (type === 'snareDrum') synth.triggerAttackRelease('8n', time)
-        else synth.triggerAttackRelease(note, '8n', time)
-      }, arrLoop).start(0);
-      setNoteSwitches(obj => ({ ...obj, [row]: { ...obj[row], [beat]: loop } }));
-    } else {
-      noteSwitches[row][beat].stop();
-      noteSwitches[row][beat].cancel();
-      setNoteSwitches(obj => ({ ...obj, [row]: { ...obj[row], [beat]: false } }));
-    }
-  }
+  //     const loop = new Tone.Sequence((time, note) => {
+  //       if (type === 'snareDrum') synth.triggerAttackRelease('8n', time)
+  //       else synth.triggerAttackRelease(note, '8n', time)
+  //     }, arrLoop).start(0);
+  //     setNoteSwitches(obj => ({ ...obj, [row]: { ...obj[row], [beat]: loop } }));
+  //   } else {
+  //     noteSwitches[row][beat].stop();
+  //     noteSwitches[row][beat].cancel();
+  //     setNoteSwitches(obj => ({ ...obj, [row]: { ...obj[row], [beat]: false } }));
+  //   }
+  // }
 
-  const getNote = (noteRow, i) => {
-    let note;
-    if (['bassDrum', 'snareDrum', 'cymbal'].includes(noteRow)) {
-      note = NOTES[noteRow][Math.floor(i / loopLength * 4)];
-    } else {
-      note = NOTES[noteRow][Math.floor(i / loopLength * 4)] + (noteRow.includes('bass') ? 3 : 5);
-    }
-    return note;
-  }
+  // const getNote = (noteRow, i) => {
+  //   let note;
+  //   if (['bassDrum', 'snareDrum', 'cymbal'].includes(noteRow)) {
+  //     note = NOTES[noteRow][Math.floor(i / loopLength * 4)];
+  //   } else {
+  //     note = NOTES[noteRow][Math.floor(i / loopLength * 4)] + (noteRow.includes('bass') ? 3 : 5);
+  //   }
+  //   return note;
+  // }
 
-  const getNoteName = (noteRow, i) => {
-    let noteName;
-    if (['bassDrum', 'snareDrum', 'cymbal'].includes(noteRow)) {
-      noteName = noteRow[0].toUpperCase() + (noteRow === 'cymbal' ? '' : 'D');
-    } else {
-      noteName = NOTES[noteRow][Math.floor(i / loopLength * 4)]
-    }
-    return noteName;
-  }
+  // const getNoteName = (noteRow, i) => {
+  //   let noteName;
+  //   if (['bassDrum', 'snareDrum', 'cymbal'].includes(noteRow)) {
+  //     noteName = noteRow[0].toUpperCase() + (noteRow === 'cymbal' ? '' : 'D');
+  //   } else {
+  //     noteName = NOTES[noteRow][Math.floor(i / loopLength * 4)]
+  //   }
+  //   return noteName;
+  // }
 
   return (
     <Row>
@@ -119,28 +117,28 @@ export default function NoteRow({
 
 
 
-function Icon({noteRow}) {
-  switch (noteRow) {
-    case 'high':
-    case 'low':
-    case 'mid':
-      return <InlineIcon
-        style={{ fontSize: '1.5rem' }}
-        icon={musicClefTreble} />
-    case 'bassHigh':
-    case 'bassLow':
-      return <InlineIcon
-        style={{ fontSize: '1.5rem' }}
-        icon={musicClefBass} />
-    case 'bassDrum':
-    case 'snareDrum':
-    case 'cymbal':
-      return <InlineIcon
-        style={{ fontSize: '1.5rem' }}
-        icon={drumIcon} />
-    default:
-      return null
-  }
-}
+// function Icon({noteRow}) {
+//   switch (noteRow) {
+//     case 'high':
+//     case 'low':
+//     case 'mid':
+//       return <InlineIcon
+//         style={{ fontSize: '1.5rem' }}
+//         icon={musicClefTreble} />
+//     case 'bassHigh':
+//     case 'bassLow':
+//       return <InlineIcon
+//         style={{ fontSize: '1.5rem' }}
+//         icon={musicClefBass} />
+//     case 'bassDrum':
+//     case 'snareDrum':
+//     case 'cymbal':
+//       return <InlineIcon
+//         style={{ fontSize: '1.5rem' }}
+//         icon={drumIcon} />
+//     default:
+//       return null
+//   }
+// }
 
 // make component for each subset of row

@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import NoteRow from './NoteRow';
+// import NoteRow from './NoteRow';
 import NoteColumns from './NoteColumns'
 import { Context } from '../context/context';
 import { Row } from 'antd';
