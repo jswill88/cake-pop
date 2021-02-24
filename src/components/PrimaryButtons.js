@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, /*useState*/ } from 'react';
 import { Context } from '../context/context';
 import { Button, Space, Row } from 'antd';
 
@@ -10,8 +10,8 @@ import {
 
 export default function PrimaryButtons() {
 
-  const [toneContext, setToneContext] = useState(null)
-  const [started, setStarted] = useState(false)
+  // const [toneContext, setToneContext] = useState(null)
+  // const [started, setStarted] = useState(false)
 
   const {
     Tone,
