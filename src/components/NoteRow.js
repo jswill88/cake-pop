@@ -2,23 +2,20 @@
 // import { Context } from '../context/context'
 // import { useContext } from 'react'
 
-// import { InlineIcon } from '@iconify/react';
-// import musicClefTreble from '@iconify-icons/mdi/music-clef-treble';
-// import musicClefBass from '@iconify-icons/mdi/music-clef-bass';
-// import drumIcon from '@iconify-icons/la/drum';
 
 
 
 
 
-import {
-  Row,
+
+// import {
+//   Row,
   // Button,
   // Divider
-} from 'antd'
+// } from 'antd'
 
 
-export default function NoteRow({noteRow}) {
+// export default function NoteRow({noteRow}) {
   // const {
     // Tone,
     // currentBeat,
@@ -73,11 +70,11 @@ export default function NoteRow({noteRow}) {
   //   return noteName;
   // }
 
-  return (
-    <Row>
+  // return (
+  //   <Row>
 
-    </Row>
-  )
+  //   </Row>
+  // )
     // <Row
     //   key={noteRow}
     //   justify="space-between"
@@ -113,32 +110,10 @@ export default function NoteRow({noteRow}) {
     //   {['low', 'bassLow', 'bassDrum'].includes(noteRow) && <Divider />}
     // </Row>
 
-}
-
-
-
-// function Icon({noteRow}) {
-//   switch (noteRow) {
-//     case 'high':
-//     case 'low':
-//     case 'mid':
-//       return <InlineIcon
-//         style={{ fontSize: '1.5rem' }}
-//         icon={musicClefTreble} />
-//     case 'bassHigh':
-//     case 'bassLow':
-//       return <InlineIcon
-//         style={{ fontSize: '1.5rem' }}
-//         icon={musicClefBass} />
-//     case 'bassDrum':
-//     case 'snareDrum':
-//     case 'cymbal':
-//       return <InlineIcon
-//         style={{ fontSize: '1.5rem' }}
-//         icon={drumIcon} />
-//     default:
-//       return null
-//   }
 // }
+
+
+
+
 
 // make component for each subset of row

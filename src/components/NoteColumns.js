@@ -1,7 +1,23 @@
 import ButtonLabel from './ButtonLabel'
+import he from 'he';
 import { Context } from '../context/context'
-import { useContext, useEffect } from 'react'
-import { Row, Button, Divider, Col } from 'antd';
+import { useContext } from 'react'
+import { InlineIcon } from '@iconify/react';
+import musicClefTreble from '@iconify-icons/mdi/music-clef-treble';
+import musicClefBass from '@iconify-icons/mdi/music-clef-bass';
+import drumIcon from '@iconify-icons/la/drum';
+
+import {
+  Row,
+  Button,
+  Divider,
+  Col,
+  Typography
+} from 'antd';
+
+const { Title } = Typography;
+
+
 
 export default function NoteColumns() {
   const {
@@ -10,7 +26,8 @@ export default function NoteColumns() {
     loopLength,
     noteSwitches,
     buttons,
-    setButtons
+    setButtons,
+    prog
   } = useContext(Context)
 
   const addSynth = (beat, note, row) => {
@@ -29,9 +46,6 @@ export default function NoteColumns() {
       })
     }
   }
-
-  useEffect(() => console.log(noteSwitches), [noteSwitches])
-  useEffect(() => console.log(loopLength), [loopLength])
 
   const getNote = (noteRow, i) => {
     let note;
@@ -64,41 +78,88 @@ export default function NoteColumns() {
 
   return (
     <>
-      {[0, 1, 2, 3].map(i =>
-        < Col
-          key={i}
-          style={{
-            marginBottom: '1rem',
-          }}
+      {('high' in noteSwitches) &&
+        <Row
+          justify="center"
         >
-          {Object.keys(noteSwitches).map((noteRow, j) =>
-            <Row
-              key={j}
-            >
-              {chordLength(i).map(beat =>
-                <Button
-                  shape="circle"
-                  onClick={() => {
-                    const note = getNote(noteRow, beat)
-                    addSynth(beat, note, noteRow)
-                  }}
-                  key={beat}
-                  style={{ overflow: 'hidden' }}
-                >
+         
+          {[0, 1, 2, 3].map(i =>
+              < Col
+                key={i}
+                style={{
+                  marginBottom: '1rem',
+                  // width: '20%',
+                  minWidth: '20%',
+                  padding: '2rem 0',
+                  boxSizing:'border-box',
+                  border: chordLength(i).includes(currentBeat) ? '2px solid black' : '2px solid lightblue',
+                }}
+              >
+                <Title
+                level={5}
+                style={{textAlign: 'center'}}
+                >{he.decode(prog[i])}</Title>
+                {Object.keys(noteSwitches).map((noteRow, j) =>
+                  <Row
+                    key={j}
+                    justify="space-around"
+                  >
+                    {chordLength(i).map(beat =>
+                      <Button
+                        shape="circle"
+                        onClick={() => {
+                          const note = getNote(noteRow, beat)
+                          addSynth(beat, note, noteRow)
+                        }}
+                        key={beat}
+                        style={{ overflow: 'hidden',
+                        border: String(beat) === String(currentBeat) && '1px solid black'
+                      }}
+                        type={!buttons[noteRow][beat] ? 'link'
+                        : String(beat) === String(currentBeat) ? 'default' : 'primary'}
+                      >
+                        <Icon noteRow={noteRow} />
+                        {/* <ButtonLabel
+                          beat={buttons[noteRow][beat]}
+                          active={String(beat) === String(currentBeat)}
+                          note={getNoteName(noteRow, beat)}
+                          noteRow={noteRow}
+                        /> */}
 
-                  <ButtonLabel
-                    beat={buttons[noteRow][beat]}
-                    active={String(beat) === String(currentBeat)}
-                    note={getNoteName(noteRow, beat)}
-                  />
-
-                </Button>
-              )}
-              {['low', 'bassLow'].includes(noteRow) && <Divider />}
-            </Row>
+                      </Button>
+                    )}
+                    {['low', 'bassLow'].includes(noteRow) && <Divider />}
+                  </Row>
+                )}
+              </Col>
+       
           )}
-        </Col>
-      )}
+        </Row>
+      }
     </>
   )
+}
+
+function Icon({noteRow}) {
+  switch (noteRow) {
+    case 'high':
+    case 'low':
+    case 'mid':
+      return <InlineIcon
+        style={{ fontSize: '1.5rem' }}
+        icon={musicClefTreble} />
+    case 'bassHigh':
+    case 'bassLow':
+      return <InlineIcon
+        style={{ fontSize: '1.5rem' }}
+        icon={musicClefBass} />
+    case 'bassDrum':
+    case 'snareDrum':
+    case 'cymbal':
+      return <InlineIcon
+        style={{ fontSize: '1.5rem' }}
+        icon={drumIcon} />
+    default:
+      return null
+  }
 }

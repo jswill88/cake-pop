@@ -191,7 +191,7 @@ function ContextProvider(props) {
 
   const open = async (songId) => {
 
-    reset(true);
+    await reset(true);
     const result = await fetchApi('/open', 'post', { songId })
     if (!result.error) {
       
@@ -340,7 +340,8 @@ function ContextProvider(props) {
   }
 
   const reset = async (skip) => {
-    await Tone.Transport.stop('+8n');
+    Tone.Transport.stop('+8n');
+    while (Tone.Transport.state !== 'stopped') {}
     const buttonObj = {};
     for (let noteRow in noteSwitches) {
       noteSwitches[noteRow].dispose()
@@ -374,7 +375,8 @@ function ContextProvider(props) {
   }
 
   const stopAudio = () => {
-    Tone.Transport.stop('+8n')
+    Tone.Transport.stop('8n')
+    while (Tone.Transport.state !== 'stopped') {}
     setPlayStatus('stop')
     setCurrentBeat(-2);
   }
