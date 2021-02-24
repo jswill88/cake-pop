@@ -1,5 +1,3 @@
-import ButtonLabel from './ButtonLabel'
-import he from 'he';
 import { Context } from '../context/context'
 import { useContext } from 'react'
 import { InlineIcon } from '@iconify/react';
@@ -7,17 +5,10 @@ import musicClefTreble from '@iconify-icons/mdi/music-clef-treble';
 import musicClefBass from '@iconify-icons/mdi/music-clef-bass';
 import drumIcon from '@iconify-icons/la/drum';
 
-import {
-  Row,
-  Button,
-  Divider,
-  Col,
-  Typography
-} from 'antd';
-
-const { Title } = Typography;
-
-
+import Row from 'antd/es/row';
+import Button from 'antd/es/button';
+import Divider from 'antd/es/divider';
+import Col from 'antd/es/col';
 
 export default function NoteColumns() {
   const {
@@ -27,7 +18,6 @@ export default function NoteColumns() {
     noteSwitches,
     buttons,
     setButtons,
-    prog
   } = useContext(Context)
 
   const addSynth = (beat, note, row) => {
@@ -57,15 +47,15 @@ export default function NoteColumns() {
     return note;
   }
 
-  const getNoteName = (noteRow, i) => {
-    let noteName;
-    if (['bassDrum', 'snareDrum', 'cymbal'].includes(noteRow)) {
-      noteName = noteRow[0].toUpperCase() + (noteRow === 'cymbal' ? '' : 'D');
-    } else {
-      noteName = NOTES[noteRow][Math.floor(i / loopLength * 4)]
-    }
-    return noteName;
-  }
+  // const getNoteName = (noteRow, i) => {
+  //   let noteName;
+  //   if (['bassDrum', 'snareDrum', 'cymbal'].includes(noteRow)) {
+  //     noteName = noteRow[0].toUpperCase() + (noteRow === 'cymbal' ? '' : 'D');
+  //   } else {
+  //     noteName = NOTES[noteRow][Math.floor(i / loopLength * 4)]
+  //   }
+  //   return noteName;
+  // }
 
 
   const chordLength = i => {
@@ -95,10 +85,10 @@ export default function NoteColumns() {
                   border: chordLength(i).includes(currentBeat) ? '2px solid black' : '2px solid lightblue',
                 }}
               >
-                <Title
+                {/* <Title
                 level={5}
                 style={{textAlign: 'center'}}
-                >{he.decode(prog[i])}</Title>
+                >{he.decode(prog[i])}</Title> */}
                 {Object.keys(noteSwitches).map((noteRow, j) =>
                   <Row
                     key={j}
@@ -112,8 +102,10 @@ export default function NoteColumns() {
                           addSynth(beat, note, noteRow)
                         }}
                         key={beat}
-                        style={{ overflow: 'hidden',
-                        border: String(beat) === String(currentBeat) && '1px solid black'
+                        style={{
+                        overflow: 'hidden',
+                        border: String(beat) === String(currentBeat) && '1px solid black',
+                        // transitionDuration: '.1s',
                       }}
                         type={!buttons[noteRow][beat] ? 'link'
                         : String(beat) === String(currentBeat) ? 'default' : 'primary'}

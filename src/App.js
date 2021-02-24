@@ -1,10 +1,10 @@
 import NoteColumns from './components/NoteColumns'
 import Heading from './components/Header';
-import './App.css'
 import ContextProvider from './context/context';
-import { Layout } from 'antd';
-import "antd/dist/antd.css";
 import SubHeader from './components/SubHeader';
+
+import './App.css'
+import Layout from 'antd/es/layout';
 const { Header, Footer, Content } = Layout;
 
 function App() {

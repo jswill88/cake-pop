@@ -3,8 +3,10 @@ import { Context } from '../context/context';
 import SignInForm from './SignInForm';
 import './Header.css'
 
-import { Row, Col, Typography, Button } from 'antd';
-
+import Row from 'antd/es/row';
+import Col from 'antd/es/col';
+import Typography from 'antd/es/typography';
+import Button from 'antd/es/button'
 const { Title } = Typography;
 
 export default function Heading() {

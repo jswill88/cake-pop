@@ -1,6 +1,10 @@
 import { useState, useContext } from 'react';
 import { Context } from '../context/context';
-import { Modal, Form, Input, Typography } from 'antd';
+
+import Modal from 'antd/es/modal';
+import Form from 'antd/es/form';
+import Input from 'antd/es/input';
+import Typography from 'antd/es/typography'
 
 const { Link } = Typography;
 

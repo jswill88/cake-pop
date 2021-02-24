@@ -1,12 +1,13 @@
 import { useContext } from 'react';
 import { Context } from '../context/context';
-import { Button, Space, Row } from 'antd';
 
-import {
-  CaretRightOutlined,
-  BorderOutlined,
-  PauseOutlined,
-} from '@ant-design/icons';
+import Button from 'antd/es/button';
+import Space from 'antd/es/space';
+import Row from 'antd/es/row';
+
+import CaretRightOutlined from '@ant-design/icons/CaretRightOutlined';
+import BorderOutlined from '@ant-design/icons/BorderOutlined';
+import PauseOutlined from '@ant-design/icons/PauseOutlined';
 
 export default function PrimaryButtons() {
 

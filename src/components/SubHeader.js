@@ -1,21 +1,20 @@
-
 import { useContext, useState } from 'react';
-import {
-  Row,
-  Col,
-  Typography,
-  Divider,
-  Button,
-  Popconfirm,
-  Modal,
-  Form,
-  Input
-} from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
 import { Context } from '../context/context';
 import SongDropDown from './SongDropDown';
 import PrimaryButtons from './PrimaryButtons';
 import Controls from './Controls';
+
+import Row from 'antd/es/row';
+import Col from 'antd/es/col';
+import Typography from 'antd/es/typography';
+import Divider from 'antd/es/divider';
+import Button from 'antd/es/button';
+import Popconfirm from 'antd/es/popconfirm';
+import Modal from 'antd/es/modal';
+import Form from 'antd/es/form';
+import Input from 'antd/es/input';
+
+import DeleteOutlined from '@ant-design/icons/DeleteOutlined'
 
 const { Title, Paragraph } = Typography;
 

@@ -2,19 +2,18 @@ import { useContext, useState } from 'react';
 import he from 'he';
 import { Context } from '../context/context';
 import { CHORDS } from '../lib/noteInfo';
-import {
-  Button,
-  Select,
-  Typography,
-  InputNumber,
-  Form,
-  Tooltip,
-  Row,
-  Space,
-  Card
-} from 'antd';
 
-import { QuestionCircleOutlined } from '@ant-design/icons'
+import Button from 'antd/es/button';
+import Select from 'antd/es/select';
+import Typography from 'antd/es/typography';
+import InputNumber from 'antd/es/input-number';
+import Form from 'antd/es/form';
+import Tooltip from 'antd/es/tooltip';
+import Row from 'antd/es/row';
+import Space from 'antd/es/space';
+import Card from 'antd/es/card';
+
+import QuestionCircleOutlined from '@ant-design/icons/QuestionCircleOutlined'
 
 const { Option } = Select;
 const { Text } = Typography
