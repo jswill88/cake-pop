@@ -60,7 +60,6 @@ export default function Controls() {
   return (
     <Card
     size="small"
-    draggable={true}
     >
       <Row
       style={{...rowStyle, justifyContent:'space-between'}}
@@ -75,7 +74,7 @@ export default function Controls() {
       >
 
         <Form.Item
-          label="Tempo"
+          label="Tempo&nbsp;"
           name="tempo"
           tooltip={{
             title: "Enter a number between 50 and 320",

@@ -42,7 +42,7 @@ export default function NoteColumns() {
     if (['bassDrum', 'snareDrum', 'cymbal'].includes(noteRow)) {
       note = NOTES[noteRow][Math.floor(i / loopLength * 4)];
     } else {
-      note = NOTES[noteRow][Math.floor(i / loopLength * 4)] + (noteRow.includes('bass') ? 3 : 5);
+      note = NOTES[noteRow][Math.floor(i / loopLength * 4)] + (noteRow.includes('bass') ? '' : 5);
     }
     return note;
   }

@@ -228,7 +228,7 @@ function ContextProvider(props) {
 
           let note;
           if (['bassLow', 'bassHigh'].includes(noteRow)) {
-            note = BASS[newChord][noteRow === 'bassLow' ? 0 : 1] + 3;
+            note = BASS[newChord][noteRow === 'bassLow' ? 0 : 1];
           } else {
             note = CHORDS[newChord][2 - Object.keys(NOTES).indexOf(noteRow)] + 5;
           }
@@ -301,7 +301,7 @@ function ContextProvider(props) {
           if (['bassDrum', 'snareDrum', 'cymbal'].includes(noteRow)) {
             note = NOTES[noteRow][0];
           } else if (['bassLow', 'bassHigh'].includes(noteRow)) {
-            note = BASS[chordProgression[chord]][noteRow === 'bassLow' ? 0 : 1] + 3;
+            note = BASS[chordProgression[chord]][noteRow === 'bassLow' ? 0 : 1];
           } else {
             note = CHORDS[chordProgression[chord]][2 - Object.keys(NOTES).indexOf(noteRow)] + 5;
           }

@@ -3,7 +3,7 @@ import Heading from './components/Header';
 import ContextProvider from './context/context';
 import SubHeader from './components/SubHeader';
 
-import './App.css'
+import './App.less'
 import Layout from 'antd/es/layout';
 const { Header, Footer, Content } = Layout;
 
