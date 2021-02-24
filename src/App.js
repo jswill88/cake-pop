@@ -1,6 +1,6 @@
 import Synth from './components/Synth';
 import Heading from './components/Header';
-
+import './App.css'
 import ContextProvider from './context/context';
 import { Layout } from 'antd';
 import "antd/dist/antd.css";
