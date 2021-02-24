@@ -1,4 +1,4 @@
-import Synth from './components/Synth';
+import NoteColumns from './components/NoteColumns'
 import Heading from './components/Header';
 import './App.css'
 import ContextProvider from './context/context';
@@ -18,7 +18,7 @@ function App() {
 
         <Content style={{padding: '1rem 3rem'}}>
           <SubHeader />
-          <Synth />
+          <NoteColumns />
         </Content>
 
         <Footer>

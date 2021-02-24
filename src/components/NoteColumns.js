@@ -1,74 +1,49 @@
 import ButtonLabel from './ButtonLabel'
+import he from 'he';
 import { Context } from '../context/context'
 import { useContext } from 'react'
-import { Row, Button, Divider, Col } from 'antd';
+import { InlineIcon } from '@iconify/react';
+import musicClefTreble from '@iconify-icons/mdi/music-clef-treble';
+import musicClefBass from '@iconify-icons/mdi/music-clef-bass';
+import drumIcon from '@iconify-icons/la/drum';
+
+import {
+  Row,
+  Button,
+  Divider,
+  Col,
+  Typography
+} from 'antd';
+
+const { Title } = Typography;
+
+
 
 export default function NoteColumns() {
   const {
-    // Tone,
     currentBeat,
     NOTES,
-    // makeSynth,
     loopLength,
     noteSwitches,
-    // setNoteSwitches,
-    // prog
+    buttons,
+    setButtons,
+    prog
   } = useContext(Context)
 
-  // useEffect(() => {
-  //   const synth = makeSynth('chordSynth');
-  //   const loop = new Tone.Sequence((time, note) => {
-  //     // if (type === 'snareDrum') synth.triggerAttackRelease('8n', time)
-  //     /*else*/ synth.triggerAttackRelease(note, '8n', time)
-  //   }, noteSwitches['high']).start(0);
-
-  //   return () => {
-  //     loop.cancel()
-  //     loop.dispose();
-  //   }
-
-  // }, [Tone.Sequence, makeSynth, noteSwitches])
-
   const addSynth = (beat, note, row) => {
-    console.log(noteSwitches[row].events)
     if (!noteSwitches[row].events[beat].length) {
 
-
-      console.log('in if')
       noteSwitches[row].events[beat] = note;
-      // const arrLoop = new Array(loopLength).fill([])
-      // arrLoop[beat] = note;
-
-      // let type;
-      // if (['bassHigh', 'bassLow'].includes(row)) type = 'bassSynth'
-      // else if (['high', 'mid', 'low'].includes(row)) type = 'chordSynth'
-      // else type = row;
-      // const synth = makeSynth(type);
-
-      // const loop = new Tone.Sequence((time, note) => {
-      //   if (type === 'snareDrum') synth.triggerAttackRelease('8n', time)
-      //   else synth.triggerAttackRelease(note, '8n', time)
-      // }, arrLoop).start(0);
-
-
-      // /********************* */
-      // console.log(loop.events)
-      // loop.events[0] = 'Ab5'
-      // console.log(loop.events)
-      /*********************** */
-
-      // const newLoopForRow = noteSwitches[row];
-
-      // newLoopForRow[beat] = note;
-
-      // setNoteSwitches(obj => {
-      //   return { ...obj, [row]: newLoopForRow }
-      // });
+      setButtons(obj => {
+        obj[row][beat] = true;
+        return { ...obj };
+      })
     } else {
-      // noteSwitches[row][beat].stop();
-      // noteSwitches[row][beat].cancel();
-      // setNoteSwitches(obj => ({ ...obj, [row]: { ...obj[row], [beat]: false } }));
       noteSwitches[row].events[beat] = []
+      setButtons(obj => {
+        obj[row][beat] = false;
+        return { ...obj };
+      })
     }
   }
 
@@ -92,7 +67,6 @@ export default function NoteColumns() {
     return noteName;
   }
 
-  // const columns = [];
 
   const chordLength = i => {
     let start = i * loopLength / 4;
@@ -102,59 +76,90 @@ export default function NoteColumns() {
     return chordLength
   }
 
-  // columns.push(
   return (
     <>
-      {[0, 1, 2, 3].map(i =>
-        < Col
-          // title={prog[i]}
-          // type="inner"
-          key={i}
-          style={{
-            marginBottom: '1rem',
-            // boxShadow: '.1rem .1rem .2rem grey'
-          }}
+      {('high' in noteSwitches) &&
+        <Row
+          justify="center"
         >
-          {Object.keys(noteSwitches).map((noteRow, j) =>
-            <Row
-              key={j}
-            >
-              {/* {Object.keys(noteSwitches[noteRow])
-                .filter((beat) => beat >= i * loopLength / 4 && beat < i * loopLength / 4 + loopLength / 4) */}
-              {chordLength(i).map(beat =>
-                <Button
-                  shape="circle"
-                  onClick={() => {
-                    const note = getNote(noteRow, beat)
-                    addSynth(beat, note, noteRow)
-                  }}
-                  key={beat}
-                  style={{ overflow: 'hidden' }}
-                >
-                  {/* <Text>{currentBeat}</Text> */}
-                  {noteSwitches[noteRow].events[beat] &&
+         
+          {[0, 1, 2, 3].map(i =>
+              < Col
+                key={i}
+                style={{
+                  marginBottom: '1rem',
+                  // width: '20%',
+                  minWidth: '20%',
+                  padding: '2rem 0',
+                  boxSizing:'border-box',
+                  border: chordLength(i).includes(currentBeat) ? '2px solid black' : '2px solid lightblue',
+                }}
+              >
+                <Title
+                level={5}
+                style={{textAlign: 'center'}}
+                >{he.decode(prog[i])}</Title>
+                {Object.keys(noteSwitches).map((noteRow, j) =>
+                  <Row
+                    key={j}
+                    justify="space-around"
+                  >
+                    {chordLength(i).map(beat =>
+                      <Button
+                        shape="circle"
+                        onClick={() => {
+                          const note = getNote(noteRow, beat)
+                          addSynth(beat, note, noteRow)
+                        }}
+                        key={beat}
+                        style={{ overflow: 'hidden',
+                        border: String(beat) === String(currentBeat) && '1px solid black'
+                      }}
+                        type={!buttons[noteRow][beat] ? 'link'
+                        : String(beat) === String(currentBeat) ? 'default' : 'primary'}
+                      >
+                        <Icon noteRow={noteRow} />
+                        {/* <ButtonLabel
+                          beat={buttons[noteRow][beat]}
+                          active={String(beat) === String(currentBeat)}
+                          note={getNoteName(noteRow, beat)}
+                          noteRow={noteRow}
+                        /> */}
 
-                    <ButtonLabel
-                      beat={noteSwitches[noteRow].events[beat]}
-                      active={String(beat) === String(currentBeat)}
-                      note={getNoteName(noteRow, beat)}
-                    />
-                    
-                  }
-                  </Button>
-              )}
-              {['low', 'bassLow'].includes(noteRow) && <Divider />}
-            </Row>
+                      </Button>
+                    )}
+                    {['low', 'bassLow'].includes(noteRow) && <Divider />}
+                  </Row>
+                )}
+              </Col>
+       
           )}
-        </Col>
-      )}
-      {/* <Divider 
-        type="vertical"
-        style={{ backgroundColor: 'black'}}
-        /> */}
+        </Row>
+      }
     </>
   )
-  // )
-  // return columns;
+}
 
+function Icon({noteRow}) {
+  switch (noteRow) {
+    case 'high':
+    case 'low':
+    case 'mid':
+      return <InlineIcon
+        style={{ fontSize: '1.5rem' }}
+        icon={musicClefTreble} />
+    case 'bassHigh':
+    case 'bassLow':
+      return <InlineIcon
+        style={{ fontSize: '1.5rem' }}
+        icon={musicClefBass} />
+    case 'bassDrum':
+    case 'snareDrum':
+    case 'cymbal':
+      return <InlineIcon
+        style={{ fontSize: '1.5rem' }}
+        icon={drumIcon} />
+    default:
+      return null
+  }
 }

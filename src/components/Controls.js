@@ -29,7 +29,8 @@ export default function Controls() {
     tempo,
     handleTempoChange,
     prog,
-    handleChordChange
+    handleChordChange,
+    stopAudio
   } = useContext(Context)
 
   const [editTempo, setEditTempo] = useState(false);
@@ -83,7 +84,6 @@ export default function Controls() {
           }}
           validateStatus={tempoError ? 'error' : 'success'}
           initialValue={tempo}
-          // style={{justifyContent: 'flex-end'}}
         >
           {!editTempo ?
             <Text
@@ -139,7 +139,7 @@ export default function Controls() {
           size="small"
           value={loopLength}
           onChange={val => {
-            reset();
+            stopAudio()
             setLoopLength(parseInt(val))
           }}
         >
@@ -176,21 +176,6 @@ export default function Controls() {
           )}
         </Space>
       </Row>
-      {/* <Row
-      style={{...rowStyle, justifyContent:'flex-end'}}
-      > */}
-
-        {/* <Button
-          onClick={() => {
-            reset();
-            setPlayStatus('stop')
-          }}
-          size="small"
-          danger
-        >
-          Reset
-      </Button> */}
-      {/* </Row> */}
     </Card>
   )
 }
