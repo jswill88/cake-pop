@@ -1,6 +1,6 @@
 import ButtonLabel from './ButtonLabel'
 import { Context } from '../context/context'
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { Row, Button, Divider, Col } from 'antd';
 
 export default function NoteColumns() {
@@ -29,6 +29,9 @@ export default function NoteColumns() {
       })
     }
   }
+
+  useEffect(() => console.log(noteSwitches), [noteSwitches])
+  useEffect(() => console.log(loopLength), [loopLength])
 
   const getNote = (noteRow, i) => {
     let note;

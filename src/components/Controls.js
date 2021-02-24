@@ -29,7 +29,8 @@ export default function Controls() {
     tempo,
     handleTempoChange,
     prog,
-    handleChordChange
+    handleChordChange,
+    stopAudio
   } = useContext(Context)
 
   const [editTempo, setEditTempo] = useState(false);
@@ -138,7 +139,7 @@ export default function Controls() {
           size="small"
           value={loopLength}
           onChange={val => {
-            reset();
+            stopAudio()
             setLoopLength(parseInt(val))
           }}
         >

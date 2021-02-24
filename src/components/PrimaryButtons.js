@@ -1,4 +1,4 @@
-import { useContext, /*useState*/ } from 'react';
+import { useContext } from 'react';
 import { Context } from '../context/context';
 import { Button, Space, Row } from 'antd';
 
@@ -10,15 +10,13 @@ import {
 
 export default function PrimaryButtons() {
 
-  // const [toneContext, setToneContext] = useState(null)
-  // const [started, setStarted] = useState(false)
-
   const {
     Tone,
     setCurrentBeat,
     tempo,
     playStatus,
     setPlayStatus,
+    stopAudio
   } = useContext(Context);
 
   const startAudio = async () => {
@@ -30,16 +28,9 @@ export default function PrimaryButtons() {
   }
 
   const pauseAudio = () => {
-    Tone.Transport.pause('+0.1');
+    Tone.Transport.pause('+8n');
     setPlayStatus('pause')
   }
-
-  const stopAudio = () => {
-    Tone.Transport.stop('+0.1')
-    setPlayStatus('stop')
-    setCurrentBeat(-2);
-  }
-
 
   return (
     <Row

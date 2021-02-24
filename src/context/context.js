@@ -56,6 +56,7 @@ function ContextProvider(props) {
   }, []);
 
   useEffect(() => {
+
     const noteObj = {};
     const buttonObj = {};
     ['high', 'mid', 'low', 'bassHigh', 'bassLow', 'cymbal', 'snareDrum', 'bassDrum'].forEach(row => {
@@ -339,7 +340,7 @@ function ContextProvider(props) {
   }
 
   const reset = async (skip) => {
-    await Tone.Transport.stop('+0.1');
+    await Tone.Transport.stop('+8n');
     const buttonObj = {};
     for (let noteRow in noteSwitches) {
       noteSwitches[noteRow].dispose()
@@ -372,6 +373,11 @@ function ContextProvider(props) {
     setCurrentBeat(-2)
   }
 
+  const stopAudio = () => {
+    Tone.Transport.stop('+8n')
+    setPlayStatus('stop')
+    setCurrentBeat(-2);
+  }
 
   const state = {
     loggedIn,
@@ -409,7 +415,8 @@ function ContextProvider(props) {
     setPlayStatus,
     handleChordChange,
     buttons,
-    setButtons
+    setButtons,
+    stopAudio
   }
 
   return (
