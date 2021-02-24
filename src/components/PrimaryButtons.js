@@ -19,22 +19,14 @@ export default function PrimaryButtons() {
     tempo,
     playStatus,
     setPlayStatus,
-    // stopAudio
   } = useContext(Context);
 
   const startAudio = async () => {
     if (playStatus === 'stop') setCurrentBeat(-1)
     setPlayStatus('start')
-    // if(!started) {
-      // const toneContext = new Tone.Context({ latencyHint : "interactive" })
-      // Tone.setContext(toneContext)
-      // setStarted(true)
-    // }
     await Tone.start();
-    // toneContext.resume();
     Tone.Transport.bpm.value = tempo;
     Tone.Transport.start('+0.1');
-    // setToneContext(toneContext)
   }
 
   const pauseAudio = () => {
@@ -46,9 +38,6 @@ export default function PrimaryButtons() {
     Tone.Transport.stop('+0.1')
     setPlayStatus('stop')
     setCurrentBeat(-2);
-    // toneContext.dispose();
-    // toneContext.close();
-    // setToneContext(null)
   }
 
 

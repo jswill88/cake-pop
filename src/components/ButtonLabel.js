@@ -3,7 +3,7 @@ export default function ButtonLabel ({ beat, note, active }) {
     <div
       style={{
         boxSizing: 'border-box',
-        backgroundColor: !beat.length ? 'pink'
+        backgroundColor: !beat ? 'pink'
           : active ? 'white' : 'lightblue',
         border: active ? '2px solid black' : 'none',
         width: '100%',

@@ -170,7 +170,6 @@ export default function SubHeader() {
         </Col>
         <Col
           span={10}
-          // offset={2}
         >
           <Controls />
         </Col>

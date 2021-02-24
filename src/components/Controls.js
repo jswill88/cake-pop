@@ -83,7 +83,6 @@ export default function Controls() {
           }}
           validateStatus={tempoError ? 'error' : 'success'}
           initialValue={tempo}
-          // style={{justifyContent: 'flex-end'}}
         >
           {!editTempo ?
             <Text
@@ -176,21 +175,6 @@ export default function Controls() {
           )}
         </Space>
       </Row>
-      {/* <Row
-      style={{...rowStyle, justifyContent:'flex-end'}}
-      > */}
-
-        {/* <Button
-          onClick={() => {
-            reset();
-            setPlayStatus('stop')
-          }}
-          size="small"
-          danger
-        >
-          Reset
-      </Button> */}
-      {/* </Row> */}
     </Card>
   )
 }
