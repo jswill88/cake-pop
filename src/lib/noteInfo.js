@@ -9,13 +9,13 @@
 }
 
 export const BASS = {
-  I: ['Db', 'Ab'],
-  ii: ['Eb', 'Bb'],
-  iii: ['F', 'C'],
-  IV: ['Gb', 'Db'],
-  V: ['Ab', 'Eb'],
-  vi: ['Bb', 'F'],
-  'vii&#x26AC;': ['C', 'Gb'],
+  I: ['Db3', 'Ab3'],
+  ii: ['Eb3', 'Bb3'],
+  iii: ['F3', 'C4'],
+  IV: ['Gb2', 'Db3'],
+  V: ['Ab2', 'Eb3'],
+  vi: ['Bb2', 'F3'],
+  'vii&#x26AC;': ['C3', 'Gb3'],
 }
 
 

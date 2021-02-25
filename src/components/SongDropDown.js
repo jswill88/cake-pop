@@ -1,7 +1,10 @@
 import { useContext } from 'react';
-import { Menu, Dropdown, Button } from 'antd';
 import { Context } from '../context/context';
-import { DownOutlined } from '@ant-design/icons';
+
+import Menu from 'antd/es/menu';
+import Dropdown from 'antd/es/dropdown';
+import Button from 'antd/es/button';
+import DownOutlined from '@ant-design/icons/DownOutlined';
 
 export default function SongDropDown() {
   const {
