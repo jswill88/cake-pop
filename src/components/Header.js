@@ -22,15 +22,18 @@ export default function Heading() {
       className="header"
       justify="space-between"
       align="middle"
+
     >
-      <Col span={6}
+      <Col span={18}
       >
         <Title
           level={2}
           style={{
             color: '#FFFFFF',
             margin: 0,
-            fontFamily: '\'Sniglet\', cursive'
+            fontFamily: '\'Sniglet\', cursive',
+            letterSpacing: '.1rem',
+            // textShadow: '2px 2px 5px #24ddd8'
           }}
         >
           🎂 Cake Pop
@@ -38,7 +41,7 @@ export default function Heading() {
       </Col>
       <>
         <Col
-          span={3}
+          span={{ xs: 6, sm: 6, md: 3, lg: 3 }}
         >
           {!loggedIn ?
             <>

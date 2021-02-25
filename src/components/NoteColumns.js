@@ -72,17 +72,19 @@ export default function NoteColumns() {
         <Row
           justify="center"
         >
-         
-          {[0, 1, 2, 3].map(i =>
+          {/* <Space> */}
+            {[0, 1, 2, 3].map(i =>
               < Col
                 key={i}
                 style={{
                   marginBottom: '1rem',
-                  // width: '20%',
                   minWidth: '20%',
-                  padding: '2rem 0',
-                  boxSizing:'border-box',
-                  border: chordLength(i).includes(currentBeat) ? '2px solid black' : '2px solid lightblue',
+                  padding: '2rem .2rem',
+                  boxSizing: 'border-box',
+                  border: chordLength(i).includes(currentBeat) ? '2px solid #251738': '2px solid #ffa4cd',
+                  borderRadius: '3%',
+                  margin: '.2rem',
+                  // backgroundColor: '#f9d673',
                 }}
               >
                 {/* <Title
@@ -103,12 +105,17 @@ export default function NoteColumns() {
                         }}
                         key={beat}
                         style={{
-                        overflow: 'hidden',
-                        border: String(beat) === String(currentBeat) && '1px solid black',
-                        // transitionDuration: '.1s',
-                      }}
-                        type={!buttons[noteRow][beat] ? 'link'
-                        : String(beat) === String(currentBeat) ? 'default' : 'primary'}
+                          overflow: 'hidden',
+                          border: String(beat) === String(currentBeat) ? '1px solid black' : '1px solid lightblue',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          display: 'flex'
+                          // transitionDuration: '.1s',
+                          // backgroundColor:'pink'
+                        }}
+                        size="large"
+                        type={!buttons[noteRow][beat] ? 'ghost'
+                          : String(beat) === String(currentBeat) ? 'default' : 'primary'}
                       >
                         <Icon noteRow={noteRow} />
                         {/* <ButtonLabel
@@ -124,32 +131,33 @@ export default function NoteColumns() {
                   </Row>
                 )}
               </Col>
-       
-          )}
+
+            )}
+          {/* </Space> */}
         </Row>
       }
     </>
   )
 }
 
-function Icon({noteRow}) {
+function Icon({ noteRow }) {
   switch (noteRow) {
     case 'high':
     case 'low':
     case 'mid':
       return <InlineIcon
-        style={{ fontSize: '1.5rem' }}
+        style={{ fontSize: '1.2rem' }}
         icon={musicClefTreble} />
     case 'bassHigh':
     case 'bassLow':
       return <InlineIcon
-        style={{ fontSize: '1.5rem' }}
+        style={{ fontSize: '1.2rem' }}
         icon={musicClefBass} />
     case 'bassDrum':
     case 'snareDrum':
     case 'cymbal':
       return <InlineIcon
-        style={{ fontSize: '1.5rem' }}
+        style={{ fontSize: '1.2rem' }}
         icon={drumIcon} />
     default:
       return null
