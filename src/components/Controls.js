@@ -141,7 +141,7 @@ export default function Controls() {
             setLoopLength(parseInt(val))
           }}
         >
-          {[8, 12, 16, 20, 24, 28, 32].map((beats, i) =>
+          {[8, 12, 16, 20, 24].map((beats, i) =>
             <Option
               key={i}
               value={beats}
@@ -163,6 +163,7 @@ export default function Controls() {
               value={he.decode(progChord)}
               onChange={val => handleChordChange(val, i)}
               size="small"
+              style={{minWidth: '2rem'}}
             >
               {CHORDS && Object.keys(CHORDS).map((chord, j) =>
                 <Option

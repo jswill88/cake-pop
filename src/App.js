@@ -2,6 +2,8 @@ import NoteColumns from './components/NoteColumns'
 import Heading from './components/Header';
 import ContextProvider from './context/context';
 import SubHeader from './components/SubHeader';
+import Foot from './components/Foot'
+
 
 import './App.less'
 import Layout from 'antd/es/layout';
@@ -22,7 +24,7 @@ function App() {
         </Content>
 
         <Footer>
-          &copy; 2021 Josh Williams
+          <Foot />
         </Footer>
 
       </Layout>

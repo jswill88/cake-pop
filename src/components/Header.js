@@ -1,12 +1,15 @@
 import { useContext } from 'react';
 import { Context } from '../context/context';
 import SignInForm from './SignInForm';
-import './Header.css'
+import './Header.css';
+
+import LoginOutlined from '@ant-design/icons/LoginOutlined';
+import LogoutOutlined from '@ant-design/icons/LogoutOutlined';
 
 import Row from 'antd/es/row';
 import Col from 'antd/es/col';
-import Typography from 'antd/es/typography';
 import Button from 'antd/es/button'
+import Typography from 'antd/es/typography';
 const { Title } = Typography;
 
 export default function Heading() {
@@ -51,6 +54,7 @@ export default function Heading() {
                 onClick={() => {
                   setShowForm(true)
                 }}
+                icon={<LoginOutlined />}
               >
                 Sign In
               </Button>
@@ -62,8 +66,8 @@ export default function Heading() {
               type="primary"
               onClick={() => {
                 logout();
-              }
-              }
+              }}
+              icon={<LogoutOutlined />}
             >
               Log Out
             </Button>
