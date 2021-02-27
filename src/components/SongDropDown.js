@@ -21,6 +21,7 @@ export default function SongDropDown() {
       {songs.map(({ title, id }, i) =>
         <Menu.Item
           key={i}
+          // style={{ fontSize: '1rem' }}
         >
           {title}
         </Menu.Item>

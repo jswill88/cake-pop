@@ -21,7 +21,7 @@ function App() {
       <Router>
         <Layout style={{ minHeight: '100vh', minWidth: '280px' }}>
 
-          <Header>
+          <Header style={{padding: '0 1rem'}}>
             <Heading />
           </Header>
 
