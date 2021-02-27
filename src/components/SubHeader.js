@@ -54,7 +54,7 @@ export default function SubHeader() {
         // style={{backgroundColor: 'lightblue'}}
         >
           <Title
-            level={3}
+            level={2}
             editable={{
               tooltip: false,
               onChange: rename,
@@ -62,11 +62,15 @@ export default function SubHeader() {
             style={{
               margin: 0,
             }}
+            ellipsis
           >
             {title}
           </Title>
 
-          <Paragraph>
+          <Paragraph
+            style={{fontSize: '14px'}}
+            ellipsis
+          >
             {loggedIn ? `Hi, ${user}` : 'Sign in to save'}
           </Paragraph>
           {loggedIn &&
@@ -75,7 +79,7 @@ export default function SubHeader() {
               {!openSongId ?
                 <Button
                   onClick={() => saveSong('new')}
-                  size="small"
+                  size="large"
                   type="link"
                 >
                   Save
@@ -84,14 +88,14 @@ export default function SubHeader() {
                 <>
                   <Button
                     onClick={() => saveSong('update')}
-                    size="small"
+                    size="large"
                     type="link"
                   >
                     Save
                   </Button>
                   <Button
                     onClick={() => setShowSaveAsModal(true)}
-                    size="small"
+                    size="large"
                     type="link"
                   >
                     Save As
@@ -139,7 +143,7 @@ export default function SubHeader() {
                     }}
                   >
                     <Button
-                      size="small"
+                      size="large"
                       type="link"
                     >
                       New
@@ -151,7 +155,7 @@ export default function SubHeader() {
                     placement="bottom"
                   >
                     <Button
-                      size="small"
+                      size="large"
                       icon={<DeleteOutlined />}
                       danger
                       type="link"

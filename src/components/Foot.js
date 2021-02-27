@@ -11,7 +11,7 @@ export default function Foot() {
       <Text
         style={{ color: '#ffffff' }}
       >
-        &copy; 2021 Josh Williams
+        Josh Williams &copy; 2021 
     </Text>
       <Text
         style={{ color: '#ffffff' }}

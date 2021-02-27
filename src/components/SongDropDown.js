@@ -36,7 +36,7 @@ export default function SongDropDown() {
     >
       <Button
         type="link"
-        size="small"
+        size="large"
       >
         Open<DownOutlined />
       </Button>

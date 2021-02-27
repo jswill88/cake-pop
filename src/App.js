@@ -2,7 +2,13 @@ import NoteColumns from './components/NoteColumns'
 import Heading from './components/Header';
 import ContextProvider from './context/context';
 import SubHeader from './components/SubHeader';
-import Foot from './components/Foot'
+import Foot from './components/Foot';
+import Info from './components/Info';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from "react-router-dom";
 
 
 import './App.less'
@@ -12,22 +18,31 @@ const { Header, Footer, Content } = Layout;
 function App() {
   return (
     <ContextProvider>
-      <Layout style={{minHeight: '100vh'}}>
+      <Router>
+        <Layout style={{ minHeight: '100vh', minWidth: '280px' }}>
 
-        <Header>
-          <Heading />
-        </Header>
+          <Header>
+            <Heading />
+          </Header>
 
-        <Content style={{padding: '1rem 3rem'}}>
-          <SubHeader />
-          <NoteColumns />
-        </Content>
+          <Content style={{ padding: '1rem 3rem' }}>
+            <Switch>
+              <Route exact path="/">
+                <SubHeader />
+                <NoteColumns />
+              </Route>
+              <Route path="/info">
+                <Info />
+              </Route>
+            </Switch>
+          </Content>
 
-        <Footer>
-          <Foot />
-        </Footer>
+          <Footer>
+            <Foot />
+          </Footer>
 
-      </Layout>
+        </Layout>
+      </Router>
     </ContextProvider>
   );
 }
