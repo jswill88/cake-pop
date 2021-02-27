@@ -21,6 +21,7 @@ export default function SongDropDown() {
       {songs.map(({ title, id }, i) =>
         <Menu.Item
           key={i}
+          // style={{ fontSize: '1rem' }}
         >
           {title}
         </Menu.Item>
@@ -36,7 +37,7 @@ export default function SongDropDown() {
     >
       <Button
         type="link"
-        size="small"
+        size="large"
       >
         Open<DownOutlined />
       </Button>
