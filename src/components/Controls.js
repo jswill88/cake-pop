@@ -11,6 +11,7 @@ import Form from 'antd/es/form';
 import Tooltip from 'antd/es/tooltip';
 import Row from 'antd/es/row';
 import Space from 'antd/es/space';
+import Col from 'antd/es/col';
 import Card from 'antd/es/card';
 
 import QuestionCircleOutlined from '@ant-design/icons/QuestionCircleOutlined'
@@ -58,68 +59,78 @@ export default function Controls() {
   }
 
   return (
-    <Card
-    size="small"
+    <Row
+      justify="start"
     >
-      <Row
-      style={{...rowStyle, justifyContent:'space-between'}}
+      <Col
+        // style={{...rowStyle, justifyContent:'space-between'}}
+        span={6}
+        // style={{display: '  ', justifyContent: 'flex-start'}}
       >
+        {/* // <Card
+    // size="small"
+    // > */}
 
-      <Form
-        layout="inline"
-        component="span"
-        colon
-        style={{ lineHeight: 1, alignItems: 'center', justifyContent:'space-between' }}
-        form={form}
-      >
-
-        <Form.Item
-          label="Tempo&nbsp;"
-          name="tempo"
-          tooltip={{
-            title: "Enter a number between 50 and 320",
-            placement: "bottom"
-          }}
-          validateStatus={tempoError ? 'error' : 'success'}
-          initialValue={tempo}
+        <Form
+          layout="inline"
+          component="span"
+          colon
+          style={{ lineHeight: 1, alignItems: '', justifyContent: 'flex-start'}}
+          form={form}
         >
-          {!editTempo ?
-            <Text
-              editable
-              onClick={() => setEditTempo(true)}
-            >{tempo}</Text> :
-            <InputNumber
-              size="small"
-              onChange={() => checkTempoErrors()}
-            />
+
+          <Form.Item
+            label="Tempo&nbsp;"
+            name="tempo"
+            tooltip={{
+              title: "Enter a number between 50 and 320",
+              placement: "bottom"
+            }}
+            validateStatus={tempoError ? 'error' : 'success'}
+            initialValue={tempo}
+          >
+            {!editTempo ?
+              <Text
+                editable
+                onClick={() => setEditTempo(true)}
+              >{tempo}</Text> :
+              <InputNumber
+                size="small"
+                onChange={() => checkTempoErrors()}
+              />
+
+            }
+          </Form.Item>
+          {editTempo &&
+            <>
+              <Form.Item>
+                <Button
+                  size="small"
+                  onClick={() => updateTempo()}
+                >
+                  Set
+              </Button>
+              </Form.Item>
+              <Form.Item>
+                <Button
+                  size="small"
+                  onClick={() => {
+                    setEditTempo(false)
+                    form.resetFields();
+                  }}
+                >
+                  Cancel
+              </Button>
+              </Form.Item>
+            </>
 
           }
-        </Form.Item>
-        {editTempo &&
-          <Form.Item>
-            <Button
-              size="small"
-              onClick={() => updateTempo()}
-            >
-              Set
-            </Button>
-          </Form.Item>
+        </Form>
 
-        }
-      </Form>
-      <Button
-          onClick={() => {
-            reset();
-            setPlayStatus('stop')
-          }}
-          size="small"
-          danger
-        >
-          Reset
-      </Button>
-      </Row>
-      <Row
-        style={rowStyle}
+      </Col>
+      <Col
+      // style={rowStyle}
+      // span={6}
       >
         <Text>
           Loop Length&nbsp;
@@ -151,9 +162,10 @@ export default function Controls() {
           )}
         </Select>
 
-      </Row>
-      <Row
-        style={rowStyle}
+      </Col>
+      <Col
+      // span={6}
+      // style={rowStyle}
       >
         <Text>Chords:&nbsp;</Text>
         <Space>
@@ -163,7 +175,7 @@ export default function Controls() {
               value={he.decode(progChord)}
               onChange={val => handleChordChange(val, i)}
               size="small"
-              style={{minWidth: '2rem'}}
+              style={{ minWidth: '2rem' }}
             >
               {CHORDS && Object.keys(CHORDS).map((chord, j) =>
                 <Option
@@ -174,8 +186,23 @@ export default function Controls() {
             </Select>
           )}
         </Space>
-      </Row>
-    </Card>
+        {/* // </Card> */}
+      </Col>
+      <Col
+      // span={6}
+      >
+        <Button
+          onClick={() => {
+            reset();
+            setPlayStatus('stop')
+          }}
+          size="small"
+          danger
+        >
+          Reset
+      </Button>
+      </Col>
+    </Row>
   )
 }
 

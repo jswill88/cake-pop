@@ -49,8 +49,10 @@ export default function SubHeader() {
       <Row
         gutter={8}
         align="middle"
+        justify="space-between"
       >
-        <Col span={7} 
+        <Col 
+        // pan={{xs: 20, sm: 17, md: 16, lg: 10}} 
         // style={{backgroundColor: 'lightblue'}}
         >
           <Title
@@ -167,17 +169,20 @@ export default function SubHeader() {
           }
         </Col>
         <Col
-          span={7}
+          // span={7}
         >
           <PrimaryButtons />
         </Col>
-        <Col
+        {/* <Col
           span={10}
         >
           <Controls />
-        </Col>
+        </Col> */}
       </Row>
+      {/* <Row> */}
       <Divider />
+        <Controls />
+      {/* </Row> */}
     </>
   );
 }
