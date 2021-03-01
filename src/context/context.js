@@ -6,6 +6,9 @@ import { BASS, CHORDS } from '../lib/noteInfo';
 import { SYNTHS, synthTypes } from '../lib/synthInfo';
 
 import message from 'antd/es/message'
+import Grid from 'antd/es/grid';
+
+const { useBreakpoint } = Grid;
 
 export const Context = createContext();
 
@@ -40,6 +43,17 @@ function ContextProvider(props) {
     bassDrum: ['C1', 'C1', 'C1', 'C1'],
   }
 
+  const [screenSize, setScreenSize] = useState([])
+  const screens = useBreakpoint();
+
+  useEffect(() => {
+    const updatedScreens = []
+    for (let key in screens) {
+      if (screens[key]) updatedScreens.push(key);
+    }
+    setScreenSize(updatedScreens)
+  }, [screens])
+
   useEffect(() => {
 
     const checkLoggedIn = async () => {
@@ -56,7 +70,6 @@ function ContextProvider(props) {
   }, []);
 
   useEffect(() => {
-
     const noteObj = {};
     const buttonObj = {};
     ['high', 'mid', 'low', 'bassHigh', 'bassLow', 'cymbal', 'snareDrum', 'bassDrum'].forEach(row => {
@@ -84,11 +97,17 @@ function ContextProvider(props) {
       loop.cancel();
       loop.dispose();
       for (let row in noteObj) {
-        noteObj[row].cancel();
+        // noteObj[row].stop();
+        // noteObj[row].clear();
+        noteObj[row].events = [];
+        noteObj[row].clear();
         noteObj[row].dispose();
+        console.log(noteObj[row].disposed)
+        new Array(loopLength).fill(false);
       }
     }
   }, [loopLength])
+
 
   const signIn = async (userData) => {
     const result = await fetchApi('/signin', 'post', userData)
@@ -108,7 +127,7 @@ function ContextProvider(props) {
     const result = await fetchApi('/signup', 'post', userData);
     if (!result.error) {
       setLoggedIn(true)
-      setUser(userData.username);
+      setUser(userData.username || userData.email);
       return 'success';
     } else {
       message.error(result.message)
@@ -194,14 +213,14 @@ function ContextProvider(props) {
     await reset(true);
     const result = await fetchApi('/open', 'post', { songId })
     if (!result.error) {
-      
+
       const { data: songObj } = result
       setProg(songObj.chordProgression);
       handleTempoChange(songObj.bpm)
       setLoopLength(songObj.numberOfBeats);
       setTitle(songObj.title)
       setOpenSongId(songObj._id)
-      setButtons({...songObj.buttonsPressed})
+      setButtons({ ...songObj.buttonsPressed })
       setNoteSwitches(updateButtons(songObj));
       setCurrentBeat(-1)
 
@@ -249,15 +268,12 @@ function ContextProvider(props) {
           message.error(result.message)
           return 'error';
         } else {
+          const newSongs = songs.map(song => {
+            if (song.id === songId) return { title: newTitle, id: song.id }
+            else return song;
+          });
           setTitle(result.data.newTitle)
-          setSongs(songs => {
-            return [...songs.map((song, { id }) => {
-              if (id === songId) {
-                return { id, title: newTitle }
-              }
-              else return song;
-            })];
-          })
+          setSongs([...newSongs])
         }
       } else {
         setTitle(newTitle);
@@ -341,7 +357,7 @@ function ContextProvider(props) {
 
   const reset = async (skip) => {
     Tone.Transport.stop('+8n');
-    while (Tone.Transport.state !== 'stopped') {}
+    while (Tone.Transport.state !== 'stopped') { }
     const buttonObj = {};
     for (let noteRow in noteSwitches) {
       noteSwitches[noteRow].dispose()
@@ -418,7 +434,9 @@ function ContextProvider(props) {
     handleChordChange,
     buttons,
     setButtons,
-    stopAudio
+    stopAudio,
+    screenSize,
+    screens
   }
 
   return (

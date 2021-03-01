@@ -21,11 +21,11 @@ function App() {
       <Router>
         <Layout style={{ minHeight: '100vh', minWidth: '280px' }}>
 
-          <Header style={{padding: '0 1rem'}}>
+          <Header style={{ padding: 0 }} >
             <Heading />
           </Header>
 
-          <Content style={{ padding: '1rem 3rem' }}>
+          <Content style={{ padding: '1rem 2rem' }}>
             <Switch>
               <Route exact path="/">
                 <SubHeader />

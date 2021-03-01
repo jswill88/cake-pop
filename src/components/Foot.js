@@ -13,43 +13,46 @@ export default function Foot() {
 
   return (
     <>
-      <Row>
+      <Row justify="end">
         <Text
           style={{ color: '#ffffff' }}
         >
           Josh Williams &copy; 2021
         </Text>
       </Row>
-      <Row>
+      <Row justify="end">
         <Link
           href="https://www.joshwilliamsdeveloper.com/"
-          style={{margin: '.2rem 0'}}
+          style={{ margin: '.2rem 0' }}
         >
           <Tag
             icon={<LinkOutlined />}
             color="cyan"
+            style={{marginRight: '.4rem'}}
           >
             Portfolio
         </Tag>
         </Link>
         <Link
-        style={{margin: '.2rem 0'}}
+          style={{ margin: '.2rem 0' }}
           href="https://github.com/jswill88"
         >
           <Tag
             icon={<GithubOutlined />}
             color="purple"
+            style={{marginRight: '.4rem'}}
           >
             GitHub
         </Tag>
         </Link>
         <Link
-        style={{margin: '.2rem 0'}}
+          style={{ margin: '.2rem 0' }}
           href="https://www.linkedin.com/in/joshua-s-williams/"
         >
           <Tag
             icon={<LinkedinOutlined />}
             color="blue"
+            style={{marginRight: 0}}
           >
             LinkedIn
         </Tag>
