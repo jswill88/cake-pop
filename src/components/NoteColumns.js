@@ -1,6 +1,8 @@
 import { Context } from '../context/context'
 import { useContext } from 'react'
 import { InlineIcon } from '@iconify/react';
+import he from 'he';
+import { CHORDS } from '../lib/noteInfo';
 import musicClefTreble from '@iconify-icons/mdi/music-clef-treble';
 import musicClefBass from '@iconify-icons/mdi/music-clef-bass';
 import drumIcon from '@iconify-icons/la/drum';
@@ -10,6 +12,10 @@ import Button from 'antd/es/button';
 import Divider from 'antd/es/divider';
 import Col from 'antd/es/col';
 import Card from 'antd/es/card';
+import Select from 'antd/es/select'
+
+const { Option } = Select;
+
 
 export default function NoteColumns() {
   const {
@@ -19,6 +25,8 @@ export default function NoteColumns() {
     noteSwitches,
     buttons,
     setButtons,
+    handleChordChange,
+    prog
   } = useContext(Context)
 
   const addSynth = (beat, note, row) => {
@@ -78,7 +86,22 @@ export default function NoteColumns() {
                 borderRadius: '3%',
               }}
             >
-              <Card>
+              <Card
+                title={<Select
+                  value={he.decode(prog[i])}
+                  onChange={val => handleChordChange(val, i)}
+                  size="small"
+                  style={{ minWidth: '2rem' }}
+                >
+                  {CHORDS && Object.keys(CHORDS).map((chord, j) =>
+                    <Option
+                      key={j}
+                      value={chord}
+                    >{he.decode(chord)}</Option>
+                  )}
+                </Select>}
+              >
+                
                 {Object.keys(noteSwitches).map((noteRow, j) =>
                   <Row
                     key={j}

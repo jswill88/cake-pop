@@ -15,6 +15,7 @@ import Form from 'antd/es/form';
 import Input from 'antd/es/input';
 
 import DeleteOutlined from '@ant-design/icons/DeleteOutlined'
+import Tooltip from 'antd/es/tooltip';
 
 const { Title, Paragraph } = Typography;
 
@@ -47,13 +48,14 @@ export default function SubHeader() {
   return (
     <>
       <Row
-        gutter={8}
+        // gutter={8}
         align="middle"
         justify="space-between"
       >
-        <Col 
-        // pan={{xs: 20, sm: 17, md: 16, lg: 10}} 
-        // style={{backgroundColor: 'lightblue'}}
+        <Col
+          // pan={{xs: 20, sm: 17, md: 16, lg: 10}} 
+          // style={{backgroundColor: 'lightblue'}}
+          span={8}
         >
           <Title
             level={2}
@@ -68,13 +70,32 @@ export default function SubHeader() {
           >
             {title}
           </Title>
+        </Col>
+        <Col
+          span={8}
+          style={{ display: 'flex', justifyContent: 'center' }}
+        >
+          <PrimaryButtons />
+        </Col>
+        <Col
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}
+          span={8}
+        >
 
           <Paragraph
-            style={{fontSize: '14px'}}
+            style={{ fontSize: '14px' }}
             ellipsis
           >
-            {loggedIn ? `Hi, ${user}` : 'Sign in to save'}
+            {loggedIn ? `🎵 Hi, ${user}! 🎵` : 'Sign in to save'}
           </Paragraph>
+        </Col>
+      </Row>
+      <Row
+        justify="space-between"
+      >
+
+
+        <Col>
           {loggedIn &&
             <>
               <SongDropDown />
@@ -96,7 +117,11 @@ export default function SubHeader() {
                     Save
                   </Button>
                   <Button
-                    onClick={() => setShowSaveAsModal(true)}
+                    onClick={() => {
+                      // if the title typed in matches the title of the song as currently saved
+                      // title, openSongId, songs
+                      setShowSaveAsModal(true)
+                    }}
                     size="large"
                     type="link"
                   >
@@ -156,23 +181,28 @@ export default function SubHeader() {
                     onConfirm={() => deleteSong()}
                     placement="bottom"
                   >
-                    <Button
-                      size="large"
-                      icon={<DeleteOutlined />}
-                      danger
-                      type="link"
-                    />
+                    <Tooltip
+                      title="Delete Loop">
+
+                      <Button
+                        size="large"
+                        icon={<DeleteOutlined />}
+                        danger
+                        type="link"
+
+                      />
+                    </Tooltip>
                   </Popconfirm>
                 </>
               }
             </>
           }
         </Col>
-        <Col
-          // span={7}
+
+        {/* <Col
         >
           <PrimaryButtons />
-        </Col>
+        </Col> */}
         {/* <Col
           span={10}
         >
@@ -180,8 +210,8 @@ export default function SubHeader() {
         </Col> */}
       </Row>
       {/* <Row> */}
+      <Controls />
       <Divider />
-        <Controls />
       {/* </Row> */}
     </>
   );

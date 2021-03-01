@@ -38,6 +38,7 @@ export default function SongDropDown() {
       <Button
         type="link"
         size="large"
+        style={{paddingLeft: 0}}
       >
         Open<DownOutlined />
       </Button>

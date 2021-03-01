@@ -43,6 +43,7 @@ export default function Heading() {
 
   return (
     <Row
+      style={{padding: !screenSize.every(val => val === 'xs') ? '0 2rem 0 1rem' : '0 1rem'}}
       className="header"
       align="middle"
     >

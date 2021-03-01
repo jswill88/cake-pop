@@ -36,6 +36,7 @@ export default function Hamburger() {
       <Button
         type="link"
         size="large"
+        style={{padding: 0}}
       >
         <UnorderedListOutlined
           style={{

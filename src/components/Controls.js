@@ -1,7 +1,5 @@
 import { useContext, useState } from 'react';
-import he from 'he';
 import { Context } from '../context/context';
-import { CHORDS } from '../lib/noteInfo';
 
 import Button from 'antd/es/button';
 import Select from 'antd/es/select';
@@ -10,9 +8,7 @@ import InputNumber from 'antd/es/input-number';
 import Form from 'antd/es/form';
 import Tooltip from 'antd/es/tooltip';
 import Row from 'antd/es/row';
-import Space from 'antd/es/space';
 import Col from 'antd/es/col';
-import Card from 'antd/es/card';
 
 import QuestionCircleOutlined from '@ant-design/icons/QuestionCircleOutlined'
 
@@ -28,9 +24,6 @@ export default function Controls() {
     setLoopLength,
     tempo,
     handleTempoChange,
-    prog,
-    handleChordChange,
-    stopAudio
   } = useContext(Context)
 
   const [editTempo, setEditTempo] = useState(false);
@@ -60,13 +53,54 @@ export default function Controls() {
 
   return (
     <Row
-      justify="start"
+      justify="space-between"
+      // align="middle"
+      style={{ marginTop: '1rem'}}
     >
+            <Col
+      // style={rowStyle}
+      span={10}
+      style={{display: 'flex', alignItems: 'center'}}
+      // offset={1}
+      >
+        <Text>
+          Length&nbsp;
+        <Tooltip
+            title="Changes how many beats are in the loop. Changing the loop length will discard all progress"
+            placement="bottom"
+          >
+            <QuestionCircleOutlined
+              style={{ color: 'rgba(0, 0, 0, 0.45)' }}
+            />
+          </Tooltip>&nbsp;:&nbsp;
+        </Text>
+
+        <Select
+          title="test"
+          size="small"
+          value={loopLength}
+          onChange={val => {
+            reset(true);
+            setLoopLength(parseInt(val));
+          }}
+          style={{marginRight: '1rem'}}
+        >
+          {[8, 12, 16, 20, 24].map((beats, i) =>
+            <Option
+              key={i}
+              value={beats}
+            >
+              {beats}
+            </Option>
+          )}
+        </Select>
+
+      {/* </Col>
       <Col
         // style={{...rowStyle, justifyContent:'space-between'}}
-        span={6}
-        // style={{display: '  ', justifyContent: 'flex-start'}}
-      >
+        span={7}
+      // style={{display: '  ', justifyContent: 'flex-start'}}
+      > */}
         {/* // <Card
     // size="small"
     // > */}
@@ -75,12 +109,12 @@ export default function Controls() {
           layout="inline"
           component="span"
           colon
-          style={{ lineHeight: 1, alignItems: '', justifyContent: 'flex-start'}}
+          // style={{ /*lineHeight: 1,*/ display: 'flex' ,justifyContent: 'flex-end', alignItems: 'flex-end', padding: '0 11px',  }}
           form={form}
         >
 
           <Form.Item
-            label="Tempo&nbsp;"
+            label="BPM&nbsp;"
             name="tempo"
             tooltip={{
               title: "Enter a number between 50 and 320",
@@ -88,6 +122,7 @@ export default function Controls() {
             }}
             validateStatus={tempoError ? 'error' : 'success'}
             initialValue={tempo}
+            // style={{ /*lineHeight: 1,*/ justifyContent: 'flex-end', alignItems: 'flex-end',}}
           >
             {!editTempo ?
               <Text
@@ -128,45 +163,8 @@ export default function Controls() {
         </Form>
 
       </Col>
-      <Col
-      // style={rowStyle}
-      // span={6}
-      >
-        <Text>
-          Loop Length&nbsp;
-        <Tooltip
-            title="Changes how many beats are in the loop. Changing the loop length will discard all progress"
-            placement="bottom"
-          >
-            <QuestionCircleOutlined
-              style={{ color: 'rgba(0, 0, 0, 0.45)' }}
-            />
-          </Tooltip>&nbsp;:&nbsp;
-        </Text>
 
-        <Select
-          size="small"
-          value={loopLength}
-          onChange={val => {
-            stopAudio()
-            setLoopLength(parseInt(val))
-          }}
-        >
-          {[8, 12, 16, 20, 24].map((beats, i) =>
-            <Option
-              key={i}
-              value={beats}
-            >
-              {beats}
-            </Option>
-          )}
-        </Select>
-
-      </Col>
-      <Col
-      // span={6}
-      // style={rowStyle}
-      >
+      {/* <Col>
         <Text>Chords:&nbsp;</Text>
         <Space>
           {prog.map((progChord, i) =>
@@ -186,10 +184,11 @@ export default function Controls() {
             </Select>
           )}
         </Space>
-        {/* // </Card> */}
-      </Col>
+ 
+      </Col> */}
       <Col
-      // span={6}
+      // span={2}
+      // offset={12}
       >
         <Button
           onClick={() => {
@@ -206,4 +205,4 @@ export default function Controls() {
   )
 }
 
-const rowStyle = { height: '32px', alignItems: 'center' }
+// const rowStyle = { height: '32px', alignItems: 'center' }
