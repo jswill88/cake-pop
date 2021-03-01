@@ -76,12 +76,12 @@ export default function NoteColumns() {
           {[0, 1, 2, 3].map(i =>
             < Col
               key={i}
-              xs={24}
-              sm={12}
-              md={12}
+              xs={loopLength <= 12 ? 12 :  24}
+              sm={loopLength <= 8 ? 6 :  12}
+              md={loopLength <= 12 ? 6 :  12}
               lg={6}
               style={{
-                minWidth: '13rem',
+                // minWidth: '13rem',
                 boxSizing: 'border-box',
                 borderRadius: '3%',
               }}
@@ -91,7 +91,7 @@ export default function NoteColumns() {
                   value={he.decode(prog[i])}
                   onChange={val => handleChordChange(val, i)}
                   size="small"
-                  style={{ minWidth: '2rem' }}
+                  // style={{ minWidth: '2rem' }}
                 >
                   {CHORDS && Object.keys(CHORDS).map((chord, j) =>
                     <Option

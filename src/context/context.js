@@ -27,6 +27,9 @@ function ContextProvider(props) {
   const [openSongId, setOpenSongId] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [playStatus, setPlayStatus] = useState('stop');
+  const [screenSize, setScreenSize] = useState([])
+  const [isMobile, setIsMobile] = useState(false)
+  const screens = useBreakpoint();
 
   const fetchApi = useFetch();
 
@@ -43,16 +46,22 @@ function ContextProvider(props) {
     bassDrum: ['C1', 'C1', 'C1', 'C1'],
   }
 
-  const [screenSize, setScreenSize] = useState([])
-  const screens = useBreakpoint();
 
   useEffect(() => {
     const updatedScreens = []
+    console.log(screens)
     for (let key in screens) {
       if (screens[key]) updatedScreens.push(key);
     }
     setScreenSize(updatedScreens)
   }, [screens])
+
+  useEffect(() => console.log(screenSize), [screenSize])
+
+  useEffect(() => {
+    if (screenSize.every(val => val === 'xs')) setIsMobile(true);
+    else setIsMobile(false)
+  }, [screenSize])
 
   useEffect(() => {
 
@@ -392,7 +401,7 @@ function ContextProvider(props) {
 
   const stopAudio = () => {
     Tone.Transport.stop('8n')
-    while (Tone.Transport.state !== 'stopped') {}
+    while (Tone.Transport.state !== 'stopped') { }
     setPlayStatus('stop')
     setCurrentBeat(-2);
   }
@@ -436,7 +445,8 @@ function ContextProvider(props) {
     setButtons,
     stopAudio,
     screenSize,
-    screens
+    screens,
+    isMobile
   }
 
   return (

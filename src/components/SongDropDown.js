@@ -9,10 +9,13 @@ import DownOutlined from '@ant-design/icons/DownOutlined';
 export default function SongDropDown() {
   const {
     songs,
-    open
+    open,
+    isMobile
   } = useContext(Context)
 
   const handleSongChoice = e => open(songs[e.key].id);
+
+  const buttonSize = () => isMobile ? "middle" : "large";
 
   const menu = (
     <Menu
@@ -37,7 +40,7 @@ export default function SongDropDown() {
     >
       <Button
         type="link"
-        size="large"
+        size={buttonSize()}
         style={{paddingLeft: 0}}
       >
         Open<DownOutlined />

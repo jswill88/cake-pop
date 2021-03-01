@@ -18,7 +18,8 @@ export default function File() {
     saveSong,
     title,
     newSong,
-    deleteSong
+    deleteSong,
+    isMobile
   } = useContext(Context)
 
   const [form] = Form.useForm();
@@ -33,6 +34,8 @@ export default function File() {
     form.resetFields();
     setShowSaveAsModal(false)
   }
+
+  const buttonSize = () => isMobile ? "middle" : "large";
 
   return (
     <>
@@ -49,14 +52,14 @@ export default function File() {
         <>
           <Button
             onClick={() => saveSong('update')}
-            size="large"
+            size={buttonSize}
             type="link"
           >
             Save
           </Button>
           <Button
             onClick={() => setShowSaveAsModal(true)}
-            size="large"
+            size={buttonSize}
             type="link"
           >
             Save As
@@ -104,7 +107,7 @@ export default function File() {
             }}
           >
             <Button
-              size="large"
+              size={buttonSize}
               type="link"
             >
               New
@@ -119,7 +122,7 @@ export default function File() {
               title="Delete Loop">
 
               <Button
-                size="large"
+                size={buttonSize}
                 icon={<DeleteOutlined />}
                 danger
                 type="link"

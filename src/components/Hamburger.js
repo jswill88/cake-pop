@@ -9,8 +9,10 @@ import { Link } from 'react-router-dom'
 export default function Hamburger() {
 
   const menu = (
-    <Menu>
+    <Menu
+    >
       <Menu.Item
+      style={{width: '50vw'}}
         // style={{ fontSize: '1rem' }}
       >
         <Link to="/">

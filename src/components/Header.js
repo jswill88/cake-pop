@@ -24,7 +24,8 @@ export default function Heading() {
     logout,
     loggedIn,
     setShowForm,
-    screenSize
+    screenSize,
+    isMobile
   } = useContext(Context);
 
   return (
@@ -33,7 +34,7 @@ export default function Heading() {
       className="header"
       align="middle"
     >
-      {screenSize.every(val => val === 'xs') && <Hamburger />}
+      {isMobile && <Hamburger />}
       <Col
         flex={1}
         style={{ display: 'flex', alignItems: 'center' }}
@@ -41,7 +42,7 @@ export default function Heading() {
         <Title
           style={{ margin: '0 1rem 0 0' }}
         >🎂</Title>
-        {!screenSize.every(val => val === 'xs') &&
+        {!isMobile &&
           <>
             <Title
               level={2}
@@ -90,7 +91,7 @@ export default function Heading() {
               icon={<LoginOutlined />}
               size="large"
             >
-              {!screenSize.includes('xs') && 'Sign In'}
+              {!isMobile && 'Sign In'}
             </Button>
             <SignInForm />
           </>
@@ -104,7 +105,7 @@ export default function Heading() {
             icon={<LogoutOutlined />}
             size="large"
           >
-            {!screenSize.includes('xs') && 'Log Out'}
+            {!isMobile && 'Log Out'}
           </Button>
         }
       </Col>

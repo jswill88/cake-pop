@@ -14,6 +14,7 @@ import Divider from 'antd/es/divider';
 export default function SubHeader() {
   const {
     loggedIn,
+    isMobile
   } = useContext(Context)
 
   return (
@@ -23,23 +24,50 @@ export default function SubHeader() {
         justify="space-between"
       >
         <Col
-          span={8}
+          xs={{ span: 24 }}
+          // span={{ xs: 24, sm: 8, md: 8 }}
+          sm={{ span: 8 }}
         >
           <SongTitle />
         </Col>
-        <Col
-          span={8}
-          style={{ display: 'flex', justifyContent: 'center' }}
-        >
-          <PrimaryButtons />
-        </Col>
-        <Col
-          style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}
-          span={8}
-        >
-          <UserGreeting />
-        </Col>
+        {!isMobile &&
+          <>
+            <Col
+              span={8}
+              style={{ display: 'flex', justifyContent: 'center' }}
+            >
+              <PrimaryButtons />
+            </Col>
+            <Col
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}
+              span={8}
+            >
+              <UserGreeting />
+            </Col>
+          </>
+        }
       </Row>
+      {isMobile &&
+        <Row
+          align="middle"
+          justify="space-between"
+          style={{ margin: '.5rem 0' }}
+        >
+          <Col
+            // span={7}
+            style={{ display: 'flex', justifyContent: 'flex-start', marginRight: '.5rem' }}
+          >
+            <UserGreeting />
+
+          </Col>
+          <Col
+          // style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}
+          // span={17}
+          >
+            <PrimaryButtons />
+          </Col>
+        </Row>
+      }
 
       <Row
         justify="space-between"
@@ -49,24 +77,34 @@ export default function SubHeader() {
         </Col>
       </Row>
 
+      {isMobile ?
+        <>
+          <Controls />
+          <Row>
+            <Reset />
+          </Row>
+        </>
+        :
+        <Row
+          justify="space-between"
+          style={{ marginTop: '1rem' }}
+        >
+          <Col
+            span={{ sm: 16, md: 10 }}
+            style={{ display: 'flex', alignItems: 'center' }}
+          >
+            <Controls />
 
-      <Row
-      justify="space-between"
-      style={{ marginTop: '1rem' }}
-    >
-      <Col
-        span={10}
-        style={{ display: 'flex', alignItems: 'center' }}
-      >
-      <Controls />
+          </Col>
+          <Col>
+            <Reset />
+          </Col>
 
-      </Col>
-      <Col>
-        <Reset />
-      </Col>
-
-    </Row>
-      <Divider />
+        </Row>
+      }
+      <Divider 
+        style={{margin: isMobile && '6px'}}
+      />
     </>
   );
 }
