@@ -6,6 +6,9 @@ import { BASS, CHORDS } from '../lib/noteInfo';
 import { SYNTHS, synthTypes } from '../lib/synthInfo';
 
 import message from 'antd/es/message'
+import Grid from 'antd/es/grid';
+
+const { useBreakpoint } = Grid;
 
 export const Context = createContext();
 
@@ -39,6 +42,17 @@ function ContextProvider(props) {
     snareDrum: ['S', 'S', 'S', 'S'],
     bassDrum: ['C1', 'C1', 'C1', 'C1'],
   }
+
+  const [screenSize, setScreenSize] = useState([])
+  const screens = useBreakpoint();
+
+  useEffect(() => {
+    const updatedScreens = []
+    for (let key in screens) {
+      if (screens[key]) updatedScreens.push(key);
+    }
+    setScreenSize(updatedScreens)
+  }, [screens])
 
   useEffect(() => {
 
@@ -91,12 +105,9 @@ function ContextProvider(props) {
         console.log(noteObj[row].disposed)
         new Array(loopLength).fill(false);
       }
-      console.log('return')
-      // setNoteSwitches({...noteObj})
     }
   }, [loopLength])
 
-  useEffect(() => console.log(noteSwitches), [noteSwitches])
 
   const signIn = async (userData) => {
     const result = await fetchApi('/signin', 'post', userData)
@@ -423,7 +434,9 @@ function ContextProvider(props) {
     handleChordChange,
     buttons,
     setButtons,
-    stopAudio
+    stopAudio,
+    screenSize,
+    screens
   }
 
   return (

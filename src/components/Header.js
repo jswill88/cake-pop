@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { Context } from '../context/context';
 import SignInForm from './SignInForm';
 import Hamburger from './Hamburger';
@@ -13,32 +13,18 @@ import LogoutOutlined from '@ant-design/icons/LogoutOutlined';
 import Row from 'antd/es/row';
 import Col from 'antd/es/col';
 import Button from 'antd/es/button'
-import Grid from 'antd/es/grid';
 import Typography from 'antd/es/typography';
 import Menu from 'antd/es/menu'
 
-const { useBreakpoint } = Grid;
 const { Title } = Typography;
 
 export default function Heading() {
 
-  const [screenSize, setScreenSize] = useState([])
-  const screens = useBreakpoint();
-
-  useEffect(() => {
-    const updatedScreens = []
-    for (let key in screens) {
-      if (screens[key]) updatedScreens.push(key);
-    }
-    setScreenSize(updatedScreens)
-  }, [screens])
-
-  useEffect(() => console.log(screenSize), [screenSize])
-
   const {
     logout,
     loggedIn,
-    setShowForm
+    setShowForm,
+    screenSize
   } = useContext(Context);
 
   return (
@@ -92,11 +78,6 @@ export default function Heading() {
           </>
         }
       </Col>
-      {/* <Col
-        flex={18}
-      >
-      </Col> */}
-      {/* <> */}
       <Col>
         {!loggedIn ?
           <>
@@ -127,7 +108,6 @@ export default function Heading() {
           </Button>
         }
       </Col>
-      {/* </> */}
     </Row>
   )
 }
