@@ -12,8 +12,9 @@ import Tooltip from 'antd/es/tooltip';
 import Row from 'antd/es/row';
 import Col from 'antd/es/col'
 
-import QuestionCircleOutlined from '@ant-design/icons/QuestionCircleOutlined'
-import CloseSquareOutlined from '@ant-design/icons/CloseCircleOutlined'
+import QuestionCircleOutlined from '@ant-design/icons/QuestionCircleOutlined';
+import CloseSquareOutlined from '@ant-design/icons/CloseCircleOutlined';
+import colors from '../colors';
 
 const { Option } = Select;
 const { Text } = Typography
@@ -71,7 +72,7 @@ function LoopLength() {
           placement="bottom"
         >
           <QuestionCircleOutlined
-            style={{ color: 'rgba(0, 0, 0, 0.45)' }}
+            style={{ color: colors.white }}
           />
         </Tooltip>&nbsp;:&nbsp;
         </Text>
@@ -147,7 +148,8 @@ function TempoSetter() {
         name="tempo"
         tooltip={{
           title: "Enter a number between 50 and 320",
-          placement: "bottom"
+          placement: "bottom",
+          // color: colors.white,
         }}
         validateStatus={tempoError ? 'error' : 'success'}
         initialValue={tempo}
@@ -194,7 +196,7 @@ function TempoSetter() {
                 setEditTempo(false)
                 form.resetFields();
               }}
-              icon={<CloseSquareOutlined />}
+              icon={<CloseSquareOutlined style={{color: colors.white}} />}
               danger
               type="text"
            />
