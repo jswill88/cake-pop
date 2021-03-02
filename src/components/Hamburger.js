@@ -1,8 +1,11 @@
 import UnorderedListOutlined from '@ant-design/icons/UnorderedListOutlined';
 import Menu from 'antd/es/menu';
 import Dropdown from 'antd/es/dropdown';
+import Divider from 'antd/es/divider'
 import Button from 'antd/es/button';
 import { Link } from 'react-router-dom'
+import HomeOutlined from '@ant-design/icons/HomeOutlined'
+import InfoCircleOutlined from '@ant-design/icons/InfoCircleOutlined'
 
 
 
@@ -12,15 +15,17 @@ export default function Hamburger() {
     <Menu
     >
       <Menu.Item
-      style={{width: '50vw'}}
-        // style={{ fontSize: '1rem' }}
+        style={{ width: '50vw', fontSize: '1.2rem' }}
+        icon={<HomeOutlined style={{fontSize: '1.2rem' }}  />}
       >
         <Link to="/">
           Looper
         </Link>
       </Menu.Item>
+      <Divider style={{margin: 0}}/>
       <Menu.Item
-        // style={{ fontSize: '1rem' }}
+        style={{ width: '50vw', fontSize: '1.2rem' }}
+        icon={<InfoCircleOutlined style={{fontSize: '1.2rem' }}  />}
       >
         <Link to="/info">
           Info
@@ -38,7 +43,7 @@ export default function Hamburger() {
       <Button
         type="link"
         size="large"
-        style={{padding: 0}}
+        style={{ padding: 0 }}
       >
         <UnorderedListOutlined
           style={{

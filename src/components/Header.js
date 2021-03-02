@@ -8,6 +8,8 @@ import { Link } from 'react-router-dom';
 
 import LoginOutlined from '@ant-design/icons/LoginOutlined';
 import LogoutOutlined from '@ant-design/icons/LogoutOutlined';
+import HomeOutlined from '@ant-design/icons/HomeOutlined'
+import InfoCircleOutlined from '@ant-design/icons/InfoCircleOutlined'
 
 
 import Row from 'antd/es/row';
@@ -62,6 +64,7 @@ export default function Heading() {
             >
               <Menu.Item
                 key="1"
+                icon={<HomeOutlined />}
               >
                 <Link to="/">
                   Looper
@@ -69,6 +72,7 @@ export default function Heading() {
               </Menu.Item>
               <Menu.Item
                 key="2"
+                icon={<InfoCircleOutlined />}
               >
                 <Link to="/info">
                   Info

@@ -26,7 +26,8 @@ export default function NoteColumns() {
     buttons,
     setButtons,
     handleChordChange,
-    prog
+    prog,
+    isMobile
   } = useContext(Context)
 
   const addSynth = (beat, note, row) => {
@@ -90,8 +91,8 @@ export default function NoteColumns() {
                 title={<Select
                   value={he.decode(prog[i])}
                   onChange={val => handleChordChange(val, i)}
-                  size="small"
-                  // style={{ minWidth: '2rem' }}
+                  size={isMobile ? "middle" : "small"}
+                  style={{ minWidth: '2.5rem' }}
                 >
                   {CHORDS && Object.keys(CHORDS).map((chord, j) =>
                     <Option

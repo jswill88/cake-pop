@@ -57,14 +57,11 @@ export default function SubHeader() {
             // span={7}
             style={{ display: 'flex', justifyContent: 'flex-start', marginRight: '.5rem' }}
           >
-            <UserGreeting />
+            <PrimaryButtons />
 
           </Col>
-          <Col
-          // style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}
-          // span={17}
-          >
-            <PrimaryButtons />
+          <Col>
+            <UserGreeting />
           </Col>
         </Row>
       }
@@ -78,16 +75,11 @@ export default function SubHeader() {
       </Row>
 
       {isMobile ?
-        <>
           <Controls />
-          <Row>
-            <Reset />
-          </Row>
-        </>
         :
         <Row
           justify="space-between"
-          style={{ marginTop: '1rem' }}
+          align="middle"
         >
           <Col
             span={{ sm: 16, md: 10 }}

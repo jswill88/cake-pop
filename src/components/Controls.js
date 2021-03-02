@@ -1,6 +1,8 @@
 import { useContext, useState } from 'react';
 import { Context } from '../context/context';
 
+import Reset from './Reset';
+
 import Button from 'antd/es/button';
 import Select from 'antd/es/select';
 import Typography from 'antd/es/typography';
@@ -11,6 +13,7 @@ import Row from 'antd/es/row';
 import Col from 'antd/es/col'
 
 import QuestionCircleOutlined from '@ant-design/icons/QuestionCircleOutlined'
+import CloseSquareOutlined from '@ant-design/icons/CloseCircleOutlined'
 
 const { Option } = Select;
 const { Text } = Typography
@@ -23,13 +26,14 @@ export default function Controls() {
     <>
       {isMobile ?
         <>
-          <Row>
+          <Row justify='space-between'>
             <LoopLength />
+            <Reset />
           </Row>
           <Row
             justify="space-between"
             align="middle"
-          style={{ height: '42px' }}
+            style={{ height: '42px' }}
           >
             <Col
               span={24}
@@ -54,11 +58,12 @@ function LoopLength() {
   const {
     loopLength,
     reset,
-    setLoopLength
+    setLoopLength,
+    isMobile
   } = useContext(Context)
 
   return (
-    <>
+    <div>
       <Text>
         Length&nbsp;
         <Tooltip
@@ -73,7 +78,7 @@ function LoopLength() {
 
       <Select
         title="test"
-        size="small"
+        size={isMobile ? "middle" : "small"}
         value={loopLength}
         onChange={val => {
           reset(true);
@@ -90,7 +95,7 @@ function LoopLength() {
           </Option>
         )}
       </Select>
-    </>
+    </div>
   )
 }
 
@@ -155,6 +160,7 @@ function TempoSetter() {
           <Text
             editable
             onClick={() => setEditTempo(true)}
+            
           >
             {tempo}
           </Text>
@@ -162,7 +168,7 @@ function TempoSetter() {
 
         
           <InputNumber
-          size="small"
+          size={isMobile ? "middle" : "small"}
           onChange={() => checkTempoErrors()}
           style={{width: isMobile && '5rem'}}
           />
@@ -174,7 +180,7 @@ function TempoSetter() {
         <>
           <Form.Item>
             <Button
-              size="small"
+              size={isMobile ? "middle" : "small"}
               onClick={() => updateTempo()}
               style={{marginLeft: isMobile && '5rem'}}
             >
@@ -183,14 +189,17 @@ function TempoSetter() {
           </Form.Item>
           <Form.Item>
             <Button
-              size="small"
+              size={isMobile ? "large" : "small"}
               onClick={() => {
                 setEditTempo(false)
                 form.resetFields();
               }}
-            >
-              Cancel
-            </Button>
+              icon={<CloseSquareOutlined />}
+              danger
+              type="text"
+           />
+              
+            {/* </Button> */}
           </Form.Item>
         </>
       }

@@ -61,11 +61,11 @@ export default function PrimaryButtons() {
 function ControlButton({ icon, callback, danger }) {
   const { isMobile } = useContext(Context);
   return <Button
-    size={isMobile ? "large" : "large"}
+    size="large"
     style={{lineHeight: 1}}
     onClick={() => callback()}
     icon={icon}
     danger={danger ? true : false}
-    shape={!isMobile && "round"}
+    shape={isMobile ? "circle" : "round"}
   />
 }
