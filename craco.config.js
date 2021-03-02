@@ -33,12 +33,14 @@ module.exports = {
               '@divider-color': '#f0eaf4',
               '@select-dropdown-bg': '#f0eaf4',
               '@select-item-selected-color':'#000',
-              '@input-color': '#000',
+              '@input-color': '#000000',
             
-
+              '@modal-heading-color':'#000',
 
               '@btn-ghost-bg': '#f0eaf4',
-              // '@btn-default-bg': '#ffa4cd',
+              '@btn-default-color': '#251738',
+              '@btn-default-bg': '#ffffff',
+              // '@btn-text-hover-bg': 'pink',
             },
             javascriptEnabled: true,
           },

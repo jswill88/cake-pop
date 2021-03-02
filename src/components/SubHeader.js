@@ -95,7 +95,7 @@ export default function SubHeader() {
         </Row>
       }
       <Divider 
-        style={{margin: isMobile && '6px'}}
+        style={{margin: isMobile && '6px 0'}}
       />
     </>
   );

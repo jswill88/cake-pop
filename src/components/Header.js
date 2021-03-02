@@ -3,7 +3,6 @@ import { Context } from '../context/context';
 import SignInForm from './SignInForm';
 import Hamburger from './Hamburger';
 import './Header.css';
-import colors from '../colors';
 
 import { Link } from 'react-router-dom';
 
@@ -45,10 +44,8 @@ export default function Heading() {
         <Title
           style={{ margin: '0 1rem 0 0' }}
         >🎂</Title>
-        {!isMobile &&
-          <>
             <Title
-              level={2}
+              level={isMobile ? 3 : 2}
               style={{
                 color: '#000',
                 margin: '0 1rem 0 0',
@@ -58,6 +55,8 @@ export default function Heading() {
             >
               Cake Pop
         </Title>
+              {!isMobile &&
+                <>
             <Menu
               mode="horizontal"
               theme="dark"
