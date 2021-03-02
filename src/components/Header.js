@@ -51,7 +51,7 @@ export default function Heading() {
               style={{
                 color: '#FFFFFF',
                 margin: '0 1rem 0 0',
-                fontFamily: '\'Sniglet\', cursive',
+                fontFamily: "'Varela Round', sans-serif",
                 letterSpacing: '.1rem',
               }}
             >
