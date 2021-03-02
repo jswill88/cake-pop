@@ -5,7 +5,8 @@ import Button from 'antd/es/button';
 export default function Reset() {
   const {
     reset,
-    setPlayStatus
+    setPlayStatus,
+    isMobile
   } = useContext(Context)
 
   return (
@@ -14,7 +15,7 @@ export default function Reset() {
         reset();
         setPlayStatus('stop')
       }}
-      size="small"
+      size={isMobile ? "middle" : "small"}
       danger
     >
       Reset

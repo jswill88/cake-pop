@@ -1,6 +1,7 @@
+import { useContext } from 'react';
+import { Context } from './context/context';
 import NoteColumns from './components/NoteColumns'
 import Heading from './components/Header';
-import ContextProvider from './context/context';
 import SubHeader from './components/SubHeader';
 import Foot from './components/Foot';
 import Info from './components/Info';
@@ -11,13 +12,17 @@ import {
 } from "react-router-dom";
 
 
+
 import './App.less'
 import Layout from 'antd/es/layout';
 const { Header, Footer, Content } = Layout;
 
 function App() {
+
+  const {
+    isMobile
+  } = useContext(Context);
   return (
-    <ContextProvider>
       <Router>
         <Layout style={{ minHeight: '100vh', minWidth: '280px' }}>
 
@@ -25,7 +30,7 @@ function App() {
             <Heading />
           </Header>
 
-          <Content style={{ padding: '1rem 2rem' }}>
+          <Content style={{ padding: isMobile ? '.5rem .5rem' : '1rem 2rem' }}>
             <Switch>
               <Route exact path="/">
                 <SubHeader />
@@ -43,7 +48,6 @@ function App() {
 
         </Layout>
       </Router>
-    </ContextProvider>
   );
 }
 

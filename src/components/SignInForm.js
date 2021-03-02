@@ -6,6 +6,8 @@ import Form from 'antd/es/form';
 import Input from 'antd/es/input';
 import Typography from 'antd/es/typography'
 
+import './SignInForm.css'
+
 const { Link } = Typography;
 
 export default function SignInForm() {
@@ -70,6 +72,9 @@ export default function SignInForm() {
       visible={showForm}
       title={showSignUp ? 'Sign Up' : 'Sign In'}
       okText='Submit'
+      cancelButtonProps={{
+        id: 'cancel'
+      }}
       onOk={() => showSignUp ? signUpHandler() : signInHandler()}
       onCancel={() => closeModal()}
     >
@@ -78,9 +83,12 @@ export default function SignInForm() {
           layout="vertical"
           form={form}
           preserve={false}
-        >
+          
+          >
           <Form.Item
-            label="Email"
+            
+            
+            label={<span style={{color: '#000000'}}>Email</span>}
             name="email"
             rules={[
               {
@@ -97,8 +105,9 @@ export default function SignInForm() {
             <Input />
           </Form.Item>
           <Form.Item
-            label="Password"
+            label={<span style={{color: '#000000'}}>Password</span>}
             name="password"
+            
             rules={[
               {
                 required: true,
@@ -124,7 +133,7 @@ export default function SignInForm() {
           preserve={false}
         >
           <Form.Item
-            label="Email"
+            label={<span style={{color: '#000000'}}>Email</span>}
             name="email"
             rules={[
               {
@@ -141,14 +150,14 @@ export default function SignInForm() {
           </Form.Item>
 
           <Form.Item
-            label="Username"
+            label={<span style={{color: '#000000'}}>Username</span>}
             name="username"
             requiredMark="optional"
           >
             <Input />
           </Form.Item>
           <Form.Item
-            label="Password"
+            label={<span style={{color: '#000000'}}>Password</span>}
             name="signUpPassword"
             rules={passwordRules}
             hasFeedback
@@ -160,7 +169,7 @@ export default function SignInForm() {
             />
           </Form.Item>
           <Form.Item
-            label="Confirm Password"
+            label={<span style={{color: '#000000'}}>Confirm Password</span>}
             name="passwordVerify"
             rules={[
               {
@@ -185,7 +194,7 @@ export default function SignInForm() {
             onClick={() => {
               setShowSignUp(false);
             }}
-          >Already have an account? Click to sign in</Link>
+          >Already have an account? Sign in</Link>
         </Form>
       }
     </Modal>

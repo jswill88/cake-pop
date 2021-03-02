@@ -8,17 +8,39 @@ module.exports = {
         lessLoaderOptions: {
           lessOptions: {
             modifyVars: {
-              '@layout-body-background': '#f0eaf4',
-              '@layout-header-background': '#251738',
-              '@layout-footer-background': '@layout-header-background',
+              '@layout-body-background': '#251738',
+              '@layout-header-background': '#24ddd8',
+              '@layout-footer-background': '#251738',
               // '@primary-color': '#1DA57A',
               // '@error-color': '@blue-4',
               // '@warning-color': '@blue-4'
+              '@text-color': '#f0eaf4',
+              '@text-color-dark': 'fade(#f0eaf4, 85%)',
+              '@heading-color': '#f0eaf4',
 
               // Button backgrounds - also options for border and color
-              // '@btn-primary-bg': '#f0eaf4',
+              '@btn-primary-bg': '#f9d673',
+              '@btn-primary-color': '#000',
+
+              '@menu-item-active-bg': '#f9d673',
+              '@menu-highlight-color': '#f9d673',
+
+              '@menu-dark-item-active-bg': '#f9d673',
+              '@menu-dark-color': '#000',
+              '@menu-dark-highlight-color': '#000',
+              '@menu-dark-selected-item-icon-color': '#000',
+
+              '@divider-color': '#f0eaf4',
+              '@select-dropdown-bg': '#f0eaf4',
+              '@select-item-selected-color':'#000',
+              '@input-color': '#000000',
+            
+              '@modal-heading-color':'#000',
+
               '@btn-ghost-bg': '#f0eaf4',
-              // '@btn-default-bg': '#ffa4cd',
+              '@btn-default-color': '#251738',
+              '@btn-default-bg': '#ffffff',
+              // '@btn-text-hover-bg': 'pink',
             },
             javascriptEnabled: true,
           },

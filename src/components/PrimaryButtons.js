@@ -3,7 +3,6 @@ import { Context } from '../context/context';
 
 import Button from 'antd/es/button';
 import Space from 'antd/es/space';
-import Row from 'antd/es/row';
 
 import CaretRightOutlined from '@ant-design/icons/CaretRightOutlined';
 import BorderOutlined from '@ant-design/icons/BorderOutlined';
@@ -17,7 +16,8 @@ export default function PrimaryButtons() {
     tempo,
     playStatus,
     setPlayStatus,
-    stopAudio
+    stopAudio,
+    isMobile
   } = useContext(Context);
 
   const startAudio = async () => {
@@ -34,11 +34,8 @@ export default function PrimaryButtons() {
   }
 
   return (
-    <Row
-      justify="start"
-    >
       <Space
-        size="large"
+        size={isMobile ? "small" : "large"}
       >
         {['pause', 'stop'].includes(playStatus) ?
           <ControlButton
@@ -58,16 +55,23 @@ export default function PrimaryButtons() {
             danger={true}
           />
       </Space>
-    </Row>
   )
 }
 
 function ControlButton({ icon, callback, danger }) {
+  const { isMobile, playStatus } = useContext(Context);
   return <Button
     size="large"
+    style={{lineHeight: 1,
+      backgroundColor: !danger && (playStatus !== 'start' ? '#7ED957' : '#ffffff'),
+      borderColor: !danger && (playStatus !== 'start' ? '#7ED957' : '#ffffff'),
+      
+  }}
     onClick={() => callback()}
     icon={icon}
     danger={danger ? true : false}
-    shape="round"
+    type="primary"
+    
+    shape={isMobile ? "circle" : "round"}
   />
 }

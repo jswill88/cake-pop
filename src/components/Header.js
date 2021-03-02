@@ -8,6 +8,8 @@ import { Link } from 'react-router-dom';
 
 import LoginOutlined from '@ant-design/icons/LoginOutlined';
 import LogoutOutlined from '@ant-design/icons/LogoutOutlined';
+import HomeOutlined from '@ant-design/icons/HomeOutlined'
+import InfoCircleOutlined from '@ant-design/icons/InfoCircleOutlined'
 
 
 import Row from 'antd/es/row';
@@ -24,7 +26,8 @@ export default function Heading() {
     logout,
     loggedIn,
     setShowForm,
-    screenSize
+    screenSize,
+    isMobile
   } = useContext(Context);
 
   return (
@@ -33,7 +36,7 @@ export default function Heading() {
       className="header"
       align="middle"
     >
-      {screenSize.every(val => val === 'xs') && <Hamburger />}
+      {isMobile && <Hamburger />}
       <Col
         flex={1}
         style={{ display: 'flex', alignItems: 'center' }}
@@ -41,19 +44,19 @@ export default function Heading() {
         <Title
           style={{ margin: '0 1rem 0 0' }}
         >🎂</Title>
-        {!screenSize.every(val => val === 'xs') &&
-          <>
             <Title
-              level={2}
+              level={isMobile ? 3 : 2}
               style={{
-                color: '#FFFFFF',
+                color: '#000',
                 margin: '0 1rem 0 0',
-                fontFamily: '\'Sniglet\', cursive',
+                fontFamily: "'Varela Round', sans-serif",
                 letterSpacing: '.1rem',
               }}
             >
               Cake Pop
         </Title>
+              {!isMobile &&
+                <>
             <Menu
               mode="horizontal"
               theme="dark"
@@ -61,6 +64,7 @@ export default function Heading() {
             >
               <Menu.Item
                 key="1"
+                icon={<HomeOutlined />}
               >
                 <Link to="/">
                   Looper
@@ -68,6 +72,7 @@ export default function Heading() {
               </Menu.Item>
               <Menu.Item
                 key="2"
+                icon={<InfoCircleOutlined />}
               >
                 <Link to="/info">
                   Info
@@ -90,7 +95,7 @@ export default function Heading() {
               icon={<LoginOutlined />}
               size="large"
             >
-              {!screenSize.includes('xs') && 'Sign In'}
+              {!isMobile && 'Sign In'}
             </Button>
             <SignInForm />
           </>
@@ -104,7 +109,7 @@ export default function Heading() {
             icon={<LogoutOutlined />}
             size="large"
           >
-            {!screenSize.includes('xs') && 'Log Out'}
+            {!isMobile && 'Log Out'}
           </Button>
         }
       </Col>

@@ -1,26 +1,110 @@
 import { useContext, useState } from 'react';
 import { Context } from '../context/context';
 
+import Reset from './Reset';
+
 import Button from 'antd/es/button';
 import Select from 'antd/es/select';
 import Typography from 'antd/es/typography';
 import InputNumber from 'antd/es/input-number';
 import Form from 'antd/es/form';
 import Tooltip from 'antd/es/tooltip';
+import Row from 'antd/es/row';
+import Col from 'antd/es/col'
 
-import QuestionCircleOutlined from '@ant-design/icons/QuestionCircleOutlined'
+import QuestionCircleOutlined from '@ant-design/icons/QuestionCircleOutlined';
+import CloseSquareOutlined from '@ant-design/icons/CloseCircleOutlined';
+import colors from '../colors';
 
 const { Option } = Select;
 const { Text } = Typography
 
 export default function Controls() {
-
   const {
-    reset,
+    isMobile,
+  } = useContext(Context);
+  return (
+    <>
+      {isMobile ?
+        <>
+          <Row justify='space-between'>
+            <LoopLength />
+            <Reset />
+          </Row>
+          <Row
+            justify="space-between"
+            align="middle"
+            style={{ height: '42px' }}
+          >
+            <Col
+              span={24}
+              // style={{ backgroundColor: 'white' }}
+            >
+              <TempoSetter />
+            </Col>
+          </Row>
+        </>
+        :
+        <>
+          <LoopLength />
+          <TempoSetter />
+        </>
+      }
+    </>
+  )
+}
+
+
+function LoopLength() {
+  const {
     loopLength,
+    reset,
     setLoopLength,
+    isMobile
+  } = useContext(Context)
+
+  return (
+    <div>
+      <Text>
+        Length&nbsp;
+        <Tooltip
+          title="Changes how many beats are in the loop. Changing the loop length will discard all progress"
+          placement="bottom"
+        >
+          <QuestionCircleOutlined
+            style={{ color: colors.white }}
+          />
+        </Tooltip>&nbsp;:&nbsp;
+        </Text>
+
+      <Select
+        title="test"
+        size={isMobile ? "middle" : "small"}
+        value={loopLength}
+        onChange={val => {
+          reset(true);
+          setLoopLength(parseInt(val));
+        }}
+        style={{ marginRight: '1rem' }}
+      >
+        {[8, 12, 16, 20, 24].map((beats, i) =>
+          <Option
+            key={i}
+            value={beats}
+          >
+            {beats}
+          </Option>
+        )}
+      </Select>
+    </div>
+  )
+}
+
+function TempoSetter() {
+  const {
     tempo,
     handleTempoChange,
+    isMobile
   } = useContext(Context)
 
   const [editTempo, setEditTempo] = useState(false);
@@ -49,91 +133,78 @@ export default function Controls() {
   }
 
   return (
-    <>
-      <Text>
-        Length&nbsp;
-        <Tooltip
-          title="Changes how many beats are in the loop. Changing the loop length will discard all progress"
-          placement="bottom"
-        >
-          <QuestionCircleOutlined
-            style={{ color: 'rgba(0, 0, 0, 0.45)' }}
-          />
-        </Tooltip>&nbsp;:&nbsp;
-        </Text>
+    <Form
+      layout="inline"
+      component="span"
+      colon
+      form={form}
+    // labelCol={{span: 10}}
+    style={{ flexWrap: 'nowrap', height: '100%' }}
+    >
 
-      <Select
-        title="test"
-        size="small"
-        value={loopLength}
-        onChange={val => {
-          reset(true);
-          setLoopLength(parseInt(val));
+
+      <Form.Item
+        label="BPM&nbsp;"
+        name="tempo"
+        tooltip={{
+          title: "Enter a number between 50 and 320",
+          placement: "bottom",
+          // color: colors.white,
         }}
-        style={{ marginRight: '1rem' }}
-      >
-        {[8, 12, 16, 20, 24].map((beats, i) =>
-          <Option
-            key={i}
-            value={beats}
-          >
-            {beats}
-          </Option>
-        )}
-      </Select>
-
-      <Form
-        layout="inline"
-        component="span"
-        colon
-        form={form}
-      >
-
-        <Form.Item
-          label="BPM&nbsp;"
-          name="tempo"
-          tooltip={{
-            title: "Enter a number between 50 and 320",
-            placement: "bottom"
-          }}
-          validateStatus={tempoError ? 'error' : 'success'}
-          initialValue={tempo}
+        validateStatus={tempoError ? 'error' : 'success'}
+        initialValue={tempo}
+        // labelCol={{span: 1}}
+        // wrapperCol={{span: 3}}
+        style={isMobile && {flexWrap: 'nowrap', width: '3rem'}}
         >
-          {!editTempo ?
-            <Text
-              editable
-              onClick={() => setEditTempo(true)}
-            >{tempo}</Text> :
-            <InputNumber
-              size="small"
-              onChange={() => checkTempoErrors()}
-            />
-          }
-        </Form.Item>
-        {editTempo &&
-          <>
-            <Form.Item>
-              <Button
-                size="small"
-                onClick={() => updateTempo()}
-              >
-                Set
-              </Button>
-            </Form.Item>
-            <Form.Item>
-              <Button
-                size="small"
-                onClick={() => {
-                  setEditTempo(false)
-                  form.resetFields();
-                }}
-              >
-                Cancel
-              </Button>
-            </Form.Item>
-          </>
+
+        {!editTempo ?
+          <Text
+            editable
+            onClick={() => setEditTempo(true)}
+            
+          >
+            {tempo}
+          </Text>
+        :
+
+        
+          <InputNumber
+          size={isMobile ? "middle" : "small"}
+          onChange={() => checkTempoErrors()}
+          style={{width: isMobile && '5rem'}}
+          />
         }
-      </Form>
-    </>
+      </Form.Item>
+        
+
+      {editTempo &&
+        <>
+          <Form.Item>
+            <Button
+              size={isMobile ? "middle" : "small"}
+              onClick={() => updateTempo()}
+              style={{marginLeft: isMobile && '5rem'}}
+            >
+              Set
+            </Button>
+          </Form.Item>
+          <Form.Item>
+            <Button
+              size={isMobile ? "large" : "small"}
+              onClick={() => {
+                setEditTempo(false)
+                form.resetFields();
+              }}
+              icon={<CloseSquareOutlined style={{color: colors.white}} />}
+              danger
+              type="text"
+           />
+              
+            {/* </Button> */}
+          </Form.Item>
+        </>
+      }
+    </Form>
   )
 }

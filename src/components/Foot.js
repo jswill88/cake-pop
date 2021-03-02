@@ -1,3 +1,6 @@
+import { useContext } from 'react';
+import { Context } from '../context/context'
+
 
 import GithubOutlined from '@ant-design/icons/GithubOutlined'
 import LinkedinOutlined from '@ant-design/icons/LinkedinOutlined'
@@ -9,18 +12,19 @@ import Typography from 'antd/es/typography';
 
 const { Text, Link } = Typography;
 
-export default function Foot() {
 
+export default function Foot() {
+  const { isMobile } = useContext(Context)
   return (
     <>
-      <Row justify="end">
+      <Row justify={isMobile ? "center" : "end"}>
         <Text
           style={{ color: '#ffffff' }}
         >
           Josh Williams &copy; 2021
         </Text>
       </Row>
-      <Row justify="end">
+      <Row justify={isMobile ? "center" : "end"}>
         <Link
           href="https://www.joshwilliamsdeveloper.com/"
           style={{ margin: '.2rem 0' }}
