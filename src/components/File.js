@@ -35,7 +35,7 @@ export default function File() {
     setShowSaveAsModal(false)
   }
 
-  const buttonSize = () => isMobile ? "middle" : "large";
+  const buttonSize = () => isMobile ? "small" : "large";
 
   return (
     <>
@@ -44,7 +44,7 @@ export default function File() {
         <Button
           onClick={() => saveSong('new')}
           size="large"
-          type="link"
+          type="text"
         >
           Save
         </Button>
@@ -52,15 +52,15 @@ export default function File() {
         <>
           <Button
             onClick={() => saveSong('update')}
-            size={buttonSize}
-            type="link"
+            size={buttonSize()}
+            type="text"
           >
             Save
           </Button>
           <Button
             onClick={() => setShowSaveAsModal(true)}
-            size={buttonSize}
-            type="link"
+            size={buttonSize()}
+            type="text"
           >
             Save As
           </Button>
@@ -107,8 +107,8 @@ export default function File() {
             }}
           >
             <Button
-              size={buttonSize}
-              type="link"
+              size={buttonSize()}
+              type="text"
             >
               New
             </Button>
@@ -122,10 +122,10 @@ export default function File() {
               title="Delete Loop">
 
               <Button
-                size={buttonSize}
+                size={buttonSize()}
                 icon={<DeleteOutlined />}
                 danger
-                type="link"
+                type="text"
 
               />
             </Tooltip>

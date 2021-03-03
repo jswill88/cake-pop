@@ -11,36 +11,46 @@ module.exports = {
               '@layout-body-background': '#251738',
               '@layout-header-background': '#24ddd8',
               '@layout-footer-background': '#251738',
-              // '@primary-color': '#1DA57A',
-              // '@error-color': '@blue-4',
-              // '@warning-color': '@blue-4'
+
               '@text-color': '#f0eaf4',
-              '@text-color-dark': 'fade(#f0eaf4, 85%)',
-              '@heading-color': '#f0eaf4',
+              '@text-color-dark': '#f0eaf4',
+              '@heading-color-dark': '#f0eaf4',
 
               // Button backgrounds - also options for border and color
               '@btn-primary-bg': '#f9d673',
               '@btn-primary-color': '#000',
 
-              '@menu-item-active-bg': '#f9d673',
-              '@menu-highlight-color': '#f9d673',
+              // '@btn-default-color':'@text-color',
+              // '@btn-default-color':'#f0eaf4',
+              // '@btn-default-bg': '@component-background',
+              // '@btn-default-bg': '#f0eaf4'
+
+              '@btn-default-ghost-border': '#24ddd8',
+              '@btn-default-ghost-color': '#24ddd8',
 
               '@menu-dark-item-active-bg': '#f9d673',
+              '@menu-dark-highlight-color': '#000000',
+              // '@menu-item-color': '#FFFFFF',
+
+              '@menu-dark-bg': '#24ddd8',
+
+              // '@menu-dark-item-active-bg': '#f9d673',
               '@menu-dark-color': '#000',
-              '@menu-dark-highlight-color': '#000',
-              '@menu-dark-selected-item-icon-color': '#000',
+
+              '@menu-dark-selected-item-icon-color': '#000000',
+
+              '@label-color': '#FFFFFF',
 
               '@divider-color': '#f0eaf4',
-              '@select-dropdown-bg': '#f0eaf4',
-              '@select-item-selected-color':'#000',
-              '@input-color': '#000000',
+              // '@select-dropdown-bg': '#f0eaf4',
+              // '@select-item-selected-color':'#000',
             
-              '@modal-heading-color':'#000',
+              '@modal-heading-color':'#FFFFFF',
+              '@card-background': 'transparent',
+              // '@btn-ghost-bg': '#f0eaf4',
+              // '@btn-default-color': '#251738',
+              // '@btn-default-bg': '#ffffff',
 
-              '@btn-ghost-bg': '#f0eaf4',
-              '@btn-default-color': '#251738',
-              '@btn-default-bg': '#ffffff',
-              // '@btn-text-hover-bg': 'pink',
             },
             javascriptEnabled: true,
           },

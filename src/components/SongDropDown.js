@@ -15,18 +15,23 @@ export default function SongDropDown() {
 
   const handleSongChoice = e => open(songs[e.key].id);
 
-  const buttonSize = () => isMobile ? "middle" : "large";
+  const buttonSize = () => isMobile ? "small" : "large";
 
   const menu = (
     <Menu
       onClick={handleSongChoice}
-    >
+      >
       {songs.map(({ title, id }, i) =>
         <Menu.Item
-          key={i}
-          // style={{ fontSize: '1rem' }}
+        key={i}
+        // style={{color: '#000000'}}
+
         >
+          {/* <span style={{color: '#000000'}}> */}
           {title}
+
+          {/* </span> */}
+          
         </Menu.Item>
       )}
     </Menu>
@@ -39,7 +44,7 @@ export default function SongDropDown() {
     trigger="click"
     >
       <Button
-        type="link"
+        type="text"
         size={buttonSize()}
         style={{paddingLeft: 0}}
       >

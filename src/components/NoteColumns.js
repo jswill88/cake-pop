@@ -3,6 +3,7 @@ import { useContext } from 'react'
 import { InlineIcon } from '@iconify/react';
 import he from 'he';
 import { CHORDS } from '../lib/noteInfo';
+import colors from '../lib/colors'
 import musicClefTreble from '@iconify-icons/mdi/music-clef-treble';
 import musicClefBass from '@iconify-icons/mdi/music-clef-bass';
 import drumIcon from '@iconify-icons/la/drum';
@@ -77,9 +78,9 @@ export default function NoteColumns() {
           {[0, 1, 2, 3].map(i =>
             < Col
               key={i}
-              xs={loopLength <= 12 ? 12 :  24}
-              sm={loopLength <= 8 ? 6 :  12}
-              md={loopLength <= 12 ? 6 :  12}
+              xs={loopLength <= 12 ? 12 : 24}
+              sm={loopLength <= 8 ? 6 : 12}
+              md={loopLength <= 12 ? 6 : 12}
               lg={6}
               style={{
                 // minWidth: '13rem',
@@ -92,7 +93,7 @@ export default function NoteColumns() {
                   value={he.decode(prog[i])}
                   onChange={val => handleChordChange(val, i)}
                   size={isMobile ? "middle" : "small"}
-                  style={{ minWidth: '2.5rem' }}
+                  style={{ minWidth: '4rem' }}
                 >
                   {CHORDS && Object.keys(CHORDS).map((chord, j) =>
                     <Option
@@ -101,8 +102,9 @@ export default function NoteColumns() {
                     >{he.decode(chord)}</Option>
                   )}
                 </Select>}
+                bordered={false}
               >
-                
+
                 {Object.keys(noteSwitches).map((noteRow, j) =>
                   <Row
                     key={j}
@@ -112,6 +114,7 @@ export default function NoteColumns() {
                     {chordLength(i).map(beat =>
 
                       <Button
+                        
                         shape="circle"
                         onClick={() => {
                           const note = getNote(noteRow, beat)
@@ -120,23 +123,40 @@ export default function NoteColumns() {
                         key={beat}
                         style={{
                           overflow: 'hidden',
-                          border: String(beat) === String(currentBeat) ? '1px solid black' : '1px solid lightblue',
                           alignItems: 'center',
                           justifyContent: 'center',
                           display: 'flex',
                           margin: '.2rem 0',
-                          boxShadow: '1px 1px 1px #25173880'
+                          // boxShadow: '1px 1px 1px white',
+
+                          color: buttons[noteRow][beat] ? 
+                            colors.purple
+                            : String(beat) === String(currentBeat) ?
+                            colors.pink : colors.cyan,
+
+                          backgroundColor: String(beat) === String(currentBeat) ?
+                            '#ffa4cd'
+                            : !buttons[noteRow][beat] ? colors.cyan : '#24ddd8',
+
+                          borderColor: String(beat) === String(currentBeat) ?
+                            '#ffa4cd'
+                            : buttons[noteRow][beat] && '#24ddd8',
+
+                          // borderStyle:'double',
+                          borderWidth: '2px'
                         }}
+                        className="note"
                         size="middle"
-                        type={!buttons[noteRow][beat] ? 'ghost'
-                          : String(beat) === String(currentBeat) ? 'default' : 'primary'}
+                        ghost={!buttons[noteRow][beat] ? true : false}
+
+                        type={!buttons[noteRow][beat] ? 'default' : 'primary'}
                       >
                         <Icon noteRow={noteRow} />
 
                       </Button>
 
                     )}
-                    {['low', 'bassLow'].includes(noteRow) && <Divider />}
+                    {['low', 'bassLow'].includes(noteRow) && <Divider style={{width: '5px'}} />}
                   </Row>
                 )}
               </Card>

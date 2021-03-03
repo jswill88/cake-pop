@@ -4,9 +4,7 @@ import { Context } from '../context/context';
 import Modal from 'antd/es/modal';
 import Form from 'antd/es/form';
 import Input from 'antd/es/input';
-import Typography from 'antd/es/typography'
-
-import './SignInForm.css'
+import Typography from 'antd/es/typography';
 
 const { Link } = Typography;
 
@@ -88,7 +86,7 @@ export default function SignInForm() {
           <Form.Item
             
             
-            label={<span style={{color: '#000000'}}>Email</span>}
+            label="Email"
             name="email"
             rules={[
               {
@@ -97,7 +95,7 @@ export default function SignInForm() {
               },
               {
                 required: true,
-                message: 'Email required to sign in'
+                message: 'Required'
               }
             ]}
           >
@@ -105,13 +103,13 @@ export default function SignInForm() {
             <Input />
           </Form.Item>
           <Form.Item
-            label={<span style={{color: '#000000'}}>Password</span>}
+            label="Password"
             name="password"
             
             rules={[
               {
                 required: true,
-                message: 'Please enter your password'
+                message: 'Required'
               }
             ]}
           >
@@ -124,7 +122,7 @@ export default function SignInForm() {
             onClick={() => {
               setShowSignUp(true);
             }}
-          >Not registered yet? Make an account!</Link>
+          >Not registered? Make an account</Link>
         </Form>
         :
         <Form
@@ -133,7 +131,7 @@ export default function SignInForm() {
           preserve={false}
         >
           <Form.Item
-            label={<span style={{color: '#000000'}}>Email</span>}
+            label="Email"
             name="email"
             rules={[
               {
@@ -150,14 +148,14 @@ export default function SignInForm() {
           </Form.Item>
 
           <Form.Item
-            label={<span style={{color: '#000000'}}>Username</span>}
+            label="Username"
             name="username"
             requiredMark="optional"
           >
             <Input />
           </Form.Item>
           <Form.Item
-            label={<span style={{color: '#000000'}}>Password</span>}
+            label="Password"
             name="signUpPassword"
             rules={passwordRules}
             hasFeedback
@@ -169,7 +167,7 @@ export default function SignInForm() {
             />
           </Form.Item>
           <Form.Item
-            label={<span style={{color: '#000000'}}>Confirm Password</span>}
+            label="Confirm Password"
             name="passwordVerify"
             rules={[
               {

@@ -15,23 +15,23 @@ export default function Hamburger() {
     <Menu
     >
       <Menu.Item
-        style={{ width: '50vw', fontSize: '1.2rem', color: '#000' }}
+        style={{ width: '50vw', fontSize: '1.2rem', /*color: '#000'*/ }}
         icon={<HomeOutlined style={{fontSize: '1.2rem' }}  />}
       >
         <Link to="/"
-          style={{color: '#000'}}
+          // style={{color: '#000'}}
         >
           Looper
         </Link>
       </Menu.Item>
       <Divider style={{margin: 0}}/>
       <Menu.Item
-        style={{ width: '50vw', fontSize: '1.2rem', color: '#000' }}
+        style={{ width: '50vw', fontSize: '1.2rem', /*color: '#ffffff'*/ }}
         icon={<InfoCircleOutlined style={{fontSize: '1.2rem' }}  />}
       >
         <Link
         to="/info"
-        style={{color: '#000'}}
+        // style={{color: '#FFFFFF'}}
         >
           Info
         </Link>
