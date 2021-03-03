@@ -89,8 +89,8 @@ function ContextProvider(props) {
       const synth = makeSynth(type);
       buttonObj[row] = new Array(loopLength).fill(false);
       noteObj[row] = new Tone.Sequence((time, note) => {
-        if (type === 'snareDrum') synth.triggerAttackRelease('16n', time + .3)
-        else synth.triggerAttackRelease(note, '8n', time + .3)
+        if (type === 'snareDrum') synth.triggerAttackRelease('16n', time /*+ .3*/)
+        else synth.triggerAttackRelease(note, '8n', time /*+ .3*/)
       }, new Array(loopLength).fill([])).start(0);
     })
     setNoteSwitches(noteObj)
@@ -347,8 +347,8 @@ function ContextProvider(props) {
 
       const synth = makeSynth(type);
       buttonsPressed[noteRow] = new Tone.Sequence((time, note) => {
-        if (type === 'snareDrum') synth.triggerAttackRelease('8n', time + .3)
-        else synth.triggerAttackRelease(note, '8n', time + .3)
+        if (type === 'snareDrum') synth.triggerAttackRelease('8n', time /*+ .3*/)
+        else synth.triggerAttackRelease(note, '8n', time /*+ .3*/)
       }, arrLoop).start(0);
 
       chord = 0;
@@ -387,8 +387,8 @@ function ContextProvider(props) {
         const synth = makeSynth(type);
 
         noteObj[row] = new Tone.Sequence((time, note) => {
-          if (type === 'snareDrum') synth.triggerAttackRelease('8n', time + .3)
-          else synth.triggerAttackRelease(note, '8n', time + .3)
+          if (type === 'snareDrum') synth.triggerAttackRelease('8n', time /*+ .3*/)
+          else synth.triggerAttackRelease(note, '8n', time /*+ .3*/)
         }, new Array(loopLength).fill([])).start(0);
       })
 

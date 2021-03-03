@@ -133,14 +133,15 @@ export default function NoteColumns() {
                           display: 'flex',
                           margin: '.2rem 0',
                           // boxShadow: '1px 1px 1px white',
-
+                          transition: 'none',
+                         
                           color: buttons[noteRow][beat] ? 
                             colors.purple
                             : String(beat) === String(currentBeat) ?
                             colors.pink : colors.cyan,
 
                           backgroundColor: String(beat) === String(currentBeat) ?
-                            '#ffa4cd'
+                          '#ffa4cd'
                             : !buttons[noteRow][beat] ? colors.cyan : '#24ddd8',
 
                           borderColor: String(beat) === String(currentBeat) ?
