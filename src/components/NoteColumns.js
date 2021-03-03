@@ -4,7 +4,6 @@ import { InlineIcon } from '@iconify/react';
 import he from 'he';
 import { CHORDS } from '../lib/noteInfo';
 import colors from '../lib/colors'
-import musicClefTreble from '@iconify-icons/mdi/music-clef-treble';
 import musicClefBass from '@iconify-icons/mdi/music-clef-bass';
 import drumIcon from '@iconify-icons/la/drum';
 
@@ -14,6 +13,12 @@ import Divider from 'antd/es/divider';
 import Col from 'antd/es/col';
 import Card from 'antd/es/card';
 import Select from 'antd/es/select'
+
+import { createFromIconfontCN } from '@ant-design/icons';
+
+const IconFont = createFromIconfontCN({
+  scriptUrl: '//at.alicdn.com/t/font_2398042_9b3z0yk2zqe.js',
+});
 
 const { Option } = Select;
 
@@ -151,7 +156,7 @@ export default function NoteColumns() {
 
                         type={!buttons[noteRow][beat] ? 'default' : 'primary'}
                       >
-                        <Icon noteRow={noteRow} />
+                        <CustomIcon noteRow={noteRow} />
 
                       </Button>
 
@@ -172,25 +177,25 @@ export default function NoteColumns() {
 
 
 
-function Icon({ noteRow }) {
+function CustomIcon({ noteRow }) {
   switch (noteRow) {
     case 'high':
     case 'low':
     case 'mid':
-      return <InlineIcon
-        style={{ fontSize: '1.2rem' }}
-        icon={musicClefTreble} />
+      return <IconFont type="icon-piano" style={{ fontSize: '1.2rem' }} />
     case 'bassHigh':
     case 'bassLow':
       return <InlineIcon
-        style={{ fontSize: '1.2rem' }}
-        icon={musicClefBass} />
+      style={{ fontSize: '1.2rem' }}
+      icon={musicClefBass} />
     case 'bassDrum':
+      return <IconFont type="icon-Drum-" style={{ fontSize: '1.2rem' }} />
     case 'snareDrum':
-    case 'cymbal':
       return <InlineIcon
         style={{ fontSize: '1.2rem' }}
         icon={drumIcon} />
+    case 'cymbal':
+      return <IconFont type="icon-Cymbal" style={{ fontSize: '1.2rem' }} />
     default:
       return null
   }

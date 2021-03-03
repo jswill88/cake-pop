@@ -13,7 +13,7 @@ const { useBreakpoint } = Grid;
 export const Context = createContext();
 
 function ContextProvider(props) {
-  const [prog, setProg] = useState(['I', 'V', 'vi', 'IV'])
+  const [prog, setProg] = useState(['I', 'I', 'I', 'I'])
   const [tempo, setTempo] = useState(120);
   const [title, setTitle] = useState('New Song')
   const [noteSwitches, setNoteSwitches] = useState({});

@@ -62,6 +62,7 @@ export default function Foot() {
         </Tag>
         </Link>
       </Row>
+      
     </>
   )
 }
