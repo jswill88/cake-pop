@@ -43,7 +43,7 @@ export default function Foot() {
         >
           <Tag
             icon={<GithubOutlined />}
-            color="purple"
+            color="magenta"
             style={{marginRight: '.4rem'}}
           >
             GitHub
@@ -62,6 +62,7 @@ export default function Foot() {
         </Tag>
         </Link>
       </Row>
+      
     </>
   )
 }

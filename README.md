@@ -5,3 +5,4 @@ This project is to find the best way to make a step sequencer web app with Tone.
 Resources: 
 https://ant.design/  
 https://tonejs.github.io/  
+https://hookagency.com/color-schemes/  

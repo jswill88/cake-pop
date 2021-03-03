@@ -14,7 +14,7 @@ import Col from 'antd/es/col'
 
 import QuestionCircleOutlined from '@ant-design/icons/QuestionCircleOutlined';
 import CloseSquareOutlined from '@ant-design/icons/CloseCircleOutlined';
-import colors from '../colors';
+import colors from '../lib/colors';
 
 const { Option } = Select;
 const { Text } = Typography
@@ -27,7 +27,7 @@ export default function Controls() {
     <>
       {isMobile ?
         <>
-          <Row justify='space-between'>
+          <Row justify='space-between' style={{ margin: '1rem 0'}}>
             <LoopLength />
             <Reset />
           </Row>
@@ -79,7 +79,7 @@ function LoopLength() {
 
       <Select
         title="test"
-        size={isMobile ? "middle" : "small"}
+        size={isMobile ? "small" : "small"}
         value={loopLength}
         onChange={val => {
           reset(true);
@@ -91,6 +91,7 @@ function LoopLength() {
           <Option
             key={i}
             value={beats}
+            // style={{color: '#000000'}}
           >
             {beats}
           </Option>
@@ -144,18 +145,21 @@ function TempoSetter() {
 
 
       <Form.Item
-        label="BPM&nbsp;"
+        label="Tempo&nbsp;"
         name="tempo"
         tooltip={{
           title: "Enter a number between 50 and 320",
+          icon: <QuestionCircleOutlined style={{ color: '#ffffff'}} />,
           placement: "bottom",
-          // color: colors.white,
+          style: {
+            color: 'pink',
+          }
         }}
         validateStatus={tempoError ? 'error' : 'success'}
         initialValue={tempo}
         // labelCol={{span: 1}}
         // wrapperCol={{span: 3}}
-        style={isMobile && {flexWrap: 'nowrap', width: '3rem'}}
+        style={isMobile && {flexWrap: 'nowrap', width: '5rem'}}
         >
 
         {!editTempo ?
@@ -170,7 +174,7 @@ function TempoSetter() {
 
         
           <InputNumber
-          size={isMobile ? "middle" : "small"}
+          size={isMobile ? "small" : "small"}
           onChange={() => checkTempoErrors()}
           style={{width: isMobile && '5rem'}}
           />
@@ -182,7 +186,7 @@ function TempoSetter() {
         <>
           <Form.Item>
             <Button
-              size={isMobile ? "middle" : "small"}
+              size={isMobile ? "small" : "small"}
               onClick={() => updateTempo()}
               style={{marginLeft: isMobile && '5rem'}}
             >
@@ -191,7 +195,7 @@ function TempoSetter() {
           </Form.Item>
           <Form.Item>
             <Button
-              size={isMobile ? "large" : "small"}
+              size={isMobile ? "small" : "small"}
               onClick={() => {
                 setEditTempo(false)
                 form.resetFields();

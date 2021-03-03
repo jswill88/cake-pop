@@ -17,7 +17,7 @@ export default function UserGreeting() {
       style={{ fontSize: '14px', margin: 0 }}
       ellipsis
     >
-      {loggedIn ? `🎵 Hi, ${user}! 🎵` : 'Sign in to save'}
+      {loggedIn ? `Hi, ${user}!` : 'Sign in to save'}
     </Paragraph>
   )
 }

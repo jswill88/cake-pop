@@ -22,6 +22,7 @@ export default function SubHeader() {
       <Row
         align="middle"
         justify="space-between"
+        style={{ marginBottom: '1rem'}}
       >
         <Col
           xs={{ span: 24 }}
@@ -68,6 +69,7 @@ export default function SubHeader() {
 
       <Row
         justify="space-between"
+        style={{ margin: '1rem 0'}}
       >
         <Col>
           {loggedIn && <File />}

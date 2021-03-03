@@ -3,6 +3,7 @@ import { Context } from '../context/context';
 import SignInForm from './SignInForm';
 import Hamburger from './Hamburger';
 import './Header.css';
+import Logo from '../images/cake-pop.jpg';
 
 import { Link } from 'react-router-dom';
 
@@ -16,7 +17,8 @@ import Row from 'antd/es/row';
 import Col from 'antd/es/col';
 import Button from 'antd/es/button'
 import Typography from 'antd/es/typography';
-import Menu from 'antd/es/menu'
+import Menu from 'antd/es/menu';
+import Image from 'antd/es/image';
 
 const { Title } = Typography;
 
@@ -41,14 +43,16 @@ export default function Heading() {
         flex={1}
         style={{ display: 'flex', alignItems: 'center' }}
       >
-        <Title
-          style={{ margin: '0 1rem 0 0' }}
-        >🎂</Title>
+        <Image
+        src={Logo}
+        alt="Logo"
+        width={38}
+        />
             <Title
-              level={isMobile ? 3 : 2}
+              level={isMobile ? 5 : 2}
               style={{
                 color: '#000',
-                margin: '0 1rem 0 0',
+                margin: '0 1rem 0 .5rem',
                 fontFamily: "'Varela Round', sans-serif",
                 letterSpacing: '.1rem',
               }}
@@ -107,7 +111,7 @@ export default function Heading() {
               logout();
             }}
             icon={<LogoutOutlined />}
-            size="large"
+            size="middle"
           >
             {!isMobile && 'Log Out'}
           </Button>
