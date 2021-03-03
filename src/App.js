@@ -23,39 +23,37 @@ function App() {
     isMobile
   } = useContext(Context);
   return (
-      <Router>
-        <Layout style={{ minHeight: '100vh', minWidth: '280px'}}>
+    <Router>
+      <Layout style={{ minHeight: '100vh', minWidth: '280px' }}>
 
-          <Header style={{ padding: 0 }} >
-            <Heading />
-          </Header>
+        <Header style={{ padding: 0 }} >
+          <Heading />
+        </Header>
 
-          <Content
-          
-          
+        <Content
           style={{
             padding: isMobile ? '.5rem .5rem' : '1rem 2rem',
             width: '100%',
             maxWidth: '1500px',
             margin: '0 auto'
-            }}>
-            <Switch>
-              <Route exact path="/">
-                <SubHeader />
-                <NoteColumns />
-              </Route>
-              <Route path="/info">
-                <Info />
-              </Route>
-            </Switch>
-          </Content>
+          }}>
+          <Switch>
+            <Route exact path="/">
+              <SubHeader />
+              <NoteColumns />
+            </Route>
+            <Route path="/info">
+              <Info />
+            </Route>
+          </Switch>
+        </Content>
 
-          <Footer>
-            <Foot />
-          </Footer>
+        <Footer>
+          <Foot />
+        </Footer>
 
-        </Layout>
-      </Router>
+      </Layout>
+    </Router>
   );
 }
 
