@@ -71,7 +71,7 @@ export default function Heading() {
                 icon={<HomeOutlined />}
               >
                 <Link to="/">
-                  Looper
+                  Home
                 </Link>
               </Menu.Item>
               <Menu.Item

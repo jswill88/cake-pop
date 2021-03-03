@@ -21,7 +21,7 @@ export default function Hamburger() {
         <Link to="/"
           // style={{color: '#000'}}
         >
-          Looper
+          Home
         </Link>
       </Menu.Item>
       <Divider style={{margin: 0}}/>
