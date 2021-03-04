@@ -35,7 +35,10 @@ function ContextProvider(props) {
 
   const fetchApi = useFetch();
 
-  const makeSynth = type => new Tone[synthTypes[type]](SYNTHS[type]).toDestination();
+  const makeSynth = type => {
+    const gainNode = new Tone.Gain(.6);
+    return new Tone[synthTypes[type]](SYNTHS[type]).chain(gainNode).toDestination()
+  };
 
   const NOTES = {
     high: [CHORDS[prog[0]][2], CHORDS[prog[1]][2], CHORDS[prog[2]][2], CHORDS[prog[3]][2]],
@@ -51,7 +54,6 @@ function ContextProvider(props) {
 
   useEffect(() => {
     const updatedScreens = []
-    console.log(screens)
     for (let key in screens) {
       if (screens[key]) updatedScreens.push(key);
     }
@@ -81,6 +83,7 @@ function ContextProvider(props) {
   }, []);
 
   useEffect(() => {
+    
     const noteObj = {};
     const buttonObj = {};
     ['high', 'mid', 'low', 'bassHigh', 'bassLow', 'cymbal', 'snareDrum', 'bassDrum'].forEach(row => {
@@ -95,27 +98,31 @@ function ContextProvider(props) {
         else synth.triggerAttackRelease(note, '8n', time + extraTime)
       }, new Array(loopLength).fill([])).start(0);
     })
+
     setNoteSwitches(noteObj)
     setButtons(buttonObj)
 
-    const loop = new Tone.Loop(time => {
+    const arrOfIdx = new Array(loopLength).fill(0).map((_, i) => i);
+    const loop = new Tone.Sequence((time, note) => {
       Tone.Draw.schedule(() => {
-        setCurrentBeat(beat => (beat + 1) % loopLength)
+        setCurrentBeat(note)
       }, time)
-    }, '8n').start(0);
+    }, arrOfIdx).start(0);
+
 
     return () => {
-      loop.cancel();
+      // loop.cancel();
+      loop.events = [];
+      loop.clear();
       loop.dispose();
       for (let row in noteObj) {
         // noteObj[row].stop();
-        // noteObj[row].clear();
         noteObj[row].events = [];
         noteObj[row].clear();
         noteObj[row].dispose();
-        console.log(noteObj[row].disposed)
         new Array(loopLength).fill(false);
       }
+      setCurrentBeat(-1);
     }
   }, [loopLength])
 
@@ -157,7 +164,7 @@ function ContextProvider(props) {
       reset();
       handleTempoChange(120);
       setLoopLength(12)
-      setProg(['I', 'V', 'vi', 'IV']);
+      setProg(['I', 'I', 'I', 'I']);
     } else {
       message.error(result.message)
       return 'error';
@@ -201,7 +208,7 @@ function ContextProvider(props) {
       reset();
       setOpenSongId(false);
       handleTempoChange(120);
-      setProg(['I', 'V', 'vi', 'IV']);
+      setProg(['I', 'I', 'I', 'I']);
       const titles = songs.map(({ title }) => title)
       let newTitle = 'New Song'
       let i = 1;
@@ -221,7 +228,8 @@ function ContextProvider(props) {
 
   const open = async (songId) => {
 
-    await reset(true);
+    reset(true);
+
     const result = await fetchApi('/open', 'post', { songId })
     if (!result.error) {
 
@@ -260,9 +268,11 @@ function ContextProvider(props) {
           if (['bassLow', 'bassHigh'].includes(noteRow)) {
             note = BASS[newChord][noteRow === 'bassLow' ? 0 : 1];
           } else {
-            note = CHORDS[newChord][2 - Object.keys(NOTES).indexOf(noteRow)] + 5;
+            note = CHORDS[newChord][2 - Object.keys(NOTES).indexOf(noteRow)] + 4;
           }
-          noteSwitches[noteRow].events[i] = note;
+          const newNoteArr = noteSwitches[noteRow].events;
+          newNoteArr[i] = note;
+          noteSwitches[noteRow].events = newNoteArr;
 
         }
       }
@@ -330,7 +340,7 @@ function ContextProvider(props) {
           } else if (['bassLow', 'bassHigh'].includes(noteRow)) {
             note = BASS[chordProgression[chord]][noteRow === 'bassLow' ? 0 : 1];
           } else {
-            note = CHORDS[chordProgression[chord]][2 - Object.keys(NOTES).indexOf(noteRow)] + 5;
+            note = CHORDS[chordProgression[chord]][2 - Object.keys(NOTES).indexOf(noteRow)] + 4;
           }
 
           arrLoop[i] = note;
@@ -362,7 +372,7 @@ function ContextProvider(props) {
 
   const handleTempoChange = newTempo => {
     const tempo = newTempo < 50 ? 50 : Math.min(320, newTempo)
-    Tone.Transport.bpm.rampTo(tempo);
+    Tone.Transport.bpm.rampTo(tempo, 1);
     setTempo(tempo)
   }
 
