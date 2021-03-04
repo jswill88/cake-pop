@@ -36,7 +36,10 @@ export default function NoteColumns() {
   const addSynth = (beat, note, row) => {
     if (!noteSwitches[row].events[beat].length) {
 
-      noteSwitches[row].events[beat] = note;
+      // noteSwitches[row].events[beat] = note;
+      const arr = [...noteSwitches[row].events]
+      arr[beat] = note
+      noteSwitches[row].events = arr;
       setButtons(obj => {
         obj[row][beat] = true;
         return { ...obj };

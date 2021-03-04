@@ -98,17 +98,22 @@ function ContextProvider(props) {
         else synth.triggerAttackRelease(note, '8n', time + extraTime)
       }, new Array(loopLength).fill([])).start(0);
     })
+    
     setNoteSwitches(noteObj)
     setButtons(buttonObj)
 
-    const loop = new Tone.Loop(time => {
+    const arrOfIdx = new Array(loopLength).fill(0).map((_, i) => i);
+    const loop = new Tone.Sequence((time, note) => {
       Tone.Draw.schedule(() => {
-        setCurrentBeat(beat => (beat + 1) % loopLength)
+        setCurrentBeat(note)
       }, time)
-    }, '8n').start(0);
+    }, arrOfIdx).start(0);
+
 
     return () => {
-      loop.cancel();
+      // loop.cancel();
+      loop.events = [];
+      loop.clear();
       loop.dispose();
       for (let row in noteObj) {
         // noteObj[row].stop();
@@ -117,6 +122,7 @@ function ContextProvider(props) {
         noteObj[row].dispose();
         new Array(loopLength).fill(false);
       }
+      setCurrentBeat(-1);
     }
   }, [loopLength])
 
@@ -264,7 +270,9 @@ function ContextProvider(props) {
           } else {
             note = CHORDS[newChord][2 - Object.keys(NOTES).indexOf(noteRow)] + 5;
           }
-          noteSwitches[noteRow].events[i] = note;
+          const newNoteArr = noteSwitches[noteRow].events;
+          newNoteArr[i] = note;
+          noteSwitches[noteRow].events = newNoteArr;
 
         }
       }
