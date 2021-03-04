@@ -29,8 +29,10 @@ function ContextProvider(props) {
   const [openSongId, setOpenSongId] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [playStatus, setPlayStatus] = useState('stop');
-  const [screenSize, setScreenSize] = useState([])
-  const [isMobile, setIsMobile] = useState(false)
+  const [screenSize, setScreenSize] = useState([]);
+  const [isMobile, setIsMobile] = useState(false);
+  const [selectedMenuItem, setSelectedMenuItem] = useState('home')
+
   const screens = useBreakpoint();
 
   const fetchApi = useFetch();
@@ -458,7 +460,9 @@ function ContextProvider(props) {
     stopAudio,
     screenSize,
     screens,
-    isMobile
+    isMobile,
+    selectedMenuItem,
+    setSelectedMenuItem,
   }
 
   return (
