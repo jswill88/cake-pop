@@ -29,7 +29,8 @@ export default function Heading() {
     loggedIn,
     setShowForm,
     screenSize,
-    isMobile
+    isMobile,
+    selectedMenuItem
   } = useContext(Context);
 
   return (
@@ -64,10 +65,10 @@ export default function Heading() {
             <Menu
               mode="horizontal"
               theme="dark"
-              defaultActiveFirst={['1']}
+              defaultSelectedKeys={[selectedMenuItem]}
             >
               <Menu.Item
-                key="1"
+                key="home"
                 icon={<HomeOutlined />}
               >
                 <Link to="/">
@@ -75,7 +76,7 @@ export default function Heading() {
                 </Link>
               </Menu.Item>
               <Menu.Item
-                key="2"
+                key="info"
                 icon={<InfoCircleOutlined />}
               >
                 <Link to="/info">
