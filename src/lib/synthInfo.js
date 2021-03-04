@@ -1,30 +1,49 @@
 export const SYNTHS = {
   chordSynth: {
-    volume: -10,
-    detune: 0,
-    portamento: 0.05,
-    envelope: {
-      attack: 0.05,
-      attackCurve: 'exponential',
-      decay: 0.2,
-      decayCurve: 'exponential',
-      release: 1,
-      releaseCurve: 'exponential',
-      sustain: 0.2,
-    },
-    oscillator: {
-      partialCount: 0,
-      partials: [],
-      phase: 0,
-      type: 'amsine',
-      harmonicity: 0.5,
-      modulationType: 'sawtooth',
+    // volume: -10,
+    // detune: 0,
+    // // portamento: 0.05,
+    // envelope: {
+    //   attack: 0.05,
+    //   attackCurve: 'exponential',
+    //   decay: 0.2,
+    //   decayCurve: 'exponential',
+    //   release: .5,
+    //   releaseCurve: 'exponential',
+    //   sustain: 0.2,
+    // },
+    // oscillator: {
+    //   partialCount: 0,
+    //   partials: [],
+    //   phase: 0,
+    //   type: 'amsine',
+    //   harmonicity: 0.5,
+    //   modulationType: 'sawtooth',
+    // }
+    
+      volume: -17,
+      detune: 0,
+      portamento: 0,
+      envelope: {
+        attack: 0.005,
+        attackCurve: 'linear',
+        decay: 0.1,
+        decayCurve: 'exponential',
+        release: 1,
+        releaseCurve: 'exponential',
+        sustain: 0.3
+      },
+      oscillator: {
+        partialCount: 0,
+        partials: [],
+        phase: 0,
+        type: 'triangle'
+      
     }
   },
   bassSynth: {
     volume: -15,
     detune: 0,
-    portamento: 0.05,
     envelope: {
       attack: 0.05,
       attackCurve: 'exponential',
@@ -44,29 +63,29 @@ export const SYNTHS = {
     }
   },
   bassDrum: {
-    volume: -5,
+    volume: -15,
   },
   snareDrum:
     {
-      volume: -10,
+      volume: -15,
       envelope: {
-        "attack": 0.001,
-        "attackCurve": "linear",
-        "decay": 0.2,
-        "decayCurve": "exponential",
-        "release": 1,
-        "releaseCurve": "exponential",
-        "sustain": 0
+        attack: 0.001,
+        attackCurve: 'linear',
+        decay: 0.2,
+        decayCurve: 'exponential',
+        release: 1,
+        releaseCurve: 'exponential',
+        sustain: 0
       },
-      "noise": {
-        "fadeIn": 0,
-        "fadeOut": 0,
-        "playbackRate": 1,
-        "type": "white"
+      noise: {
+        fadeIn: 0,
+        fadeOut: 0,
+        playbackRate: 1,
+        type: "white"
       }
     },
   cymbal: {
-    volume: -25,
+    volume: -40,
   },
 }
 

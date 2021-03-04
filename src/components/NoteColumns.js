@@ -38,14 +38,17 @@ export default function NoteColumns() {
 
       // noteSwitches[row].events[beat] = note;
       const arr = [...noteSwitches[row].events]
-      arr[beat] = note
+      arr[beat] = note;
       noteSwitches[row].events = arr;
       setButtons(obj => {
         obj[row][beat] = true;
         return { ...obj };
       })
     } else {
-      noteSwitches[row].events[beat] = []
+      // noteSwitches[row].events[beat] = []
+      const arr = [...noteSwitches[row].events]
+      arr[beat] = [];
+      noteSwitches[row].events = arr;
       setButtons(obj => {
         obj[row][beat] = false;
         return { ...obj };
@@ -58,7 +61,7 @@ export default function NoteColumns() {
     if (['bassDrum', 'snareDrum', 'cymbal'].includes(noteRow)) {
       note = NOTES[noteRow][Math.floor(i / loopLength * 4)];
     } else {
-      note = NOTES[noteRow][Math.floor(i / loopLength * 4)] + (noteRow.includes('bass') ? '' : 5);
+      note = NOTES[noteRow][Math.floor(i / loopLength * 4)] + (noteRow.includes('bass') ? '' : 4);
     }
     return note;
   }

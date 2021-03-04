@@ -98,7 +98,7 @@ function ContextProvider(props) {
         else synth.triggerAttackRelease(note, '8n', time + extraTime)
       }, new Array(loopLength).fill([])).start(0);
     })
-    
+
     setNoteSwitches(noteObj)
     setButtons(buttonObj)
 
@@ -268,7 +268,7 @@ function ContextProvider(props) {
           if (['bassLow', 'bassHigh'].includes(noteRow)) {
             note = BASS[newChord][noteRow === 'bassLow' ? 0 : 1];
           } else {
-            note = CHORDS[newChord][2 - Object.keys(NOTES).indexOf(noteRow)] + 5;
+            note = CHORDS[newChord][2 - Object.keys(NOTES).indexOf(noteRow)] + 4;
           }
           const newNoteArr = noteSwitches[noteRow].events;
           newNoteArr[i] = note;
@@ -340,7 +340,7 @@ function ContextProvider(props) {
           } else if (['bassLow', 'bassHigh'].includes(noteRow)) {
             note = BASS[chordProgression[chord]][noteRow === 'bassLow' ? 0 : 1];
           } else {
-            note = CHORDS[chordProgression[chord]][2 - Object.keys(NOTES).indexOf(noteRow)] + 5;
+            note = CHORDS[chordProgression[chord]][2 - Object.keys(NOTES).indexOf(noteRow)] + 4;
           }
 
           arrLoop[i] = note;
