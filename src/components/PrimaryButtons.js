@@ -30,6 +30,7 @@ export default function PrimaryButtons() {
 
   const pauseAudio = () => {
     Tone.Transport.pause('+8n');
+    // while (Tone.Transport.state !== 'paused') { }
     setPlayStatus('pause')
   }
 

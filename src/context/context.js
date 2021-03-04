@@ -35,7 +35,10 @@ function ContextProvider(props) {
 
   const fetchApi = useFetch();
 
-  const makeSynth = type => new Tone[synthTypes[type]](SYNTHS[type]).toDestination();
+  const makeSynth = type => {
+    const gainNode = new Tone.Gain(.6);
+    return new Tone[synthTypes[type]](SYNTHS[type]).chain(gainNode).toDestination()
+  };
 
   const NOTES = {
     high: [CHORDS[prog[0]][2], CHORDS[prog[1]][2], CHORDS[prog[2]][2], CHORDS[prog[3]][2]],
@@ -51,7 +54,6 @@ function ContextProvider(props) {
 
   useEffect(() => {
     const updatedScreens = []
-    console.log(screens)
     for (let key in screens) {
       if (screens[key]) updatedScreens.push(key);
     }
@@ -81,6 +83,7 @@ function ContextProvider(props) {
   }, []);
 
   useEffect(() => {
+    
     const noteObj = {};
     const buttonObj = {};
     ['high', 'mid', 'low', 'bassHigh', 'bassLow', 'cymbal', 'snareDrum', 'bassDrum'].forEach(row => {
@@ -109,11 +112,9 @@ function ContextProvider(props) {
       loop.dispose();
       for (let row in noteObj) {
         // noteObj[row].stop();
-        // noteObj[row].clear();
         noteObj[row].events = [];
         noteObj[row].clear();
         noteObj[row].dispose();
-        console.log(noteObj[row].disposed)
         new Array(loopLength).fill(false);
       }
     }
@@ -157,7 +158,7 @@ function ContextProvider(props) {
       reset();
       handleTempoChange(120);
       setLoopLength(12)
-      setProg(['I', 'V', 'vi', 'IV']);
+      setProg(['I', 'I', 'I', 'I']);
     } else {
       message.error(result.message)
       return 'error';
@@ -201,7 +202,7 @@ function ContextProvider(props) {
       reset();
       setOpenSongId(false);
       handleTempoChange(120);
-      setProg(['I', 'V', 'vi', 'IV']);
+      setProg(['I', 'I', 'I', 'I']);
       const titles = songs.map(({ title }) => title)
       let newTitle = 'New Song'
       let i = 1;
@@ -221,7 +222,8 @@ function ContextProvider(props) {
 
   const open = async (songId) => {
 
-    await reset(true);
+    reset(true);
+
     const result = await fetchApi('/open', 'post', { songId })
     if (!result.error) {
 
@@ -362,7 +364,7 @@ function ContextProvider(props) {
 
   const handleTempoChange = newTempo => {
     const tempo = newTempo < 50 ? 50 : Math.min(320, newTempo)
-    Tone.Transport.bpm.rampTo(tempo);
+    Tone.Transport.bpm.rampTo(tempo, 1);
     setTempo(tempo)
   }
 

@@ -31,9 +31,6 @@ export default function NoteColumns() {
     noteSwitches,
     buttons,
     setButtons,
-    handleChordChange,
-    prog,
-    isMobile
   } = useContext(Context)
 
   const addSynth = (beat, note, row) => {
@@ -94,19 +91,7 @@ export default function NoteColumns() {
               }}
             >
               <Card
-                title={<Select
-                  value={he.decode(prog[i])}
-                  onChange={val => handleChordChange(val, i)}
-                  size={isMobile ? "middle" : "small"}
-                  style={{ minWidth: '4rem' }}
-                >
-                  {CHORDS && Object.keys(CHORDS).map((chord, j) =>
-                    <Option
-                      key={j}
-                      value={chord}
-                    >{he.decode(chord)}</Option>
-                  )}
-                </Select>}
+                title={<ChordDropDown i={i} />}
                 bordered={false}
               >
 
@@ -119,7 +104,7 @@ export default function NoteColumns() {
                     {chordLength(i).map(beat =>
 
                       <Button
-                        
+
                         shape="circle"
                         onClick={() => {
                           const note = getNote(noteRow, beat)
@@ -134,14 +119,14 @@ export default function NoteColumns() {
                           margin: '.2rem 0',
                           // boxShadow: '1px 1px 1px white',
                           transition: 'none',
-                         
-                          color: buttons[noteRow][beat] ? 
+
+                          color: buttons[noteRow][beat] ?
                             colors.purple
                             : String(beat) === String(currentBeat) ?
-                            colors.pink : colors.cyan,
+                              colors.pink : colors.cyan,
 
                           backgroundColor: String(beat) === String(currentBeat) ?
-                          '#ffa4cd'
+                            '#ffa4cd'
                             : !buttons[noteRow][beat] ? colors.cyan : '#24ddd8',
 
                           borderColor: String(beat) === String(currentBeat) ?
@@ -162,7 +147,7 @@ export default function NoteColumns() {
                       </Button>
 
                     )}
-                    {['low', 'bassLow'].includes(noteRow) && <Divider style={{width: '5px'}} />}
+                    {['low', 'bassLow'].includes(noteRow) && <Divider style={{ width: '5px' }} />}
                   </Row>
                 )}
               </Card>
@@ -177,6 +162,32 @@ export default function NoteColumns() {
 }
 
 
+function ChordDropDown({ i }) {
+
+  const {
+    prog,
+    isMobile,
+    handleChordChange
+  } = useContext(Context);
+
+  return (
+    <Select
+      value={he.decode(prog[i])}
+      onChange={val => handleChordChange(val, i)}
+      size={isMobile ? "middle" : "small"}
+      style={{ minWidth: '4rem' }}
+    >
+      {CHORDS && Object.keys(CHORDS).map((chord, j) =>
+        <Option
+          key={j}
+          value={chord}
+        >{he.decode(chord)}</Option>
+      )}
+    </Select>
+  )
+
+}
+
 
 function CustomIcon({ noteRow }) {
   switch (noteRow) {
@@ -187,8 +198,8 @@ function CustomIcon({ noteRow }) {
     case 'bassHigh':
     case 'bassLow':
       return <InlineIcon
-      style={{ fontSize: '1.2rem' }}
-      icon={musicClefBass} />
+        style={{ fontSize: '1.2rem' }}
+        icon={musicClefBass} />
     case 'bassDrum':
       return <IconFont type="icon-Drum-" style={{ fontSize: '1.2rem' }} />
     case 'snareDrum':

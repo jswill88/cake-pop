@@ -22,7 +22,7 @@ export const SYNTHS = {
     }
   },
   bassSynth: {
-    volume: -5,
+    volume: -15,
     detune: 0,
     portamento: 0.05,
     envelope: {
@@ -43,10 +43,28 @@ export const SYNTHS = {
       modulationType: 'sine',
     }
   },
-  bassDrum: {},
-  snareDrum: {
+  bassDrum: {
     volume: -5,
   },
+  snareDrum:
+    {
+      volume: -10,
+      envelope: {
+        "attack": 0.001,
+        "attackCurve": "linear",
+        "decay": 0.2,
+        "decayCurve": "exponential",
+        "release": 1,
+        "releaseCurve": "exponential",
+        "sustain": 0
+      },
+      "noise": {
+        "fadeIn": 0,
+        "fadeOut": 0,
+        "playbackRate": 1,
+        "type": "white"
+      }
+    },
   cymbal: {
     volume: -25,
   },
