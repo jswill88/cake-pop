@@ -8,6 +8,7 @@ import { SYNTHS, synthTypes } from '../lib/synthInfo';
 import message from 'antd/es/message'
 import Grid from 'antd/es/grid';
 
+axios.defaults.withCredentials = true;
 const { useBreakpoint } = Grid;
 
 export const Context = createContext();
@@ -70,7 +71,7 @@ function ContextProvider(props) {
   }, [screenSize])
 
   useEffect(() => {
-
+    console.log('hello')
     const checkLoggedIn = async () => {
       const result = await axios.get(process.env.REACT_APP_URL + '/api/v1/loggedIn')
 
