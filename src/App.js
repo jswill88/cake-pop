@@ -11,10 +11,12 @@ import {
   Route
 } from "react-router-dom";
 
-
-
 import './App.less'
 import Layout from 'antd/es/layout';
+
+import axios from 'axios';
+axios.defaults.withCredentials = true;
+
 const { Header, Footer, Content } = Layout;
 
 function App() {
