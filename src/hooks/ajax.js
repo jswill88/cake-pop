@@ -1,5 +1,6 @@
 import axios from 'axios';
-// axios.defaults.withCredentials = true;
+axios.defaults.withCredentials = true;
+
 
 const url = process.env.REACT_APP_URL;
 
@@ -11,7 +12,7 @@ export default function useFetch() {
         method,
         url:`${url}/api/v1${route}`,
         data,
-        
+
       });
       return result
 

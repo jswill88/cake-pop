@@ -70,11 +70,11 @@ function ContextProvider(props) {
   }, [screenSize])
 
   useEffect(() => {
-    // console.log('hello')
+    console.log('hello')
     const checkLoggedIn = async () => {
       const result = await axios.get(
         process.env.REACT_APP_URL + '/api/v1/loggedIn',
-        // {withCredentials: true}
+        { withCredentials: true }
         )
 
       if (result.data) {
