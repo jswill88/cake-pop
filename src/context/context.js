@@ -8,6 +8,8 @@ import { SYNTHS, synthTypes } from '../lib/synthInfo';
 import message from 'antd/es/message'
 import Grid from 'antd/es/grid';
 
+import { useCookies } from 'react-cookie';
+
 const { useBreakpoint } = Grid;
 
 export const Context = createContext();
@@ -32,6 +34,8 @@ function ContextProvider(props) {
   const [screenSize, setScreenSize] = useState([]);
   const [isMobile, setIsMobile] = useState(false);
   const [selectedMenuItem, setSelectedMenuItem] = useState('home')
+
+  const [cookies, setCookie, removeCookie] = useCookies(['token','songId','test'])
 
   const screens = useBreakpoint();
 
@@ -71,11 +75,16 @@ function ContextProvider(props) {
 
   useEffect(() => {
     // console.log('hello')
+    // setCookie('test','cookie')
+    // console.log(cookies.token)
+    // pass the cookie
+    const token = cookies.token
     const checkLoggedIn = async () => {
-      const result = await axios.get(
-        process.env.REACT_APP_URL + '/api/v1/loggedIn',
-        // {withCredentials: true}
-        )
+      const result = await axios({
+        url: process.env.REACT_APP_URL + '/api/v1/loggedIn',
+        method: 'post',
+        data: { token }
+      })
 
       if (result.data) {
         setSongs(result.data.songList);
@@ -84,8 +93,7 @@ function ContextProvider(props) {
       }
     }
     checkLoggedIn();
-
-  }, []);
+  }, [cookies.token]);
 
   useEffect(() => {
     
@@ -139,6 +147,7 @@ function ContextProvider(props) {
       setLoggedIn(true)
       setUser(result.data.username);
       setSongs(result.data.songs);
+      setCookie('token', result.data.token);
       return 'success';
     } else {
       message.error(result.message)
@@ -151,6 +160,7 @@ function ContextProvider(props) {
     if (!result.error) {
       setLoggedIn(true)
       setUser(userData.username || userData.email);
+      setCookie('token', result.data.token)
       return 'success';
     } else {
       message.error(result.message)
@@ -170,6 +180,8 @@ function ContextProvider(props) {
       handleTempoChange(120);
       setLoopLength(12)
       setProg(['I', 'I', 'I', 'I']);
+      removeCookie('token');
+      removeCookie('songId');
     } else {
       message.error(result.message)
       return 'error';
@@ -187,6 +199,10 @@ function ContextProvider(props) {
       bpm: tempo,
       numberOfBeats: loopLength,
       chordProgression: prog,
+      token: cookies.token
+    }
+    if(type === 'update') {
+      songObj.songId = openSongId;
     }
     const result = await fetchApi(
       type === 'update' ? '/update' : '/save',
@@ -198,6 +214,7 @@ function ContextProvider(props) {
         setSongs(arr => [...arr, result.data])
         setOpenSongId(result.data.id)
         setTitle(result.data.title)
+        // setCookie('songId', result.data.id)
       }
       message.success(`${result.data.title} successfully saved`)
       return 'success'
@@ -208,12 +225,13 @@ function ContextProvider(props) {
   }
 
   const newSong = async () => {
-    const result = await fetchApi('/close', 'get')
-    if (!result.error) {
+    // const result = await fetchApi('/close', 'get')
+    // if (!result.error) {
       reset();
       setOpenSongId(false);
       handleTempoChange(120);
       setProg(['I', 'I', 'I', 'I']);
+      // removeCookie('songId')
       const titles = songs.map(({ title }) => title)
       let newTitle = 'New Song'
       let i = 1;
@@ -221,13 +239,12 @@ function ContextProvider(props) {
         newTitle = `New Song ${i}`;
         i++;
       }
-
       setTitle(newTitle);
       return 'success';
-    } else {
-      message.error(result.message)
-      return 'error';
-    }
+    // } else {
+    //   message.error(result.message)
+    //   return 'error';
+    // }
 
   }
 
@@ -235,10 +252,10 @@ function ContextProvider(props) {
 
     reset(true);
 
-    const result = await fetchApi('/open', 'post', { songId })
+    const result = await fetchApi('/open', 'post', { token: cookies.token, songId })
     if (!result.error) {
 
-      const { data: songObj } = result
+      const { data: songObj } = result;
       setProg(songObj.chordProgression);
       handleTempoChange(songObj.bpm)
       setLoopLength(songObj.numberOfBeats);
@@ -247,7 +264,7 @@ function ContextProvider(props) {
       setButtons({ ...songObj.buttonsPressed })
       setNoteSwitches(updateButtons(songObj));
       setCurrentBeat(-1)
-
+      // setCookie('songId', songObj._id)
       return 'success'
     } else {
       message.error(result.message)
@@ -289,7 +306,7 @@ function ContextProvider(props) {
       let songInList = songs.filter(({ title: titleInList }) => titleInList === title)
       if (songInList.length) {
         const { id: songId } = songInList[0];
-        const result = await fetchApi('/rename', 'patch', { newTitle, songId });
+        const result = await fetchApi('/rename', 'patch', { newTitle, songId, token: cookies.token });
         if (result.error) {
           message.error(result.message)
           return 'error';
@@ -312,7 +329,8 @@ function ContextProvider(props) {
 
   const deleteSong = async () => {
     const result = await fetchApi('/deletesong', 'delete', {
-      songIdToDelete: openSongId
+      songIdToDelete: openSongId,
+      token: cookies.token
     })
     if (!result.error) {
       reset();
@@ -320,8 +338,8 @@ function ContextProvider(props) {
       setOpenSongId(false);
       setTitle('New Song');
       handleTempoChange(120);
-
-      setProg(['I', 'V', 'vi', 'IV']);
+      // removeCookie('songId');
+      setProg(['I', 'I', 'I', 'I']);
       message.success(`${result.data.title} successfullly deleted`)
       return 'success';
     } else {
