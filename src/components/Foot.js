@@ -17,14 +17,14 @@ export default function Foot() {
   const { isMobile } = useContext(Context)
   return (
     <>
-      <Row justify={isMobile ? "center" : "end"}>
+      <Row justify={isMobile ? "center" : "end"} style={{ maxWidth: '2000px', margin: '0 auto'}}>
         <Text
           style={{ color: '#ffffff' }}
         >
           Josh Williams &copy; 2021
         </Text>
       </Row>
-      <Row justify={isMobile ? "center" : "end"}>
+      <Row justify={isMobile ? "center" : "end"} style={{ maxWidth: '2000px', margin: '0 auto'}}>
         <Link
           href="https://www.joshwilliamsdeveloper.com/"
           style={{ margin: '.2rem 0' }}

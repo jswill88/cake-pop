@@ -26,9 +26,9 @@ function App() {
   } = useContext(Context);
   return (
     <Router>
-      <Layout style={{ minHeight: '100vh', minWidth: '280px' }}>
+      <Layout style={{ minHeight: '100vh', minWidth: '280px'}}>
 
-        <Header style={{ padding: 0 }} >
+        <Header style={{ padding: 0  }} >
           <Heading />
         </Header>
 

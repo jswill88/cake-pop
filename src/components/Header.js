@@ -35,7 +35,7 @@ export default function Heading() {
 
   return (
     <Row
-      style={{padding: !screenSize.every(val => val === 'xs') ? '0 2rem 0 1rem' : '0 1rem'}}
+      style={{padding: !screenSize.every(val => val === 'xs') ? '0 2rem 0 1rem' : '0 1rem',  maxWidth: '2000px', margin: '0 auto'}}
       className="header"
       align="middle"
     >
