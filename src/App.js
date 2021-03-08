@@ -36,7 +36,7 @@ function App() {
           style={{
             padding: isMobile ? '.5rem .5rem' : '1rem 2rem',
             width: '100%',
-            maxWidth: '1500px',
+            maxWidth: '2000px',
             margin: '0 auto'
           }}>
           <Switch>
