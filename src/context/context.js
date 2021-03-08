@@ -74,10 +74,6 @@ function ContextProvider(props) {
   }, [screenSize])
 
   useEffect(() => {
-    // console.log('hello')
-    // setCookie('test','cookie')
-    // console.log(cookies.token)
-    // pass the cookie
     const token = cookies.token
     const checkLoggedIn = async () => {
       const result = await axios({
@@ -225,13 +221,10 @@ function ContextProvider(props) {
   }
 
   const newSong = async () => {
-    // const result = await fetchApi('/close', 'get')
-    // if (!result.error) {
       reset();
       setOpenSongId(false);
       handleTempoChange(120);
       setProg(['I', 'I', 'I', 'I']);
-      // removeCookie('songId')
       const titles = songs.map(({ title }) => title)
       let newTitle = 'New Song'
       let i = 1;
@@ -241,10 +234,6 @@ function ContextProvider(props) {
       }
       setTitle(newTitle);
       return 'success';
-    // } else {
-    //   message.error(result.message)
-    //   return 'error';
-    // }
 
   }
 
@@ -264,7 +253,6 @@ function ContextProvider(props) {
       setButtons({ ...songObj.buttonsPressed })
       setNoteSwitches(updateButtons(songObj));
       setCurrentBeat(-1)
-      // setCookie('songId', songObj._id)
       return 'success'
     } else {
       message.error(result.message)
@@ -400,8 +388,7 @@ function ContextProvider(props) {
   }
 
   const reset = async (skip) => {
-    Tone.Transport.stop('+8n');
-    while (Tone.Transport.state !== 'stopped') { }
+    stopAudio()
     const buttonObj = {};
     for (let noteRow in noteSwitches) {
       noteSwitches[noteRow].dispose()
@@ -429,16 +416,13 @@ function ContextProvider(props) {
 
       setNoteSwitches(noteObj)
     }
-
-    setPlayStatus('stop')
-    setCurrentBeat(-2)
   }
 
-  const stopAudio = () => {
+  const stopAudio = () => { 
+    const waitTime = Tone.Time("8n").toSeconds()
     Tone.Transport.stop('8n')
-    while (Tone.Transport.state !== 'stopped') { }
     setPlayStatus('stop')
-    setCurrentBeat(-2);
+    setTimeout(() => setCurrentBeat(-2), waitTime * 1000)
   }
 
   const state = {
