@@ -12,7 +12,7 @@ export const BASS = {
   I: ['Db3', 'Ab3'],
   ii: ['Eb3', 'Bb3'],
   iii: ['F3', 'C4'],
-  IV: ['Gb2', 'Db3'],
+  IV: ['Gb3', 'Db4'],
   V: ['Ab2', 'Eb3'],
   vi: ['Bb2', 'F3'],
   'vii&#x26AC;': ['C3', 'Gb3'],

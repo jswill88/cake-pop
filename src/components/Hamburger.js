@@ -6,8 +6,6 @@ import Button from 'antd/es/button';
 import { Link } from 'react-router-dom'
 import HomeOutlined from '@ant-design/icons/HomeOutlined'
 import InfoCircleOutlined from '@ant-design/icons/InfoCircleOutlined'
-// import color from 
-
 
 export default function Hamburger() {
 
@@ -15,23 +13,20 @@ export default function Hamburger() {
     <Menu
     >
       <Menu.Item
-        style={{ width: '50vw', fontSize: '1.2rem', /*color: '#000'*/ }}
+        style={{ width: '50vw', fontSize: '1.2rem'}}
         icon={<HomeOutlined style={{fontSize: '1.2rem' }}  />}
       >
-        <Link to="/"
-          // style={{color: '#000'}}
-        >
+        <Link to="/">
           Home
         </Link>
       </Menu.Item>
       <Divider style={{margin: 0}}/>
       <Menu.Item
-        style={{ width: '50vw', fontSize: '1.2rem', /*color: '#ffffff'*/ }}
-        icon={<InfoCircleOutlined style={{fontSize: '1.2rem' }}  />}
+        style={{ width: '50vw', fontSize: '1.2rem' }}
+        icon={<InfoCircleOutlined style={{ fontSize: '1.2rem' }}  />}
       >
         <Link
         to="/info"
-        // style={{color: '#FFFFFF'}}
         >
           Info
         </Link>

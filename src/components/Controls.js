@@ -38,7 +38,6 @@ export default function Controls() {
           >
             <Col
               span={24}
-              // style={{ backgroundColor: 'white' }}
             >
               <TempoSetter />
             </Col>
@@ -58,9 +57,8 @@ export default function Controls() {
 function LoopLength() {
   const {
     loopLength,
-    reset,
-    setLoopLength,
-    isMobile
+    isMobile,
+    handleLoopLengthChange
   } = useContext(Context)
 
   return (
@@ -82,8 +80,7 @@ function LoopLength() {
         size={isMobile ? "small" : "small"}
         value={loopLength}
         onChange={val => {
-          reset(true);
-          setLoopLength(parseInt(val));
+          handleLoopLengthChange(val);
         }}
         style={{ marginRight: '1rem' }}
       >
@@ -91,7 +88,6 @@ function LoopLength() {
           <Option
             key={i}
             value={beats}
-            // style={{color: '#000000'}}
           >
             {beats}
           </Option>
@@ -139,7 +135,6 @@ function TempoSetter() {
       component="span"
       colon
       form={form}
-    // labelCol={{span: 10}}
     style={{ flexWrap: 'nowrap', height: '100%' }}
     >
 
@@ -157,8 +152,6 @@ function TempoSetter() {
         }}
         validateStatus={tempoError ? 'error' : 'success'}
         initialValue={tempo}
-        // labelCol={{span: 1}}
-        // wrapperCol={{span: 3}}
         style={isMobile && {flexWrap: 'nowrap', width: '5rem'}}
         >
 
@@ -204,8 +197,6 @@ function TempoSetter() {
               danger
               type="text"
            />
-              
-            {/* </Button> */}
           </Form.Item>
         </>
       }

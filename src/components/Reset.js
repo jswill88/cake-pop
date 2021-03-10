@@ -6,7 +6,6 @@ import colors from '../lib/colors'
 export default function Reset() {
   const {
     reset,
-    // setPlayStatus,
     isMobile
   } = useContext(Context)
 
@@ -14,7 +13,6 @@ export default function Reset() {
     <Button
       onClick={() => {
         reset();
-        // setPlayStatus('stop')
       }}
       style={{backgroundColor: colors.white}}
       size={isMobile ? "small" : "middle"}
