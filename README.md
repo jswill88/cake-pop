@@ -24,3 +24,4 @@ Resources:
 - https://tonejs.github.io/examples/events  
 - https://hookagency.com/color-schemes/  
 - https://dev.to/rajeshroyal/page-not-found-error-on-netlify-reactjs-react-router-solved-43oa
+- https://observablehq.com/@tmcw/playing-with-tone-js

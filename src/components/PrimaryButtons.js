@@ -17,20 +17,23 @@ export default function PrimaryButtons() {
     playStatus,
     setPlayStatus,
     stopAudio,
-    isMobile
+    isMobile,
+    makeLoops
   } = useContext(Context);
 
   const startAudio = async () => {
-    if (playStatus === 'stop') setCurrentBeat(-1)
+    if (playStatus === 'stop') {
+      setCurrentBeat(-1)
+      makeLoops()
+    }
     setPlayStatus('start')
-    await Tone.start();
+
     Tone.Transport.bpm.value = tempo;
     Tone.Transport.start('+0.1');
   }
 
   const pauseAudio = () => {
     Tone.Transport.pause('+8n');
-    // while (Tone.Transport.state !== 'paused') { }
     setPlayStatus('pause')
   }
 

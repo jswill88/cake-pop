@@ -24,14 +24,8 @@ export default function SongDropDown() {
       {songs.map(({ title, id }, i) =>
         <Menu.Item
         key={i}
-        // style={{color: '#000000'}}
-
         >
-          {/* <span style={{color: '#000000'}}> */}
           {title}
-
-          {/* </span> */}
-          
         </Menu.Item>
       )}
     </Menu>

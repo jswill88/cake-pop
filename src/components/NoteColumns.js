@@ -34,21 +34,25 @@ export default function NoteColumns() {
   } = useContext(Context)
 
   const addSynth = (beat, note, row) => {
-    if (!noteSwitches[row].events[beat].length) {
+    if (!buttons[row][beat]) {
 
-      // noteSwitches[row].events[beat] = note;
-      const arr = [...noteSwitches[row].events]
-      arr[beat] = note;
-      noteSwitches[row].events = arr;
+      if('high' in noteSwitches) {
+        const arr = [...noteSwitches[row].events]
+        arr[beat] = note;
+        noteSwitches[row].events = arr;
+      }
+
       setButtons(obj => {
-        obj[row][beat] = true;
+        obj[row][beat] = note;
         return { ...obj };
       })
     } else {
-      // noteSwitches[row].events[beat] = []
-      const arr = [...noteSwitches[row].events]
-      arr[beat] = [];
-      noteSwitches[row].events = arr;
+
+      if('high' in noteSwitches) {
+        const arr = [...noteSwitches[row].events]
+        arr[beat] = [];
+        noteSwitches[row].events = arr;
+      }
       setButtons(obj => {
         obj[row][beat] = false;
         return { ...obj };
@@ -76,12 +80,11 @@ export default function NoteColumns() {
 
   return (
     <>
-      {('high' in noteSwitches) &&
+      {('high' in buttons) &&
         <Row
           justify="space-around"
           gutter={[{ xs: 0, sm: 24 }, 18]}
         >
-
 
           {[0, 1, 2, 3].map(i =>
             < Col
@@ -91,7 +94,6 @@ export default function NoteColumns() {
               md={loopLength <= 12 ? 6 : 12}
               lg={6}
               style={{
-                // minWidth: '13rem',
                 boxSizing: 'border-box',
                 borderRadius: '3%',
               }}
@@ -101,7 +103,7 @@ export default function NoteColumns() {
                 bordered={false}
               >
 
-                {Object.keys(noteSwitches).map((noteRow, j) =>
+                {Object.keys(buttons).map((noteRow, j) =>
                   <Row
                     key={j}
                     justify="space-around"
@@ -123,7 +125,6 @@ export default function NoteColumns() {
                           justifyContent: 'center',
                           display: 'flex',
                           margin: '.2rem 0',
-                          // boxShadow: '1px 1px 1px white',
                           transition: 'none',
 
                           color: buttons[noteRow][beat] ?
@@ -139,7 +140,6 @@ export default function NoteColumns() {
                             '#ffa4cd'
                             : buttons[noteRow][beat] && '#24ddd8',
 
-                          // borderStyle:'double',
                           borderWidth: '2px'
                         }}
                         className="note"
@@ -160,7 +160,6 @@ export default function NoteColumns() {
             </Col>
           )}
 
-          {/* </Space> */}
         </Row>
       }
     </>
