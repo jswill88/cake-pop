@@ -75,6 +75,15 @@ function ContextProvider(props) {
   }, [screenSize])
 
   useEffect(() => {
+    const startTone = async () => {
+      console.log('audio started')
+      await Tone.start()
+      window.removeEventListener('click', startTone)
+    };
+    window.addEventListener('click', startTone)
+  }, [])
+
+  useEffect(() => {
     const token = cookies.token
     const checkLoggedIn = async () => {
       const result = await axios({
@@ -115,7 +124,7 @@ const makeLoops = () => {
     noteObj[row] = new Tone.Sequence((time, note) => {
       if (type === 'snareDrum') synth.triggerAttackRelease('16n', time + extraTime)
       else synth.triggerAttackRelease(note, '8n', time + extraTime)
-    }, buttons[row].map(note => note ? note : [])).start(0);
+    }, buttons[row].map(note => note ? [note] : [])).start(0);
   })
 
   setNoteSwitches(noteObj)
@@ -443,12 +452,14 @@ const makeLoops = () => {
 
   const cleanUp = () => {
     for (let noteRow in noteSwitches) {
-      noteSwitches[noteRow].events = [];
+      // noteSwitches[noteRow].events = [];
+      noteSwitches[noteRow].cancel()
       noteSwitches[noteRow].clear();
       noteSwitches[noteRow].dispose();
     }
     if(loopDraw.current) {
-      loopDraw.current.events = []
+      // loopDraw.current.events = []
+      loopDraw.current.cancel()
       loopDraw.current.clear();
       loopDraw.current.dispose();
       loopDraw.current = null;
