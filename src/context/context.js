@@ -285,9 +285,7 @@ const makeLoops = () => {
 //   }
 
   const open = async (songId) => {
-
     stopAudio()
-
     const result = await fetchApi('/open', 'post', { token: cookies.token, songId })
     if (!result.error) {
 
@@ -492,8 +490,10 @@ const makeLoops = () => {
 
   const stopAudio = () => { 
     const waitTime = playStatus === 'start' ? Tone.Time("8n").toSeconds() : 0;
-    Tone.Transport.stop('8n')
-    setPlayStatus('stop')
+    if (playStatus !== 'stop') {
+      Tone.Transport.stop('8n')
+      setPlayStatus('stop')
+    }
     setTimeout(() => {
       setCurrentBeat(-2)
       cleanUp();
