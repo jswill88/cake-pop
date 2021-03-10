@@ -17,12 +17,14 @@ export default function PrimaryButtons() {
     playStatus,
     setPlayStatus,
     stopAudio,
-    isMobile
+    isMobile,
+    makeLoops
   } = useContext(Context);
 
   const startAudio = async () => {
     if (playStatus === 'stop') setCurrentBeat(-1)
     setPlayStatus('start')
+    makeLoops()
     await Tone.start();
     Tone.Transport.bpm.value = tempo;
     Tone.Transport.start('+0.1');

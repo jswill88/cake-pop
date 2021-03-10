@@ -34,21 +34,26 @@ export default function NoteColumns() {
   } = useContext(Context)
 
   const addSynth = (beat, note, row) => {
-    if (!noteSwitches[row].events[beat].length) {
+    if (!buttons[row][beat]) {
 
       // noteSwitches[row].events[beat] = note;
-      const arr = [...noteSwitches[row].events]
-      arr[beat] = note;
-      noteSwitches[row].events = arr;
+      if('high' in noteSwitches) {
+        const arr = [...noteSwitches[row].events]
+        arr[beat] = note;
+        noteSwitches[row].events = arr;
+      }
+
       setButtons(obj => {
-        obj[row][beat] = true;
+        obj[row][beat] = note;
         return { ...obj };
       })
     } else {
       // noteSwitches[row].events[beat] = []
-      const arr = [...noteSwitches[row].events]
-      arr[beat] = [];
-      noteSwitches[row].events = arr;
+      if('high' in noteSwitches) {
+        const arr = [...noteSwitches[row].events]
+        arr[beat] = [];
+        noteSwitches[row].events = arr;
+      }
       setButtons(obj => {
         obj[row][beat] = false;
         return { ...obj };
@@ -76,7 +81,7 @@ export default function NoteColumns() {
 
   return (
     <>
-      {('high' in noteSwitches) &&
+      {('high' in buttons) &&
         <Row
           justify="space-around"
           gutter={[{ xs: 0, sm: 24 }, 18]}
@@ -101,7 +106,7 @@ export default function NoteColumns() {
                 bordered={false}
               >
 
-                {Object.keys(noteSwitches).map((noteRow, j) =>
+                {Object.keys(buttons).map((noteRow, j) =>
                   <Row
                     key={j}
                     justify="space-around"

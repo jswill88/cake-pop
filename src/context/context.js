@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState, /*useRef*/} from 'react';
+import { createContext, useEffect, useState, useRef} from 'react';
 import useFetch from '../hooks/ajax'
 import axios from 'axios';
 import * as Tone from 'tone';
@@ -35,7 +35,7 @@ function ContextProvider(props) {
   const [isMobile, setIsMobile] = useState(false);
   const [selectedMenuItem, setSelectedMenuItem] = useState('home')
   
-  // const loop = useRef({})
+  const loopDraw = useRef({})
 
   const [cookies, setCookie, removeCookie] = useCookies(['token','songId','test'])
 
@@ -94,51 +94,86 @@ function ContextProvider(props) {
   }, [cookies.token]);
 
 
-  // make separate object for buttons and notes - only fill notes when playing
   useEffect(() => {
-    
-    const noteObj = {};
     const buttonObj = {};
     ['high', 'mid', 'low', 'bassHigh', 'bassLow', 'cymbal', 'snareDrum', 'bassDrum'].forEach(row => {
-      let type;
-      if (['bassHigh', 'bassLow'].includes(row)) type = 'bassSynth'
-      else if (['high', 'mid', 'low'].includes(row)) type = 'chordSynth'
-      else type = row;
-      const synth = makeSynth(type);
       buttonObj[row] = new Array(loopLength).fill(false);
-      noteObj[row] = new Tone.Sequence((time, note) => {
-        if (type === 'snareDrum') synth.triggerAttackRelease('16n', time + extraTime)
-        else synth.triggerAttackRelease(note, '8n', time + extraTime)
-      }, new Array(loopLength).fill([])).start(0);
     })
+    setButtons(buttonObj);
+  },[loopLength])
 
-    setNoteSwitches(noteObj)
-    setButtons(buttonObj)
+const makeLoops = () => {
 
-    const arrOfIdx = new Array(loopLength).fill(0).map((_, i) => i);
-    const loop = new Tone.Sequence((time, note) => {
-      Tone.Draw.schedule(() => {
-        setCurrentBeat(note)
-      }, time)
-    }, arrOfIdx).start(0);
+  const noteObj = {};
+
+  ['high', 'mid', 'low', 'bassHigh', 'bassLow', 'cymbal', 'snareDrum', 'bassDrum'].forEach(row => {
+    let type;
+    if (['bassHigh', 'bassLow'].includes(row)) type = 'bassSynth'
+    else if (['high', 'mid', 'low'].includes(row)) type = 'chordSynth'
+    else type = row;
+    const synth = makeSynth(type);
+
+    noteObj[row] = new Tone.Sequence((time, note) => {
+      if (type === 'snareDrum') synth.triggerAttackRelease('16n', time + extraTime)
+      else synth.triggerAttackRelease(note, '8n', time + extraTime)
+    }, buttons[row].map(note => note ? note : [])).start(0);
+  })
+
+  setNoteSwitches(noteObj)
+
+  const arrOfIdx = new Array(loopLength).fill(0).map((_, i) => i);
+  loopDraw.current = new Tone.Sequence((time, note) => {
+    Tone.Draw.schedule(() => {
+      setCurrentBeat(note)
+    }, time)
+  }, arrOfIdx).start(0);
+}
+
+  // make separate object for buttons and notes - only fill notes when playing
+  // useEffect(() => {
+    
+  //   const noteObj = {};
+  //   const buttonObj = {};
+  //   ['high', 'mid', 'low', 'bassHigh', 'bassLow', 'cymbal', 'snareDrum', 'bassDrum'].forEach(row => {
+  //     let type;
+  //     if (['bassHigh', 'bassLow'].includes(row)) type = 'bassSynth'
+  //     else if (['high', 'mid', 'low'].includes(row)) type = 'chordSynth'
+  //     else type = row;
+  //     const synth = makeSynth(type);
+  //     buttonObj[row] = new Array(loopLength).fill(false);
+  //     noteObj[row] = new Tone.Sequence((time, note) => {
+  //       if (type === 'snareDrum') synth.triggerAttackRelease('16n', time + extraTime)
+  //       else synth.triggerAttackRelease(note, '8n', time + extraTime)
+  //     }, new Array(loopLength).fill([])).start(0);
+  //   })
+
+  //   setNoteSwitches(noteObj)
+  //   setButtons(buttonObj)
+
+  //   const arrOfIdx = new Array(loopLength).fill(0).map((_, i) => i);
+  //   const loop = new Tone.Sequence((time, note) => {
+  //     Tone.Draw.schedule(() => {
+  //       setCurrentBeat(note)
+  //     }, time)
+  //   }, arrOfIdx).start(0);
 
 
-    return () => {
-      // loop.cancel();
-      loop.events = [];
-      loop.clear();
-      loop.dispose();
-      for (let row in noteObj) {
-        // noteObj[row].stop();
-        noteObj[row].events = [];
-        noteObj[row].clear();
-        noteObj[row].dispose();
-        noteObj[row] = new Array(loopLength).fill(false);
-      }
-      setNoteSwitches(noteObj)
-      setCurrentBeat(-1);
-    }
-  }, [loopLength])
+  //   return () => {
+  //     // loop.cancel();
+  //     loop.events = [];
+  //     loop.clear();
+  //     loop.dispose();
+  //     for (let row in noteObj) {
+  //       // noteObj[row].stop();
+  //       noteObj[row].events = [];
+  //       noteObj[row].clear();
+  //       noteObj[row].dispose();
+  //       noteObj[row] = new Array(loopLength).fill(false);
+  //     }
+  //     setNoteSwitches(noteObj)
+  //     setCurrentBeat(-1);
+  //   }
+  // }, [loopLength])
 
 
   const signIn = async (userData) => {
@@ -264,7 +299,7 @@ function ContextProvider(props) {
       setTitle(songObj.title)
       setOpenSongId(songObj._id)
       setButtons({ ...songObj.buttonsPressed })
-      setNoteSwitches(updateButtons(songObj));
+      // setNoteSwitches(updateButtons(songObj));
       setCurrentBeat(-1)
       return 'success'
     } else {
@@ -400,6 +435,17 @@ function ContextProvider(props) {
     setTempo(tempo)
   }
 
+  const cleanUp = () => {
+    for (let noteRow in noteSwitches) {
+      noteSwitches[noteRow].events = [];
+      noteSwitches[noteRow].clear();
+      noteSwitches[noteRow].dispose();
+    }
+    loopDraw.current.events = []
+    loopDraw.current.clear();
+    loopDraw.current.dispose();
+  }
+
   const reset = async (skip) => {
     stopAudio()
     const buttonObj = {};
@@ -438,6 +484,7 @@ function ContextProvider(props) {
     Tone.Transport.stop('8n')
     setPlayStatus('stop')
     setTimeout(() => setCurrentBeat(-2), waitTime * 1000)
+    cleanUp();
   }
 
   const state = {
@@ -483,6 +530,7 @@ function ContextProvider(props) {
     isMobile,
     selectedMenuItem,
     setSelectedMenuItem,
+    makeLoops
   }
 
   return (
