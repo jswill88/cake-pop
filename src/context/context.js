@@ -23,6 +23,7 @@ function ContextProvider(props) {
   const [title, setTitle] = useState('New Song')
   const [noteSwitches, setNoteSwitches] = useState({});
   const [buttons, setButtons] = useState({})
+  const [synths, setSynths] = useState({})
 
   const [loopLength, setLoopLength] = useState(startLength);
   const [loggedIn, setLoggedIn] = useState(false);
@@ -77,7 +78,15 @@ function ContextProvider(props) {
   useEffect(() => {
     const startTone = async () => {
       console.log('audio started')
-      await Tone.start()
+      await Tone.start();
+      ['high', 'mid', 'low', 'bassHigh', 'bassLow', 'cymbal', 'snareDrum', 'bassDrum'].forEach(row => {
+        let type;
+        if (['bassHigh', 'bassLow'].includes(row)) type = 'bassSynth'
+        else if (['high', 'mid', 'low'].includes(row)) type = 'chordSynth'
+        else type = row;
+        const newSynth = makeSynth(type);
+        setSynths(synthObj => ({...synthObj, [row]: newSynth}))
+      });
       window.removeEventListener('click', startTone)
       window.removeEventListener('touchstart', startTone)
     };
@@ -115,13 +124,15 @@ function ContextProvider(props) {
 const makeLoops = () => {
 
   const noteObj = {};
+  // const synthObj = {};
 
   ['high', 'mid', 'low', 'bassHigh', 'bassLow', 'cymbal', 'snareDrum', 'bassDrum'].forEach(row => {
     let type;
     if (['bassHigh', 'bassLow'].includes(row)) type = 'bassSynth'
     else if (['high', 'mid', 'low'].includes(row)) type = 'chordSynth'
     else type = row;
-    const synth = makeSynth(type);
+    const synth = synths[row];
+    // synthObj[row] = synth;
 
     noteObj[row] = new Tone.Sequence((time, note) => {
       if (type === 'snareDrum') synth.triggerAttackRelease('16n', time + extraTime)
@@ -130,6 +141,7 @@ const makeLoops = () => {
   })
 
   setNoteSwitches(noteObj)
+  // setSynths(synthObj)
 
   const arrOfIdx = new Array(loopLength).fill(0).map((_, i) => i);
   loopDraw.current = new Tone.Sequence((time, note) => {
@@ -459,6 +471,10 @@ const makeLoops = () => {
       noteSwitches[noteRow].clear();
       noteSwitches[noteRow].dispose();
     }
+    // for (let synth in synths) {
+    //   synths[synth].disconnect();
+    //   synths[synth].dispose();
+    // }
     if(loopDraw.current) {
       // loopDraw.current.events = []
       loopDraw.current.cancel()
@@ -466,6 +482,7 @@ const makeLoops = () => {
       loopDraw.current.dispose();
       loopDraw.current = null;
     }
+
   }
 
   const reset = async (skip) => {
