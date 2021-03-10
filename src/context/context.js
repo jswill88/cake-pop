@@ -384,50 +384,50 @@ const makeLoops = () => {
     }
   }
 
-  const updateButtons = ({ chordProgression, buttonsPressed, numberOfBeats }) => {
-    const numPerChord = numberOfBeats / 4;
-    let chord = 0;
-    let counter = 0
-    for (let noteRow in buttonsPressed) {
-      const arrLoop = new Array(numberOfBeats).fill([])
-      for (let i = 0; i < numberOfBeats; i++) {
-        if (buttonsPressed[noteRow][i]) {
+  // const updateButtons = ({ chordProgression, buttonsPressed, numberOfBeats }) => {
+  //   const numPerChord = numberOfBeats / 4;
+  //   let chord = 0;
+  //   let counter = 0
+  //   for (let noteRow in buttonsPressed) {
+  //     const arrLoop = new Array(numberOfBeats).fill([])
+  //     for (let i = 0; i < numberOfBeats; i++) {
+  //       if (buttonsPressed[noteRow][i]) {
 
-          let note;
-          if (['bassDrum', 'snareDrum', 'cymbal'].includes(noteRow)) {
-            note = NOTES[noteRow][0];
-          } else if (['bassLow', 'bassHigh'].includes(noteRow)) {
-            note = BASS[chordProgression[chord]][noteRow === 'bassLow' ? 0 : 1];
-          } else {
-            note = CHORDS[chordProgression[chord]][2 - Object.keys(NOTES).indexOf(noteRow)] + 4;
-          }
+  //         let note;
+  //         if (['bassDrum', 'snareDrum', 'cymbal'].includes(noteRow)) {
+  //           note = NOTES[noteRow][0];
+  //         } else if (['bassLow', 'bassHigh'].includes(noteRow)) {
+  //           note = BASS[chordProgression[chord]][noteRow === 'bassLow' ? 0 : 1];
+  //         } else {
+  //           note = CHORDS[chordProgression[chord]][2 - Object.keys(NOTES).indexOf(noteRow)] + 4;
+  //         }
 
-          arrLoop[i] = note;
-        }
-        counter++;
-        if (counter >= numPerChord) {
-          chord++;
-          counter = 0;
-        }
-      }
+  //         arrLoop[i] = note;
+  //       }
+  //       counter++;
+  //       if (counter >= numPerChord) {
+  //         chord++;
+  //         counter = 0;
+  //       }
+  //     }
 
-      let type;
-      if (['bassHigh', 'bassLow'].includes(noteRow)) type = 'bassSynth'
-      else if (['high', 'mid', 'low'].includes(noteRow)) type = 'chordSynth'
-      else type = noteRow;
+  //     let type;
+  //     if (['bassHigh', 'bassLow'].includes(noteRow)) type = 'bassSynth'
+  //     else if (['high', 'mid', 'low'].includes(noteRow)) type = 'chordSynth'
+  //     else type = noteRow;
 
-      const synth = makeSynth(type);
-      buttonsPressed[noteRow] = new Tone.Sequence((time, note) => {
-        if (type === 'snareDrum') synth.triggerAttackRelease('8n', time + extraTime)
-        else synth.triggerAttackRelease(note, '8n', time + extraTime)
-      }, arrLoop).start(0);
+  //     const synth = makeSynth(type);
+  //     buttonsPressed[noteRow] = new Tone.Sequence((time, note) => {
+  //       if (type === 'snareDrum') synth.triggerAttackRelease('8n', time + extraTime)
+  //       else synth.triggerAttackRelease(note, '8n', time + extraTime)
+  //     }, arrLoop).start(0);
 
-      chord = 0;
-      counter = 0;
-    }
+  //     chord = 0;
+  //     counter = 0;
+  //   }
 
-    return buttonsPressed;
-  }
+  //   return buttonsPressed;
+  // }
 
   const handleTempoChange = newTempo => {
     const tempo = newTempo < 50 ? 50 : Math.min(320, newTempo)
