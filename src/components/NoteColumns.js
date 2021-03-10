@@ -36,7 +36,6 @@ export default function NoteColumns() {
   const addSynth = (beat, note, row) => {
     if (!buttons[row][beat]) {
 
-      // noteSwitches[row].events[beat] = note;
       if('high' in noteSwitches) {
         const arr = [...noteSwitches[row].events]
         arr[beat] = note;
@@ -48,7 +47,7 @@ export default function NoteColumns() {
         return { ...obj };
       })
     } else {
-      // noteSwitches[row].events[beat] = []
+
       if('high' in noteSwitches) {
         const arr = [...noteSwitches[row].events]
         arr[beat] = [];
@@ -87,7 +86,6 @@ export default function NoteColumns() {
           gutter={[{ xs: 0, sm: 24 }, 18]}
         >
 
-
           {[0, 1, 2, 3].map(i =>
             < Col
               key={i}
@@ -96,7 +94,6 @@ export default function NoteColumns() {
               md={loopLength <= 12 ? 6 : 12}
               lg={6}
               style={{
-                // minWidth: '13rem',
                 boxSizing: 'border-box',
                 borderRadius: '3%',
               }}
@@ -128,7 +125,6 @@ export default function NoteColumns() {
                           justifyContent: 'center',
                           display: 'flex',
                           margin: '.2rem 0',
-                          // boxShadow: '1px 1px 1px white',
                           transition: 'none',
 
                           color: buttons[noteRow][beat] ?
@@ -144,7 +140,6 @@ export default function NoteColumns() {
                             '#ffa4cd'
                             : buttons[noteRow][beat] && '#24ddd8',
 
-                          // borderStyle:'double',
                           borderWidth: '2px'
                         }}
                         className="note"
@@ -165,7 +160,6 @@ export default function NoteColumns() {
             </Col>
           )}
 
-          {/* </Space> */}
         </Row>
       }
     </>

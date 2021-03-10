@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState, useRef} from 'react';
+import { createContext, useEffect, useState, useRef } from 'react';
 import useFetch from '../hooks/ajax'
 import axios from 'axios';
 import * as Tone from 'tone';
@@ -36,7 +36,7 @@ function ContextProvider(props) {
   const [screenSize, setScreenSize] = useState([]);
   const [isMobile, setIsMobile] = useState(false);
   const [selectedMenuItem, setSelectedMenuItem] = useState('home')
-  
+
   const loopDraw = useRef(null)
 
   const [cookies, setCookie, removeCookie] = useCookies(['token'])
@@ -85,7 +85,7 @@ function ContextProvider(props) {
         else if (['high', 'mid', 'low'].includes(row)) type = 'chordSynth'
         else type = row;
         const newSynth = makeSynth(type);
-        setSynths(synthObj => ({...synthObj, [row]: newSynth}))
+        setSynths(synthObj => ({ ...synthObj, [row]: newSynth }))
       });
       window.removeEventListener('click', startTone)
       window.removeEventListener('touchstart', startTone)
@@ -121,81 +121,33 @@ function ContextProvider(props) {
     setButtons(buttonObj);
   }, [])
 
-const makeLoops = () => {
+  const makeLoops = () => {
 
-  const noteObj = {};
-  // const synthObj = {};
+    const noteObj = {};
 
-  ['high', 'mid', 'low', 'bassHigh', 'bassLow', 'cymbal', 'snareDrum', 'bassDrum'].forEach(row => {
-    let type;
-    if (['bassHigh', 'bassLow'].includes(row)) type = 'bassSynth'
-    else if (['high', 'mid', 'low'].includes(row)) type = 'chordSynth'
-    else type = row;
-    const synth = synths[row];
-    // synthObj[row] = synth;
+    ['high', 'mid', 'low', 'bassHigh', 'bassLow', 'cymbal', 'snareDrum', 'bassDrum'].forEach(row => {
+      let type;
+      if (['bassHigh', 'bassLow'].includes(row)) type = 'bassSynth'
+      else if (['high', 'mid', 'low'].includes(row)) type = 'chordSynth'
+      else type = row;
 
-    noteObj[row] = new Tone.Sequence((time, note) => {
-      if (type === 'snareDrum') synth.triggerAttackRelease('16n', time + extraTime)
-      else synth.triggerAttackRelease(note, '8n', time + extraTime)
-    }, buttons[row].map(note => note ? [note] : [])).start(0);
-  })
+      const synth = synths[row];
 
-  setNoteSwitches(noteObj)
-  // setSynths(synthObj)
+      noteObj[row] = new Tone.Sequence((time, note) => {
+        if (type === 'snareDrum') synth.triggerAttackRelease('16n', time + extraTime)
+        else synth.triggerAttackRelease(note, '8n', time + extraTime)
+      }, buttons[row].map(note => note ? [note] : [])).start(0);
+    })
 
-  const arrOfIdx = new Array(loopLength).fill(0).map((_, i) => i);
-  loopDraw.current = new Tone.Sequence((time, note) => {
-    Tone.Draw.schedule(() => {
-      setCurrentBeat(note)
-    }, time)
-  }, arrOfIdx).start(0);
-}
+    setNoteSwitches(noteObj)
 
-  // make separate object for buttons and notes - only fill notes when playing
-  // useEffect(() => {
-    
-  //   const noteObj = {};
-  //   const buttonObj = {};
-  //   ['high', 'mid', 'low', 'bassHigh', 'bassLow', 'cymbal', 'snareDrum', 'bassDrum'].forEach(row => {
-  //     let type;
-  //     if (['bassHigh', 'bassLow'].includes(row)) type = 'bassSynth'
-  //     else if (['high', 'mid', 'low'].includes(row)) type = 'chordSynth'
-  //     else type = row;
-  //     const synth = makeSynth(type);
-  //     buttonObj[row] = new Array(loopLength).fill(false);
-  //     noteObj[row] = new Tone.Sequence((time, note) => {
-  //       if (type === 'snareDrum') synth.triggerAttackRelease('16n', time + extraTime)
-  //       else synth.triggerAttackRelease(note, '8n', time + extraTime)
-  //     }, new Array(loopLength).fill([])).start(0);
-  //   })
-
-  //   setNoteSwitches(noteObj)
-  //   setButtons(buttonObj)
-
-  //   const arrOfIdx = new Array(loopLength).fill(0).map((_, i) => i);
-  //   const loop = new Tone.Sequence((time, note) => {
-  //     Tone.Draw.schedule(() => {
-  //       setCurrentBeat(note)
-  //     }, time)
-  //   }, arrOfIdx).start(0);
-
-
-  //   return () => {
-  //     // loop.cancel();
-  //     loop.events = [];
-  //     loop.clear();
-  //     loop.dispose();
-  //     for (let row in noteObj) {
-  //       // noteObj[row].stop();
-  //       noteObj[row].events = [];
-  //       noteObj[row].clear();
-  //       noteObj[row].dispose();
-  //       noteObj[row] = new Array(loopLength).fill(false);
-  //     }
-  //     setNoteSwitches(noteObj)
-  //     setCurrentBeat(-1);
-  //   }
-  // }, [loopLength])
+    const arrOfIdx = new Array(loopLength).fill(0).map((_, i) => i);
+    loopDraw.current = new Tone.Sequence((time, note) => {
+      Tone.Draw.schedule(() => {
+        setCurrentBeat(note)
+      }, time)
+    }, arrOfIdx).start(0);
+  }
 
 
   const signIn = async (userData) => {
@@ -239,7 +191,6 @@ const makeLoops = () => {
       setLoopLength(12)
       setProg(['I', 'I', 'I', 'I']);
       removeCookie('token');
-      // removeCookie('songId');
     } else {
       message.error(result.message)
       return 'error';
@@ -259,7 +210,7 @@ const makeLoops = () => {
       chordProgression: prog,
       token: cookies.token
     }
-    if(type === 'update') {
+    if (type === 'update') {
       songObj.songId = openSongId;
     }
     const result = await fetchApi(
@@ -272,7 +223,6 @@ const makeLoops = () => {
         setSongs(arr => [...arr, result.data])
         setOpenSongId(result.data.id)
         setTitle(result.data.title)
-        // setCookie('songId', result.data.id)
       }
       message.success(`${result.data.title} successfully saved`)
       return 'success'
@@ -283,29 +233,21 @@ const makeLoops = () => {
   }
 
   const newSong = async () => {
-      reset();
-      setOpenSongId(false);
-      handleTempoChange(120);
-      setProg(['I', 'I', 'I', 'I']);
-      const titles = songs.map(({ title }) => title)
-      let newTitle = 'New Song'
-      let i = 1;
-      while (titles.includes(newTitle)) {
-        newTitle = `New Song ${i}`;
-        i++;
-      }
-      setTitle(newTitle);
-      return 'success';
+    reset();
+    setOpenSongId(false);
+    handleTempoChange(120);
+    setProg(['I', 'I', 'I', 'I']);
+    const titles = songs.map(({ title }) => title)
+    let newTitle = 'New Song'
+    let i = 1;
+    while (titles.includes(newTitle)) {
+      newTitle = `New Song ${i}`;
+      i++;
+    }
+    setTitle(newTitle);
+    return 'success';
 
   }
-// const reset
-//   for (let row in noteObj) {
-//     // noteObj[row].stop();
-//     noteObj[row].events = [];
-//     noteObj[row].clear();
-//     noteObj[row].dispose();
-//     new Array(loopLength).fill(false);
-//   }
 
   const open = async (songId) => {
     stopAudio()
@@ -345,12 +287,12 @@ const makeLoops = () => {
           } else {
             note = CHORDS[newChord][2 - Object.keys(NOTES).indexOf(noteRow)] + 4;
           }
-          if(noteSwitches[noteRow]?.events[i]?.length) {
+          if (noteSwitches[noteRow]?.events[i]?.length) {
             const newNoteArr = noteSwitches[noteRow].events;
             newNoteArr[i] = note;
             noteSwitches[noteRow].events = newNoteArr;
           }
-          buttons[noteRow][i] =  note;
+          buttons[noteRow][i] = note;
         }
       }
     })
@@ -393,7 +335,6 @@ const makeLoops = () => {
       setOpenSongId(false);
       setTitle('New Song');
       handleTempoChange(120);
-      // removeCookie('songId');
       setProg(['I', 'I', 'I', 'I']);
       message.success(`${result.data.title} successfullly deleted`)
       return 'success';
@@ -402,51 +343,6 @@ const makeLoops = () => {
       return 'error'
     }
   }
-
-  // const updateButtons = ({ chordProgression, buttonsPressed, numberOfBeats }) => {
-  //   const numPerChord = numberOfBeats / 4;
-  //   let chord = 0;
-  //   let counter = 0
-  //   for (let noteRow in buttonsPressed) {
-  //     const arrLoop = new Array(numberOfBeats).fill([])
-  //     for (let i = 0; i < numberOfBeats; i++) {
-  //       if (buttonsPressed[noteRow][i]) {
-
-  //         let note;
-  //         if (['bassDrum', 'snareDrum', 'cymbal'].includes(noteRow)) {
-  //           note = NOTES[noteRow][0];
-  //         } else if (['bassLow', 'bassHigh'].includes(noteRow)) {
-  //           note = BASS[chordProgression[chord]][noteRow === 'bassLow' ? 0 : 1];
-  //         } else {
-  //           note = CHORDS[chordProgression[chord]][2 - Object.keys(NOTES).indexOf(noteRow)] + 4;
-  //         }
-
-  //         arrLoop[i] = note;
-  //       }
-  //       counter++;
-  //       if (counter >= numPerChord) {
-  //         chord++;
-  //         counter = 0;
-  //       }
-  //     }
-
-  //     let type;
-  //     if (['bassHigh', 'bassLow'].includes(noteRow)) type = 'bassSynth'
-  //     else if (['high', 'mid', 'low'].includes(noteRow)) type = 'chordSynth'
-  //     else type = noteRow;
-
-  //     const synth = makeSynth(type);
-  //     buttonsPressed[noteRow] = new Tone.Sequence((time, note) => {
-  //       if (type === 'snareDrum') synth.triggerAttackRelease('8n', time + extraTime)
-  //       else synth.triggerAttackRelease(note, '8n', time + extraTime)
-  //     }, arrLoop).start(0);
-
-  //     chord = 0;
-  //     counter = 0;
-  //   }
-
-  //   return buttonsPressed;
-  // }
 
   const handleTempoChange = newTempo => {
     const tempo = newTempo < 50 ? 50 : Math.min(320, newTempo)
@@ -466,17 +362,11 @@ const makeLoops = () => {
 
   const cleanUp = () => {
     for (let noteRow in noteSwitches) {
-      // noteSwitches[noteRow].events = [];
       noteSwitches[noteRow].cancel()
       noteSwitches[noteRow].clear();
       noteSwitches[noteRow].dispose();
     }
-    // for (let synth in synths) {
-    //   synths[synth].disconnect();
-    //   synths[synth].dispose();
-    // }
-    if(loopDraw.current) {
-      // loopDraw.current.events = []
+    if (loopDraw.current) {
       loopDraw.current.cancel()
       loopDraw.current.clear();
       loopDraw.current.dispose();
@@ -485,40 +375,17 @@ const makeLoops = () => {
 
   }
 
-  const reset = async (skip) => {
+  const reset = async () => {
     stopAudio()
     const buttonObj = {};
     for (let noteRow in buttons) {
-      // noteSwitches[noteRow].events = [];
-      // noteSwitches[noteRow].clear();
-      // noteSwitches[noteRow].dispose()
       buttonObj[noteRow] = new Array(loopLength).fill(false);
     }
 
     setButtons(buttonObj)
-
-    // if (!skip) {
-
-    //   const noteObj = {};
-
-    //   ['high', 'mid', 'low', 'bassHigh', 'bassLow', 'cymbal', 'snareDrum', 'bassDrum'].forEach(row => {
-    //     let type;
-    //     if (['bassHigh', 'bassLow'].includes(row)) type = 'bassSynth'
-    //     else if (['high', 'mid', 'low'].includes(row)) type = 'chordSynth'
-    //     else type = row;
-    //     const synth = makeSynth(type);
-
-    //     noteObj[row] = new Tone.Sequence((time, note) => {
-    //       if (type === 'snareDrum') synth.triggerAttackRelease('8n', time + extraTime)
-    //       else synth.triggerAttackRelease(note, '8n', time + extraTime)
-    //     }, new Array(loopLength).fill([])).start(0);
-    //   })
-
-    //   setNoteSwitches(noteObj)
-    // }
   }
 
-  const stopAudio = () => { 
+  const stopAudio = () => {
     const waitTime = playStatus === 'start' ? Tone.Time("8n").toSeconds() : 0;
     if (playStatus !== 'stop') {
       Tone.Transport.stop('8n')

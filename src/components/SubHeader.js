@@ -26,7 +26,6 @@ export default function SubHeader() {
       >
         <Col
           xs={{ span: 24 }}
-          // span={{ xs: 24, sm: 8, md: 8 }}
           sm={{ span: 8 }}
         >
           <SongTitle />
