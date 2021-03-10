@@ -58,9 +58,10 @@ export default function Controls() {
 function LoopLength() {
   const {
     loopLength,
-    reset,
-    setLoopLength,
-    isMobile
+    // reset,
+    // setLoopLength,
+    isMobile,
+    handleLoopLengthChange
   } = useContext(Context)
 
   return (
@@ -82,8 +83,9 @@ function LoopLength() {
         size={isMobile ? "small" : "small"}
         value={loopLength}
         onChange={val => {
-          reset(true);
-          setLoopLength(parseInt(val));
+          // reset(true);
+          // setLoopLength(parseInt(val));
+          handleLoopLengthChange(val);
         }}
         style={{ marginRight: '1rem' }}
       >

@@ -15,6 +15,7 @@ const { useBreakpoint } = Grid;
 export const Context = createContext();
 
 const extraTime = .1;
+const startLength = 12;
 
 function ContextProvider(props) {
   const [prog, setProg] = useState(['I', 'I', 'I', 'I'])
@@ -23,7 +24,7 @@ function ContextProvider(props) {
   const [noteSwitches, setNoteSwitches] = useState({});
   const [buttons, setButtons] = useState({})
 
-  const [loopLength, setLoopLength] = useState(12);
+  const [loopLength, setLoopLength] = useState(startLength);
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState('');
   const [songs, setSongs] = useState([]);
@@ -68,8 +69,6 @@ function ContextProvider(props) {
     setScreenSize(updatedScreens)
   }, [screens])
 
-  useEffect(() => console.log(screenSize), [screenSize])
-
   useEffect(() => {
     if (screenSize.every(val => val === 'xs')) setIsMobile(true);
     else setIsMobile(false)
@@ -97,10 +96,10 @@ function ContextProvider(props) {
   useEffect(() => {
     const buttonObj = {};
     ['high', 'mid', 'low', 'bassHigh', 'bassLow', 'cymbal', 'snareDrum', 'bassDrum'].forEach(row => {
-      buttonObj[row] = new Array(loopLength).fill(false);
+      buttonObj[row] = new Array(startLength).fill(false);
     })
     setButtons(buttonObj);
-  }, [loopLength])
+  }, [])
 
 const makeLoops = () => {
 
@@ -287,7 +286,7 @@ const makeLoops = () => {
 
   const open = async (songId) => {
 
-    reset(true);
+    stopAudio()
 
     const result = await fetchApi('/open', 'post', { token: cookies.token, songId })
     if (!result.error) {
@@ -299,8 +298,6 @@ const makeLoops = () => {
       setTitle(songObj.title)
       setOpenSongId(songObj._id)
       setButtons({ ...songObj.buttonsPressed })
-      // setNoteSwitches(updateButtons(songObj));
-      setCurrentBeat(-1)
       return 'success'
     } else {
       message.error(result.message)
@@ -436,6 +433,16 @@ const makeLoops = () => {
     setTempo(tempo)
   }
 
+  const handleLoopLengthChange = newLength => {
+    stopAudio();
+    setLoopLength(newLength);
+    const buttonObj = {};
+    ['high', 'mid', 'low', 'bassHigh', 'bassLow', 'cymbal', 'snareDrum', 'bassDrum'].forEach(row => {
+      buttonObj[row] = new Array(newLength).fill(false);
+    })
+    setButtons(buttonObj);
+  }
+
   const cleanUp = () => {
     for (let noteRow in noteSwitches) {
       noteSwitches[noteRow].events = [];
@@ -536,7 +543,8 @@ const makeLoops = () => {
     isMobile,
     selectedMenuItem,
     setSelectedMenuItem,
-    makeLoops
+    makeLoops,
+    handleLoopLengthChange
   }
 
   return (
