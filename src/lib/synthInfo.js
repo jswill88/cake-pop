@@ -21,7 +21,7 @@ export const SYNTHS = {
     //   modulationType: 'sawtooth',
     // }
     
-      volume: -17,
+      volume: 3,
       detune: 0,
       portamento: 0,
       envelope: {
@@ -42,7 +42,7 @@ export const SYNTHS = {
     }
   },
   bassSynth: {
-    volume: -15,
+    volume: 5,
     detune: 0,
     envelope: {
       attack: 0.005,
@@ -66,11 +66,11 @@ export const SYNTHS = {
     }
   },
   bassDrum: {
-    volume: -15,
+    volume: 7,
   },
   snareDrum:
     {
-      volume: -15,
+      volume: 3,
       envelope: {
         attack: 0.001,
         attackCurve: 'linear',
@@ -88,7 +88,7 @@ export const SYNTHS = {
       }
     },
   cymbal: {
-    volume: -40,
+    volume: -10,
   },
 }
 
