@@ -79,8 +79,10 @@ function ContextProvider(props) {
       console.log('audio started')
       await Tone.start()
       window.removeEventListener('click', startTone)
+      window.removeEventListener('touchstart', startTone)
     };
     window.addEventListener('click', startTone)
+    window.addEventListener('touchstart', startTone)
   }, [])
 
   useEffect(() => {
