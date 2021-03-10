@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useEffect, useState, /*useRef*/} from 'react';
 import useFetch from '../hooks/ajax'
 import axios from 'axios';
 import * as Tone from 'tone';
@@ -34,6 +34,8 @@ function ContextProvider(props) {
   const [screenSize, setScreenSize] = useState([]);
   const [isMobile, setIsMobile] = useState(false);
   const [selectedMenuItem, setSelectedMenuItem] = useState('home')
+  
+  // const loop = useRef({})
 
   const [cookies, setCookie, removeCookie] = useCookies(['token','songId','test'])
 
@@ -91,6 +93,8 @@ function ContextProvider(props) {
     checkLoggedIn();
   }, [cookies.token]);
 
+
+  // make separate object for buttons and notes - only fill notes when playing
   useEffect(() => {
     
     const noteObj = {};
@@ -129,8 +133,9 @@ function ContextProvider(props) {
         noteObj[row].events = [];
         noteObj[row].clear();
         noteObj[row].dispose();
-        new Array(loopLength).fill(false);
+        noteObj[row] = new Array(loopLength).fill(false);
       }
+      setNoteSwitches(noteObj)
       setCurrentBeat(-1);
     }
   }, [loopLength])
@@ -236,6 +241,14 @@ function ContextProvider(props) {
       return 'success';
 
   }
+// const reset
+//   for (let row in noteObj) {
+//     // noteObj[row].stop();
+//     noteObj[row].events = [];
+//     noteObj[row].clear();
+//     noteObj[row].dispose();
+//     new Array(loopLength).fill(false);
+//   }
 
   const open = async (songId) => {
 
@@ -391,6 +404,8 @@ function ContextProvider(props) {
     stopAudio()
     const buttonObj = {};
     for (let noteRow in noteSwitches) {
+      noteSwitches[noteRow].events = [];
+      noteSwitches[noteRow].clear();
       noteSwitches[noteRow].dispose()
       buttonObj[noteRow] = new Array(loopLength).fill(false);
     }
