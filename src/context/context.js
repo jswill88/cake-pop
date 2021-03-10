@@ -320,18 +320,19 @@ const makeLoops = () => {
     const noteRows = ['high', 'mid', 'low', 'bassHigh', 'bassLow']
     noteRows.forEach(noteRow => {
       for (let i = start; i < end; i++) {
-        if (noteSwitches[noteRow].events[i].length) {
-
+        if (buttons[noteRow][i]) {
           let note;
           if (['bassLow', 'bassHigh'].includes(noteRow)) {
             note = BASS[newChord][noteRow === 'bassLow' ? 0 : 1];
           } else {
             note = CHORDS[newChord][2 - Object.keys(NOTES).indexOf(noteRow)] + 4;
           }
-          const newNoteArr = noteSwitches[noteRow].events;
-          newNoteArr[i] = note;
-          noteSwitches[noteRow].events = newNoteArr;
-
+          if(noteSwitches[noteRow]?.events[i]?.length) {
+            const newNoteArr = noteSwitches[noteRow].events;
+            newNoteArr[i] = note;
+            noteSwitches[noteRow].events = newNoteArr;
+          }
+          buttons[noteRow][i] =  note;
         }
       }
     })
