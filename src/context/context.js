@@ -37,15 +37,15 @@ function ContextProvider(props) {
   
   const loopDraw = useRef(null)
 
-  const [cookies, setCookie, removeCookie] = useCookies(['token','songId','test'])
+  const [cookies, setCookie, removeCookie] = useCookies(['token'])
 
   const screens = useBreakpoint();
 
   const fetchApi = useFetch();
 
   const makeSynth = type => {
-    const gainNode = new Tone.Gain(.1).toDestination();
-    return new Tone[synthTypes[type]](SYNTHS[type]).connect(gainNode)//.toDestination()
+    const gainNode = new Tone.Gain(.2).toDestination();
+    return new Tone[synthTypes[type]](SYNTHS[type]).connect(gainNode)
   };
 
   const NOTES = {
@@ -100,7 +100,7 @@ function ContextProvider(props) {
       buttonObj[row] = new Array(loopLength).fill(false);
     })
     setButtons(buttonObj);
-  },[loopLength])
+  }, [loopLength])
 
 const makeLoops = () => {
 
@@ -217,7 +217,7 @@ const makeLoops = () => {
       setLoopLength(12)
       setProg(['I', 'I', 'I', 'I']);
       removeCookie('token');
-      removeCookie('songId');
+      // removeCookie('songId');
     } else {
       message.error(result.message)
       return 'error';
@@ -484,11 +484,13 @@ const makeLoops = () => {
   }
 
   const stopAudio = () => { 
-    const waitTime = Tone.Time("8n").toSeconds()
+    const waitTime = playStatus === 'start' ? Tone.Time("8n").toSeconds() : 0;
     Tone.Transport.stop('8n')
     setPlayStatus('stop')
-    setTimeout(() => setCurrentBeat(-2), waitTime * 1000)
-    cleanUp();
+    setTimeout(() => {
+      setCurrentBeat(-2)
+      cleanUp();
+    }, waitTime * 1000)
   }
 
   const state = {
