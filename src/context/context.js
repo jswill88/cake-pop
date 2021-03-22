@@ -309,19 +309,15 @@ function ContextProvider(props) {
           return 'error';
         } else {
           const newSongs = songs.map(song => {
-            if (song.id === songId) return { title: newTitle, id: song.id }
+            if (song.id === songId) return { title: result.data.newTitle, id: song.id }
             else return song;
           });
-          setTitle(result.data.newTitle)
+          newTitle = result.data.newTitle;
           setSongs([...newSongs])
         }
-      } else {
-        setTitle(newTitle);
       }
-    } else {
-      setTitle(newTitle);
-    }
-
+    } 
+    setTitle(newTitle)
   }
 
   const deleteSong = async () => {
