@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import { Context } from '../context/context';
+import { useLoggedIn } from '../context/loggedInContext/';
 import PrimaryButtons from './PrimaryButtons';
 import Controls from './Controls';
 import SongTitle from './SongTitle';
@@ -13,9 +14,11 @@ import Divider from 'antd/es/divider';
 
 export default function SubHeader() {
   const {
-    loggedIn,
+    // loggedIn,
     isMobile
   } = useContext(Context)
+
+  const { loggedIn } = useLoggedIn()
 
   return (
     <>

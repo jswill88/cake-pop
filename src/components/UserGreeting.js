@@ -1,16 +1,10 @@
-
-import { useContext } from 'react';
-import { Context } from '../context/context'
-
+import { useLoggedIn } from '../context/loggedInContext/'
 import Typography from 'antd/es/typography'
 const { Paragraph } = Typography;
 
 export default function UserGreeting() {
 
-  const {
-    loggedIn,
-    user
-  } = useContext(Context)
+  const { loggedIn, user } = useLoggedIn()
 
   return (
     <Paragraph

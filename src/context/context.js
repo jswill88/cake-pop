@@ -1,6 +1,5 @@
 import { createContext, useEffect, useState, useRef } from 'react';
 import useFetch from '../hooks/ajax'
-import axios from 'axios';
 import * as Tone from 'tone';
 import { BASS, CHORDS } from '../lib/noteInfo';
 import { SYNTHS, synthTypes } from '../lib/synthInfo';
@@ -26,8 +25,6 @@ function ContextProvider(props) {
   const [synths, setSynths] = useState({})
 
   const [loopLength, setLoopLength] = useState(startLength);
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [user, setUser] = useState('');
   const [songs, setSongs] = useState([]);
   const [currentBeat, setCurrentBeat] = useState(-1);
   const [openSongId, setOpenSongId] = useState(false);
@@ -39,7 +36,7 @@ function ContextProvider(props) {
 
   const loopDraw = useRef(null)
 
-  const [cookies, setCookie, removeCookie] = useCookies(['token'])
+  const [cookies] = useCookies(['token'])
 
   const screens = useBreakpoint();
 
@@ -95,25 +92,6 @@ function ContextProvider(props) {
   }, [])
 
   useEffect(() => {
-    const token = cookies.token
-    const checkLoggedIn = async () => {
-      const result = await axios({
-        url: process.env.REACT_APP_URL + '/api/v1/loggedIn',
-        method: 'post',
-        data: { token }
-      })
-
-      if (result.data) {
-        setSongs(result.data.songList);
-        setUser(result.data.username);
-        setLoggedIn(true);
-      }
-    }
-    checkLoggedIn();
-  }, [cookies.token]);
-
-
-  useEffect(() => {
     const buttonObj = {};
     ['high', 'mid', 'low', 'bassHigh', 'bassLow', 'cymbal', 'snareDrum', 'bassDrum'].forEach(row => {
       buttonObj[row] = new Array(startLength).fill(false);
@@ -147,54 +125,6 @@ function ContextProvider(props) {
         setCurrentBeat(note)
       }, time)
     }, arrOfIdx).start(0);
-  }
-
-
-  const signIn = async (userData) => {
-    const result = await fetchApi('/signin', 'post', userData)
-
-    if (!result.error) {
-      setLoggedIn(true)
-      setUser(result.data.username);
-      setSongs(result.data.songs);
-      setCookie('token', result.data.token);
-      return 'success';
-    } else {
-      message.error(result.message)
-      return 'error';
-    }
-  }
-
-  const signUp = async (userData) => {
-    const result = await fetchApi('/signup', 'post', userData);
-    if (!result.error) {
-      setLoggedIn(true)
-      setUser(userData.username || userData.email);
-      setCookie('token', result.data.token)
-      return 'success';
-    } else {
-      message.error(result.message)
-      return 'error';
-    }
-  }
-
-  const logout = async () => {
-    const result = await fetchApi('/logout', 'get')
-    if (!result.error) {
-      setLoggedIn(false)
-      setUser('')
-      setSongs([])
-      setOpenSongId(false)
-      setTitle('New Song')
-      reset();
-      handleTempoChange(120);
-      setLoopLength(12)
-      setProg(['I', 'I', 'I', 'I']);
-      removeCookie('token');
-    } else {
-      message.error(result.message)
-      return 'error';
-    }
   }
 
   /**
@@ -394,13 +324,10 @@ function ContextProvider(props) {
   }
 
   const state = {
-    loggedIn,
-    signIn,
-    signUp,
-    logout,
     saveSong,
+    setSongs,
+    setOpenSongId,
     songs,
-    user,
     noteSwitches,
     setNoteSwitches,
     prog,

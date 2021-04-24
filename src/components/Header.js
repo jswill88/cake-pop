@@ -5,12 +5,16 @@ import Hamburger from './Hamburger';
 import './Header.css';
 import Logo from '../images/cake-pop.jpg';
 
+import { useLoggedIn } from '../context/loggedInContext/'
+import useFetch from '../hooks/ajax'
+
 import { Link } from 'react-router-dom';
 
 import LoginOutlined from '@ant-design/icons/LoginOutlined';
 import LogoutOutlined from '@ant-design/icons/LogoutOutlined';
 import HomeOutlined from '@ant-design/icons/HomeOutlined'
 import InfoCircleOutlined from '@ant-design/icons/InfoCircleOutlined'
+import message from 'antd/es/message'
 
 
 import Row from 'antd/es/row';
@@ -25,13 +29,47 @@ const { Title } = Typography;
 export default function Heading() {
 
   const {
-    logout,
-    loggedIn,
     setShowForm,
     screenSize,
     isMobile,
-    selectedMenuItem
+    selectedMenuItem,
+
+    setSongs,
+    setOpenSongId,
+    setTitle,
+    reset,
+    handleTempoChange,
+    setLoopLength,
+    setProg,
   } = useContext(Context);
+
+  const {
+    loggedIn,
+    setLoggedIn,
+    setUser,
+    removeCookie
+  } = useLoggedIn()
+
+  const fetchApi = useFetch()
+
+  const logout = async () => {
+    const result = await fetchApi('/logout', 'get')
+    if (!result.error) {
+      setLoggedIn(false)
+      setUser('')
+      setSongs([])
+      setOpenSongId(false)
+      setTitle('New Song')
+      reset();
+      handleTempoChange(120);
+      setLoopLength(12)
+      setProg(['I', 'I', 'I', 'I']);
+      removeCookie('token');
+    } else {
+      message.error(result.message)
+      return 'error';
+    }
+  }
 
   return (
     <Row

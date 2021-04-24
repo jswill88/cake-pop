@@ -1,5 +1,6 @@
 import { useState, useContext } from 'react';
 import { Context } from '../context/context';
+import { useLoggedIn } from '../context/loggedInContext/';
 
 import Modal from 'antd/es/modal';
 import Form from 'antd/es/form';
@@ -12,7 +13,9 @@ export default function SignInForm() {
   const [showSignUp, setShowSignUp] = useState(false)
   const [form] = Form.useForm();
 
-  const { signIn, signUp, showForm, setShowForm } = useContext(Context)
+  const { showForm, setShowForm } = useContext(Context)
+
+  const { signIn, signUp } = useLoggedIn();
 
   const signInHandler = async () => {
     try {
