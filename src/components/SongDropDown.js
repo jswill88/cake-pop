@@ -1,5 +1,6 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { Context } from '../context/context';
+import { useSongList } from '../context/songListContext/';
 
 import Menu from 'antd/es/menu';
 import Dropdown from 'antd/es/dropdown';
@@ -8,12 +9,15 @@ import DownOutlined from '@ant-design/icons/DownOutlined';
 
 export default function SongDropDown() {
   const {
-    songs,
     open,
     isMobile
   } = useContext(Context)
 
-  const handleSongChoice = e => open(songs[e.key].id);
+  const { songs } = useSongList();
+
+  useEffect(() => console.log('songs i dropdown', songs), [songs])
+
+  const handleSongChoice = e => open(e.key);
 
   const buttonSize = () => isMobile ? "small" : "large";
 
@@ -23,7 +27,7 @@ export default function SongDropDown() {
       >
       {songs.map(({ title, id }, i) =>
         <Menu.Item
-        key={i}
+        key={id}
         >
           {title}
         </Menu.Item>

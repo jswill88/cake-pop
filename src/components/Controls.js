@@ -135,7 +135,7 @@ function TempoSetter() {
       component="span"
       colon
       form={form}
-    style={{ flexWrap: 'nowrap', height: '100%' }}
+      style={{ flexWrap: 'nowrap', height: '100%' }}
     >
 
 

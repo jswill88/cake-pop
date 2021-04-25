@@ -1,6 +1,9 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { Context } from '../context/context';
 import { useLoggedIn } from '../context/loggedInContext/';
+import { useCookies } from 'react-cookie';
+import axios from 'axios';
+
 import PrimaryButtons from './PrimaryButtons';
 import Controls from './Controls';
 import SongTitle from './SongTitle';
@@ -11,21 +14,41 @@ import Reset from './Reset'
 import Row from 'antd/es/row';
 import Col from 'antd/es/col';
 import Divider from 'antd/es/divider';
+import { useSongList } from '../context/songListContext';
 
 export default function SubHeader() {
-  const {
-    // loggedIn,
-    isMobile
-  } = useContext(Context)
+  const { isMobile } = useContext(Context)
 
-  const { loggedIn } = useLoggedIn()
+  const { loggedIn, setUser, setLoggedIn } = useLoggedIn()
+  const { setSongs } = useSongList();
+  const [cookies] = useCookies(['token']);
+
+  
+  useEffect(() => {
+    const checkLoggedIn = async () => {
+      const token = cookies.token
+      const result = await axios({
+        url: process.env.REACT_APP_URL + '/api/v1/loggedIn',
+        method: 'post',
+        data: { token }
+      })
+  
+      if (result.data) {
+        setSongs(result.data.songList);
+        setUser(result.data.username);
+        setLoggedIn(true);
+      }
+    }
+    checkLoggedIn();
+    
+  }, [cookies.token, setLoggedIn, setSongs, setUser]);
 
   return (
     <>
       <Row
         align="middle"
         justify="space-between"
-        style={{ marginBottom: '1rem'}}
+        style={{ marginBottom: '1rem' }}
       >
         <Col
           xs={{ span: 24 }}
@@ -71,7 +94,7 @@ export default function SubHeader() {
 
       <Row
         justify="space-between"
-        style={{ margin: '1rem 0'}}
+        style={{ margin: '1rem 0' }}
       >
         <Col>
           {loggedIn && <File />}
@@ -79,7 +102,7 @@ export default function SubHeader() {
       </Row>
 
       {isMobile ?
-          <Controls />
+        <Controls />
         :
         <Row
           justify="space-between"
@@ -98,8 +121,8 @@ export default function SubHeader() {
 
         </Row>
       }
-      <Divider 
-        style={{margin: isMobile && '6px 0'}}
+      <Divider
+        style={{ margin: isMobile && '6px 0' }}
       />
     </>
   );

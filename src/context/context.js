@@ -25,7 +25,6 @@ function ContextProvider(props) {
   const [synths, setSynths] = useState({})
 
   const [loopLength, setLoopLength] = useState(startLength);
-  const [songs, setSongs] = useState([]);
   const [currentBeat, setCurrentBeat] = useState(-1);
   const [openSongId, setOpenSongId] = useState(false);
   const [showForm, setShowForm] = useState(false);
@@ -33,9 +32,9 @@ function ContextProvider(props) {
   const [screenSize, setScreenSize] = useState([]);
   const [isMobile, setIsMobile] = useState(false);
   const [selectedMenuItem, setSelectedMenuItem] = useState('home')
-
+  
   const loopDraw = useRef(null)
-
+  
   const [cookies] = useCookies(['token'])
 
   const screens = useBreakpoint();
@@ -150,7 +149,7 @@ function ContextProvider(props) {
 
     if (!result.error) {
       if (type === 'new') {
-        setSongs(arr => [...arr, result.data])
+        // setSongs(arr => [...arr, result.data])
         setOpenSongId(result.data.id)
         setTitle(result.data.title)
       }
@@ -167,13 +166,13 @@ function ContextProvider(props) {
     setOpenSongId(false);
     handleTempoChange(120);
     setProg(['I', 'I', 'I', 'I']);
-    const titles = songs.map(({ title }) => title)
+    // const titles = songs.map(({ title }) => title)
     let newTitle = 'New Song'
-    let i = 1;
-    while (titles.includes(newTitle)) {
-      newTitle = `New Song ${i}`;
-      i++;
-    }
+    // let i = 1;
+    // while (titles.includes(newTitle)) {
+    //   newTitle = `New Song ${i}`;
+    //   i++;
+    // }
     setTitle(newTitle);
     return 'success';
 
@@ -229,24 +228,24 @@ function ContextProvider(props) {
   }
 
   const rename = async newTitle => {
-    if (songs.length) {
-      let songInList = songs.filter(({ title: titleInList }) => titleInList === title)
-      if (songInList.length) {
-        const { id: songId } = songInList[0];
-        const result = await fetchApi('/rename', 'patch', { newTitle, songId, token: cookies.token });
-        if (result.error) {
-          message.error(result.message)
-          return 'error';
-        } else {
-          const newSongs = songs.map(song => {
-            if (song.id === songId) return { title: result.data.newTitle, id: song.id }
-            else return song;
-          });
-          newTitle = result.data.newTitle;
-          setSongs([...newSongs])
-        }
-      }
-    } 
+    // if (songs.length) {
+    //   let songInList = songs.filter(({ title: titleInList }) => titleInList === title)
+    //   if (songInList.length) {
+    //     const { id: songId } = songInList[0];
+    //     const result = await fetchApi('/rename', 'patch', { newTitle, songId, token: cookies.token });
+    //     if (result.error) {
+    //       message.error(result.message)
+    //       return 'error';
+    //     } else {
+    //       const newSongs = songs.map(song => {
+    //         if (song.id === songId) return { title: result.data.newTitle, id: song.id }
+    //         else return song;
+    //       });
+    //       newTitle = result.data.newTitle;
+    //       setSongs([...newSongs])
+    //     }
+    //   }
+    // } 
     setTitle(newTitle)
   }
 
@@ -257,7 +256,7 @@ function ContextProvider(props) {
     })
     if (!result.error) {
       reset();
-      setSongs(arr => arr.filter(({ id }) => id !== openSongId))
+      // setSongs(arr => arr.filter(({ id }) => id !== openSongId))
       setOpenSongId(false);
       setTitle('New Song');
       handleTempoChange(120);
@@ -325,9 +324,7 @@ function ContextProvider(props) {
 
   const state = {
     saveSong,
-    setSongs,
     setOpenSongId,
-    songs,
     noteSwitches,
     setNoteSwitches,
     prog,

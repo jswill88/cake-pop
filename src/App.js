@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { Context } from './context/context';
 import NoteColumns from './components/NoteColumns'
 import Heading from './components/Header';
@@ -14,6 +14,10 @@ import {
 import './App.less'
 import Layout from 'antd/es/layout';
 
+import {useLoggedIn} from './context/loggedInContext/'
+import { useSongList } from './context/songListContext/'
+import { useCookies } from 'react-cookie';
+
 import axios from 'axios';
 axios.defaults.withCredentials = true;
 
@@ -24,6 +28,31 @@ function App() {
   const {
     isMobile
   } = useContext(Context);
+
+  const { setUser, setLoggedIn } = useLoggedIn()
+  const { setSongs } = useSongList();
+  const [cookies] = useCookies(['token']);
+
+  
+  useEffect(() => {
+    const checkLoggedIn = async () => {
+      const token = cookies.token
+      const result = await axios({
+        url: process.env.REACT_APP_URL + '/api/v1/loggedIn',
+        method: 'post',
+        data: { token }
+      })
+  
+      if (result.data) {
+        setSongs(result.data.songList);
+        setUser(result.data.username);
+        setLoggedIn(true);
+      }
+    }
+    checkLoggedIn();
+    
+  }, [cookies.token, setLoggedIn, setSongs, setUser]);
+  
   return (
     <Router>
       <Layout style={{ minHeight: '100vh', minWidth: '280px'}}>

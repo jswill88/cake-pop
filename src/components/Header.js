@@ -6,7 +6,8 @@ import './Header.css';
 import Logo from '../images/cake-pop.jpg';
 
 import { useLoggedIn } from '../context/loggedInContext/'
-import useFetch from '../hooks/ajax'
+import useFetch from '../hooks/ajax';
+import { useSongList } from '../context/songListContext/';
 
 import { Link } from 'react-router-dom';
 
@@ -15,7 +16,7 @@ import LogoutOutlined from '@ant-design/icons/LogoutOutlined';
 import HomeOutlined from '@ant-design/icons/HomeOutlined'
 import InfoCircleOutlined from '@ant-design/icons/InfoCircleOutlined'
 import message from 'antd/es/message'
-
+import { useCookies } from 'react-cookie';
 
 import Row from 'antd/es/row';
 import Col from 'antd/es/col';
@@ -34,7 +35,6 @@ export default function Heading() {
     isMobile,
     selectedMenuItem,
 
-    setSongs,
     setOpenSongId,
     setTitle,
     reset,
@@ -47,8 +47,11 @@ export default function Heading() {
     loggedIn,
     setLoggedIn,
     setUser,
-    removeCookie
   } = useLoggedIn()
+
+  const [,,removeCookie] = useCookies();
+
+  const { setSongs } = useSongList()
 
   const fetchApi = useFetch()
 
