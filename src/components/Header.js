@@ -7,7 +7,7 @@ import Logo from '../images/cake-pop.jpg';
 
 import { useLoggedIn } from '../context/loggedInContext/'
 import useFetch from '../hooks/ajax';
-import { useSongList } from '../context/songListContext/';
+import { SongListContext } from '../context/songListContext/'
 
 import { Link } from 'react-router-dom';
 
@@ -51,7 +51,7 @@ export default function Heading() {
 
   const [,,removeCookie] = useCookies();
 
-  const { setSongs } = useSongList()
+  const { setSongs } = useContext(SongListContext)
 
   const fetchApi = useFetch()
 

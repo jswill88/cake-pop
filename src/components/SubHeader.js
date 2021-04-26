@@ -1,8 +1,6 @@
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { Context } from '../context/context';
 import { useLoggedIn } from '../context/loggedInContext/';
-import { useCookies } from 'react-cookie';
-import axios from 'axios';
 
 import PrimaryButtons from './PrimaryButtons';
 import Controls from './Controls';
@@ -14,34 +12,12 @@ import Reset from './Reset'
 import Row from 'antd/es/row';
 import Col from 'antd/es/col';
 import Divider from 'antd/es/divider';
-import { useSongList } from '../context/songListContext';
 
 export default function SubHeader() {
   const { isMobile } = useContext(Context)
 
-  const { loggedIn, setUser, setLoggedIn } = useLoggedIn()
-  const { setSongs } = useSongList();
-  const [cookies] = useCookies(['token']);
+  const { loggedIn } = useLoggedIn()
 
-  
-  useEffect(() => {
-    const checkLoggedIn = async () => {
-      const token = cookies.token
-      const result = await axios({
-        url: process.env.REACT_APP_URL + '/api/v1/loggedIn',
-        method: 'post',
-        data: { token }
-      })
-  
-      if (result.data) {
-        setSongs(result.data.songList);
-        setUser(result.data.username);
-        setLoggedIn(true);
-      }
-    }
-    checkLoggedIn();
-    
-  }, [cookies.token, setLoggedIn, setSongs, setUser]);
 
   return (
     <>

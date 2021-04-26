@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { Context } from '../context/context';
+import { Context, extraTime } from '../context/context';
 
 import Button from 'antd/es/button';
 import Space from 'antd/es/space';
@@ -18,7 +18,12 @@ export default function PrimaryButtons() {
     setPlayStatus,
     stopAudio,
     isMobile,
-    makeLoops
+    synths,
+    buttons,
+    setNoteSwitches,
+    loopLength,
+    loopDraw
+    // makeLoops
   } = useContext(Context);
 
   const startAudio = async () => {
@@ -30,6 +35,34 @@ export default function PrimaryButtons() {
 
     Tone.Transport.bpm.value = tempo;
     Tone.Transport.start('+0.1');
+  }
+
+  const makeLoops = () => {
+
+    const noteObj = {};
+
+    ['high', 'mid', 'low', 'bassHigh', 'bassLow', 'cymbal', 'snareDrum', 'bassDrum'].forEach(row => {
+      let type;
+      if (['bassHigh', 'bassLow'].includes(row)) type = 'bassSynth'
+      else if (['high', 'mid', 'low'].includes(row)) type = 'chordSynth'
+      else type = row;
+
+      const synth = synths[row];
+
+      noteObj[row] = new Tone.Sequence((time, note) => {
+        if (type === 'snareDrum') synth.triggerAttackRelease('16n', time + extraTime)
+        else synth.triggerAttackRelease(note, '8n', time + extraTime)
+      }, buttons[row].map(note => note ? [note] : [])).start(0);
+    })
+
+    setNoteSwitches(noteObj)
+
+    const arrOfIdx = new Array(loopLength).fill(0).map((_, i) => i);
+    loopDraw.current = new Tone.Sequence((time, note) => {
+      Tone.Draw.schedule(() => {
+        setCurrentBeat(note)
+      }, time)
+    }, arrOfIdx).start(0);
   }
 
   const pauseAudio = () => {

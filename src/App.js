@@ -15,7 +15,8 @@ import './App.less'
 import Layout from 'antd/es/layout';
 
 import {useLoggedIn} from './context/loggedInContext/'
-import { useSongList } from './context/songListContext/'
+// import { useSongList } from './context/songListContext/'
+import { SongListContext } from './context/songListContext/'
 import { useCookies } from 'react-cookie';
 
 import axios from 'axios';
@@ -30,12 +31,13 @@ function App() {
   } = useContext(Context);
 
   const { setUser, setLoggedIn } = useLoggedIn()
-  const { setSongs } = useSongList();
+  const { setSongs } = useContext(SongListContext);
   const [cookies] = useCookies(['token']);
 
   
   useEffect(() => {
     const checkLoggedIn = async () => {
+      console.log('cookie check in APP.js')
       const token = cookies.token
       const result = await axios({
         url: process.env.REACT_APP_URL + '/api/v1/loggedIn',
@@ -51,7 +53,8 @@ function App() {
     }
     checkLoggedIn();
     
-  }, [cookies.token, setLoggedIn, setSongs, setUser]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   
   return (
     <Router>

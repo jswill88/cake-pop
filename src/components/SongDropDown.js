@@ -1,6 +1,6 @@
 import { useContext, useEffect } from 'react';
 import { Context } from '../context/context';
-import { useSongList } from '../context/songListContext/';
+import { SongListContext } from '../context/songListContext/';
 
 import Menu from 'antd/es/menu';
 import Dropdown from 'antd/es/dropdown';
@@ -13,9 +13,9 @@ export default function SongDropDown() {
     isMobile
   } = useContext(Context)
 
-  const { songs } = useSongList();
+  const { songs } = useContext(SongListContext);
 
-  useEffect(() => console.log('songs i dropdown', songs), [songs])
+  useEffect(() => console.log('songs in dropdown', songs), [songs])
 
   const handleSongChoice = e => open(e.key);
 

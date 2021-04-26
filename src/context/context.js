@@ -13,7 +13,7 @@ const { useBreakpoint } = Grid;
 
 export const Context = createContext();
 
-const extraTime = .1;
+export const extraTime = .1;
 const startLength = 12;
 
 function ContextProvider(props) {
@@ -85,8 +85,10 @@ function ContextProvider(props) {
       });
       window.removeEventListener('click', startTone)
       window.removeEventListener('touchstart', startTone)
+      window.removeEventListener('mousemove', startTone)
     };
     window.addEventListener('click', startTone)
+    window.addEventListener('mousemove', startTone)
     window.addEventListener('touchstart', startTone)
   }, [])
 
@@ -98,33 +100,34 @@ function ContextProvider(props) {
     setButtons(buttonObj);
   }, [])
 
-  const makeLoops = () => {
+  // moved to Primary buttons, because it is the only component that uses this
+  // const makeLoops = () => {
 
-    const noteObj = {};
+  //   const noteObj = {};
 
-    ['high', 'mid', 'low', 'bassHigh', 'bassLow', 'cymbal', 'snareDrum', 'bassDrum'].forEach(row => {
-      let type;
-      if (['bassHigh', 'bassLow'].includes(row)) type = 'bassSynth'
-      else if (['high', 'mid', 'low'].includes(row)) type = 'chordSynth'
-      else type = row;
+  //   ['high', 'mid', 'low', 'bassHigh', 'bassLow', 'cymbal', 'snareDrum', 'bassDrum'].forEach(row => {
+  //     let type;
+  //     if (['bassHigh', 'bassLow'].includes(row)) type = 'bassSynth'
+  //     else if (['high', 'mid', 'low'].includes(row)) type = 'chordSynth'
+  //     else type = row;
 
-      const synth = synths[row];
+  //     const synth = synths[row];
 
-      noteObj[row] = new Tone.Sequence((time, note) => {
-        if (type === 'snareDrum') synth.triggerAttackRelease('16n', time + extraTime)
-        else synth.triggerAttackRelease(note, '8n', time + extraTime)
-      }, buttons[row].map(note => note ? [note] : [])).start(0);
-    })
+  //     noteObj[row] = new Tone.Sequence((time, note) => {
+  //       if (type === 'snareDrum') synth.triggerAttackRelease('16n', time + extraTime)
+  //       else synth.triggerAttackRelease(note, '8n', time + extraTime)
+  //     }, buttons[row].map(note => note ? [note] : [])).start(0);
+  //   })
 
-    setNoteSwitches(noteObj)
+  //   setNoteSwitches(noteObj)
 
-    const arrOfIdx = new Array(loopLength).fill(0).map((_, i) => i);
-    loopDraw.current = new Tone.Sequence((time, note) => {
-      Tone.Draw.schedule(() => {
-        setCurrentBeat(note)
-      }, time)
-    }, arrOfIdx).start(0);
-  }
+  //   const arrOfIdx = new Array(loopLength).fill(0).map((_, i) => i);
+  //   loopDraw.current = new Tone.Sequence((time, note) => {
+  //     Tone.Draw.schedule(() => {
+  //       setCurrentBeat(note)
+  //     }, time)
+  //   }, arrOfIdx).start(0);
+  // }
 
   /**
    * @param {String} type Should be 'new' or 'update'
@@ -360,8 +363,10 @@ function ContextProvider(props) {
     isMobile,
     selectedMenuItem,
     setSelectedMenuItem,
-    makeLoops,
-    handleLoopLengthChange
+    // makeLoops,
+    handleLoopLengthChange,
+    synths,
+    loopDraw
   }
 
   return (
