@@ -1,6 +1,7 @@
 import { useContext, useEffect } from 'react';
 import { Context } from '../context/context';
 import { SongListContext } from '../context/songListContext/';
+import { useOpenSong } from '../context/openSongContext/'
 
 import Menu from 'antd/es/menu';
 import Dropdown from 'antd/es/dropdown';
@@ -8,12 +9,12 @@ import Button from 'antd/es/button';
 import DownOutlined from '@ant-design/icons/DownOutlined';
 
 export default function SongDropDown() {
-  const {
-    open,
-    isMobile
-  } = useContext(Context)
+
+  const { isMobile } = useContext(Context)
 
   const { songs } = useContext(SongListContext);
+
+  const { open } = useOpenSong();
 
   useEffect(() => console.log('songs in dropdown', songs), [songs])
 

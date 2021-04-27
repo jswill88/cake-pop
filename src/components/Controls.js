@@ -15,6 +15,7 @@ import Col from 'antd/es/col'
 import QuestionCircleOutlined from '@ant-design/icons/QuestionCircleOutlined';
 import CloseSquareOutlined from '@ant-design/icons/CloseCircleOutlined';
 import colors from '../lib/colors';
+import { SongSettingsContext, useSongSettings } from '../context/songSettingsContext';
 
 const { Option } = Select;
 const { Text } = Typography
@@ -55,11 +56,10 @@ export default function Controls() {
 
 
 function LoopLength() {
-  const {
-    loopLength,
-    isMobile,
-    handleLoopLengthChange
-  } = useContext(Context)
+  const { isMobile } = useContext(Context)
+
+  const { handleLoopLengthChange } = useSongSettings();
+  const { loopLength } = useContext(SongSettingsContext)
 
   return (
     <div>

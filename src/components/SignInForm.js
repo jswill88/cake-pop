@@ -1,5 +1,4 @@
-import { useState, useContext } from 'react';
-import { Context } from '../context/context';
+import { useState } from 'react';
 import { useLoggedIn } from '../context/loggedInContext/';
 
 import Modal from 'antd/es/modal';
@@ -9,11 +8,9 @@ import Typography from 'antd/es/typography';
 
 const { Link } = Typography;
 
-export default function SignInForm() {
+export default function SignInForm({showForm, setShowForm}) {
   const [showSignUp, setShowSignUp] = useState(false)
   const [form] = Form.useForm();
-
-  const { showForm, setShowForm } = useContext(Context)
 
   const { signIn, signUp } = useLoggedIn();
 

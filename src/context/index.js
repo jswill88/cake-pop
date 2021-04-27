@@ -1,17 +1,23 @@
 import ContextProvider from './context';
 import LoggedInContextProvider from './loggedInContext/'
 import SongListContextProvider from './songListContext/'
+import OpenSongContextProvider from './openSongContext/'
+import SongSettingsContextProvider from './songSettingsContext/'
 
 function GlobalContext({ children }) {
   return (
 
-      <ContextProvider>
-        <LoggedInContextProvider>
-          <SongListContextProvider>
-            {children}
-          </SongListContextProvider>
-        </LoggedInContextProvider>
-      </ContextProvider>
+    <ContextProvider>
+      <LoggedInContextProvider>
+        <SongListContextProvider>
+          <OpenSongContextProvider>
+            <SongSettingsContextProvider>
+              {children}
+            </SongSettingsContextProvider>
+          </OpenSongContextProvider>
+        </SongListContextProvider>
+      </LoggedInContextProvider>
+    </ContextProvider>
 
   )
 }

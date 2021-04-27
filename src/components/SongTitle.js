@@ -1,16 +1,17 @@
 import { useContext } from 'react';
-import { Context } from '../context/context'
 
 
 import Typography from 'antd/es/typography';
+import { OpenSongContext, useOpenSong } from '../context/openSongContext/';
 const { Title } = Typography;
 
 export default function SongTitle() {
 
   const {
     title,
-    rename
-  } = useContext(Context);
+  } = useContext(OpenSongContext)
+
+  const { rename } = useOpenSong()
   
   return (
     <Title

@@ -7,6 +7,7 @@ import Space from 'antd/es/space';
 import CaretRightOutlined from '@ant-design/icons/CaretRightOutlined';
 import BorderOutlined from '@ant-design/icons/BorderOutlined';
 import PauseOutlined from '@ant-design/icons/PauseOutlined';
+import { SongSettingsContext } from '../context/songSettingsContext';
 
 export default function PrimaryButtons() {
 
@@ -19,12 +20,11 @@ export default function PrimaryButtons() {
     stopAudio,
     isMobile,
     synths,
-    buttons,
-    setNoteSwitches,
-    loopLength,
     loopDraw
     // makeLoops
   } = useContext(Context);
+
+  const { setNoteSwitches, loopLength, buttons } = useContext(SongSettingsContext)
 
   const startAudio = async () => {
     if (playStatus === 'stop') {

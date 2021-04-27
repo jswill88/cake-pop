@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { Context } from '../context/context';
 import SignInForm from './SignInForm';
 import Hamburger from './Hamburger';
@@ -8,6 +8,8 @@ import Logo from '../images/cake-pop.jpg';
 import { useLoggedIn } from '../context/loggedInContext/'
 import useFetch from '../hooks/ajax';
 import { SongListContext } from '../context/songListContext/'
+import { OpenSongContext } from '../context/openSongContext/';
+import { useCookies } from 'react-cookie';
 
 import { Link } from 'react-router-dom';
 
@@ -16,7 +18,6 @@ import LogoutOutlined from '@ant-design/icons/LogoutOutlined';
 import HomeOutlined from '@ant-design/icons/HomeOutlined'
 import InfoCircleOutlined from '@ant-design/icons/InfoCircleOutlined'
 import message from 'antd/es/message'
-import { useCookies } from 'react-cookie';
 
 import Row from 'antd/es/row';
 import Col from 'antd/es/col';
@@ -24,30 +25,36 @@ import Button from 'antd/es/button'
 import Typography from 'antd/es/typography';
 import Menu from 'antd/es/menu';
 import Image from 'antd/es/image';
+import { SongSettingsContext } from '../context/songSettingsContext';
 
 const { Title } = Typography;
 
 export default function Heading() {
 
+  const [showForm, setShowForm] = useState(false);
+
   const {
-    setShowForm,
+    // setShowForm,
     screenSize,
     isMobile,
     selectedMenuItem,
 
-    setOpenSongId,
-    setTitle,
     reset,
     handleTempoChange,
-    setLoopLength,
-    setProg,
   } = useContext(Context);
+
+  const { setProg, setLoopLength } = useContext(SongSettingsContext)
 
   const {
     loggedIn,
     setLoggedIn,
     setUser,
   } = useLoggedIn()
+
+  const {
+    setTitle,
+    setOpenSongId,
+  } = useContext(OpenSongContext)
 
   const [,,removeCookie] = useCookies();
 
@@ -143,7 +150,10 @@ export default function Heading() {
             >
               {!isMobile && 'Sign In'}
             </Button>
-            <SignInForm />
+            <SignInForm
+              showForm={showForm}
+              setShowForm={setShowForm}
+            />
           </>
           :
           <Button

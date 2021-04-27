@@ -1,5 +1,6 @@
 import { useContext, useState } from 'react';
 import { Context } from '../context/context'
+import { OpenSongContext, useOpenSong } from '../context/openSongContext/';
 import SongDropDown from './SongDropDown';
 import Button from 'antd/es/button';
 import Modal from 'antd/es/modal';
@@ -13,14 +14,16 @@ export default function File() {
 
   const [showSaveAsModal, setShowSaveAsModal] = useState(false)
 
+  const { isMobile } = useContext(Context)
+
+  const { newSong, saveSong } = useOpenSong()
+
   const {
-    openSongId,
-    saveSong,
     title,
-    newSong,
-    deleteSong,
-    isMobile
-  } = useContext(Context)
+    openSongId
+  } = useContext(OpenSongContext)
+
+  const { deleteSong } = useOpenSong()
 
   const [form] = Form.useForm();
 
