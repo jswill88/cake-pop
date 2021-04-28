@@ -15,8 +15,6 @@ import './App.less'
 import Layout from 'antd/es/layout';
 
 import { useLoggedIn } from './context/LoggedInContext/'
-import { SongListContext } from './context/SongListContext/'
-import { useCookies } from 'react-cookie';
 
 import axios from 'axios';
 axios.defaults.withCredentials = true;
@@ -26,32 +24,11 @@ const { Header, Footer, Content } = Layout;
 function App() {
 
   const { isMobile } = useContext(ScreenContext);
-  const { setSongs } = useContext(SongListContext);
   
-  const { setUser, setLoggedIn } = useLoggedIn()
-  const [cookies] = useCookies(['token']);
-
+  const { checkLoggedIn } = useLoggedIn()
   
-  useEffect(() => {
-    const checkLoggedIn = async () => {
-      console.log('cookie check in APP.js')
-      const token = cookies.token
-      const result = await axios({
-        url: process.env.REACT_APP_URL + '/api/v1/loggedIn',
-        method: 'post',
-        data: { token }
-      })
-  
-      if (result.data) {
-        setSongs(result.data.songList);
-        setUser(result.data.username);
-        setLoggedIn(true);
-      }
-    }
-    checkLoggedIn();
-    
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => checkLoggedIn(), []);
   
   return (
     <Router>

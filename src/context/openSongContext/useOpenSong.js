@@ -6,7 +6,6 @@ import { useSongList }  from '../SongListContext'
 import { useSongSettings, useStoppingFunctions } from '../SongSettingsContext';
 import { usePlayControls, useTone } from '../ToneContext';
 
-
 const OpenSongContext = createContext();
 
 function useOpenSong() {
@@ -74,7 +73,6 @@ function useOpenSong() {
     stopAudio()
     const result = await fetchApi('/open', 'post', { token: cookies.token, songId })
     if (!result.error) {
-
       const { data: songObj } = result;
       setProg(songObj.chordProgression);
       handleTempoChange(songObj.bpm)

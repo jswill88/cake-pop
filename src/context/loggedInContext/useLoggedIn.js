@@ -15,7 +15,7 @@ function useLoggedIn() {
   const { setLoopLength, setProg } = useSongSettings();
   const { reset } = useStoppingFunctions();
   const { handleTempoChange } = useTone();
-  const [, setCookie, removeCookie] = useCookies(['token']);
+  const [cookies, setCookie, removeCookie] = useCookies(['token']);
   const fetchApi = useFetch();
   const { setSongs } = useSongList();
 
@@ -65,7 +65,17 @@ function useLoggedIn() {
     }
   }
 
-  
+  const checkLoggedIn = async () => {
+    console.log('cookie check in APP.js')
+    const token = cookies.token
+    const result = await fetchApi('/loggedIn', 'post', { token });
+
+    if (result.data) {
+      setSongs(result.data.songList);
+      setUser(result.data.username);
+      setLoggedIn(true);
+    }
+  }
 
   return {
     signIn,
@@ -74,7 +84,8 @@ function useLoggedIn() {
     loggedIn,
     setLoggedIn,
     setUser,
-    logout
+    logout,
+    checkLoggedIn
   }
 }
 

@@ -1,18 +1,16 @@
 import { useContext } from 'react';
-import { ToneContext } from './index';
+import { ToneContext, Tone } from './index';
 import { useSongSettings } from '../SongSettingsContext';
 
 function usePlayControls() {
   const {
-    Tone,
+    // Tone,
     playStatus, 
     setPlayStatus,
     setCurrentBeat,
   } = useContext(ToneContext)
 
-  const {
-    cleanUp,
-  } = useSongSettings()
+  const { cleanUp } = useSongSettings()
 
   const pauseAudio = () => {
     Tone.Transport.pause('+8n');
@@ -35,7 +33,6 @@ function usePlayControls() {
     pauseAudio,
     stopAudio,
   }
-
 }
 
 export { usePlayControls }

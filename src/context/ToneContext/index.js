@@ -14,27 +14,32 @@ function ToneContextProvider ({ children }) {
   const [currentBeat, setCurrentBeat] = useState(-1);
   
 
-  const makeSynth = type => {
-    const gainNode = new Tone.Gain(.2).toDestination();
-    return new Tone[synthTypes[type]](SYNTHS[type]).connect(gainNode)
-  };
-
+  
   useEffect(() => {
+
+    const makeSynth = type => {
+      const gainNode = new Tone.Gain(.2).toDestination();
+      return new Tone[synthTypes[type]](SYNTHS[type]).connect(gainNode)
+    };
+
     const startTone = async () => {
       console.log('audio started')
       window.removeEventListener('click', startTone)
       window.removeEventListener('touchstart', startTone)
       window.removeEventListener('mousemove', startTone)
       await Tone.start();
+      const synthObj = {};
       ['high', 'mid', 'low', 'bassHigh', 'bassLow', 'cymbal', 'snareDrum', 'bassDrum'].forEach(row => {
         let type;
         if (['bassHigh', 'bassLow'].includes(row)) type = 'bassSynth'
         else if (['high', 'mid', 'low'].includes(row)) type = 'chordSynth'
         else type = row;
         const newSynth = makeSynth(type);
-        setSynths(synthObj => ({ ...synthObj, [row]: newSynth }))
+        synthObj[row] = newSynth;
       });
+      setSynths(synthObj)
     };
+
     window.addEventListener('click', startTone)
     window.addEventListener('mousemove', startTone)
     window.addEventListener('touchstart', startTone)
@@ -43,7 +48,7 @@ function ToneContextProvider ({ children }) {
   const state = {
     tempo,
     setTempo,
-    Tone,
+    // Tone,
     synths,
     playStatus,
     setPlayStatus,
@@ -57,5 +62,5 @@ function ToneContextProvider ({ children }) {
   )
 }
 
-export { useTone, ToneContext, usePlayControls }
+export { useTone, ToneContext, usePlayControls, Tone }
 export default ToneContextProvider;

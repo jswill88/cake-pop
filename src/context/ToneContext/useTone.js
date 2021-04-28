@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { minTempo, maxTempo, extraTime } from '../../lib/constants';
 import { useSongSettings } from '../SongSettingsContext';
-import { ToneContext } from './index'
+import { ToneContext, Tone } from './index'
 
 function useTone() {
   const {
@@ -11,7 +11,7 @@ function useTone() {
     playStatus,
     setPlayStatus,
     setCurrentBeat,
-    Tone
+    // Tone
   } = useContext(ToneContext)
 
   const {

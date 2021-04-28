@@ -9,21 +9,21 @@ import PageContextProvider from './PageContext/';
 function GlobalContext({ children }) {
   return (
 
-    <ScreenContextProvider>
-      <ToneContextProvider>
+    <ToneContextProvider>
+      <SongSettingsContextProvider>
         <LoggedInContextProvider>
           <SongListContextProvider>
             <OpenSongContextProvider>
-              <SongSettingsContextProvider>
-                <PageContextProvider>
+              <PageContextProvider>
+                <ScreenContextProvider>
                   {children}
-                </PageContextProvider>
-              </SongSettingsContextProvider>
+                </ScreenContextProvider>
+              </PageContextProvider>
             </OpenSongContextProvider>
           </SongListContextProvider>
         </LoggedInContextProvider>
-      </ToneContextProvider>
-    </ScreenContextProvider>
+      </SongSettingsContextProvider>
+    </ToneContextProvider>
 
   )
 }

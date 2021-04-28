@@ -14,11 +14,11 @@ function ScreenContextProvider(props) {
   const screens = useBreakpoint();
 
   useEffect(() => {
-    const updatedScreens = []
-    for (let key in screens) {
-      if (screens[key]) updatedScreens.push(key);
-    }
+    
+    const updatedScreens = Object.keys(screens).filter(key => screens[key])
+
     setScreenSize(updatedScreens)
+
   }, [screens])
 
   useEffect(() => {
@@ -28,7 +28,6 @@ function ScreenContextProvider(props) {
 
   const state = {
     screenSize,
-    screens,
     isMobile,
   }
 
