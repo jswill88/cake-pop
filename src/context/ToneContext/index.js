@@ -13,7 +13,6 @@ function ToneContextProvider ({ children }) {
   const [playStatus, setPlayStatus] = useState('stop');
   const [currentBeat, setCurrentBeat] = useState(-1);
   
-
   
   useEffect(() => {
 
