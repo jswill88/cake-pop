@@ -1,4 +1,4 @@
-import { Context } from '../context/context'
+import { ScreenContext } from '../context/ScreenContext'
 import { useContext } from 'react'
 import { InlineIcon } from '@iconify/react';
 import he from 'he';
@@ -175,7 +175,7 @@ export default function NoteColumns() {
 
 function ChordDropDown({ i }) {
 
-  const { isMobile } = useContext(Context);
+  const { isMobile } = useContext(ScreenContext);
 
   const { prog } = useContext(SongSettingsContext)
 

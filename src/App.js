@@ -1,5 +1,5 @@
 import { useContext, useEffect } from 'react';
-import { Context } from './context/context';
+import { ScreenContext } from './context/ScreenContext';
 import NoteColumns from './components/NoteColumns'
 import Heading from './components/Header';
 import SubHeader from './components/SubHeader';
@@ -25,12 +25,10 @@ const { Header, Footer, Content } = Layout;
 
 function App() {
 
-  const {
-    isMobile
-  } = useContext(Context);
-
-  const { setUser, setLoggedIn } = useLoggedIn()
+  const { isMobile } = useContext(ScreenContext);
   const { setSongs } = useContext(SongListContext);
+  
+  const { setUser, setLoggedIn } = useLoggedIn()
   const [cookies] = useCookies(['token']);
 
   

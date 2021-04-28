@@ -1,8 +1,7 @@
 import { useContext, useState } from 'react';
-import { Context } from '../context/context';
+import { ScreenContext } from '../context/ScreenContext';
 
 import Reset from './Reset';
-
 import Button from 'antd/es/button';
 import Select from 'antd/es/select';
 import Typography from 'antd/es/typography';
@@ -22,8 +21,9 @@ const { Option } = Select;
 const { Text } = Typography
 
 export default function Controls() {
-  const { isMobile } = useContext(Context);
-  
+
+  const { isMobile } = useContext(ScreenContext);
+
   return (
     <>
       {isMobile ?
@@ -56,7 +56,7 @@ export default function Controls() {
 
 
 function LoopLength() {
-  const { isMobile } = useContext(Context)
+  const { isMobile } = useContext(ScreenContext)
 
   const { handleLoopLengthChange } = useStoppingFunctions();
   const { loopLength } = useContext(SongSettingsContext)
@@ -98,7 +98,7 @@ function LoopLength() {
 }
 
 function TempoSetter() {
-  const { isMobile } = useContext(Context)
+  const { isMobile } = useContext(ScreenContext)
 
   const { tempo } = useContext(ToneContext);
 

@@ -1,15 +1,12 @@
 import { useContext, useState } from 'react';
-import { Context } from '../context/context';
+import { ScreenContext } from '../context/ScreenContext';
 import SignInForm from './SignInForm';
 import Hamburger from './Hamburger';
 import './Header.css';
 import Logo from '../images/cake-pop.jpg';
 
 import { useLoggedIn } from '../context/LoggedInContext/'
-// import useFetch from '../hooks/ajax';
-// import { SongListContext } from '../context/SongListContext/'
-// import { OpenSongContext } from '../context/OpenSongContext/';
-// import { useCookies } from 'react-cookie';
+import { PageContext } from '../context/PageContext/'
 
 import { Link } from 'react-router-dom';
 
@@ -17,7 +14,6 @@ import LoginOutlined from '@ant-design/icons/LoginOutlined';
 import LogoutOutlined from '@ant-design/icons/LogoutOutlined';
 import HomeOutlined from '@ant-design/icons/HomeOutlined'
 import InfoCircleOutlined from '@ant-design/icons/InfoCircleOutlined'
-// import message from 'antd/es/message'
 
 import Row from 'antd/es/row';
 import Col from 'antd/es/col';
@@ -25,8 +21,6 @@ import Button from 'antd/es/button'
 import Typography from 'antd/es/typography';
 import Menu from 'antd/es/menu';
 import Image from 'antd/es/image';
-// import { SongSettingsContext, useStoppingFunctions } from '../context/SongSettingsContext';
-// import { useTone } from '../context/ToneContext/'
 
 const { Title } = Typography;
 
@@ -37,51 +31,14 @@ export default function Heading() {
   const {
     screenSize,
     isMobile,
-    selectedMenuItem,
-  } = useContext(Context);
+  } = useContext(ScreenContext);
 
-  // const { handleTempoChange } = useTone()
-
-  // const { setProg, setLoopLength } = useContext(SongSettingsContext)
-
-  // const { reset } = useStoppingFunctions();
+  const { selectedMenuItem } = useContext(PageContext);
 
   const {
     loggedIn,
-    // setLoggedIn,
-    // setUser,
     logout
   } = useLoggedIn()
-
-  // const {
-  //   setTitle,
-  //   setOpenSongId,
-  // } = useContext(OpenSongContext)
-
-  // const [,,removeCookie] = useCookies();
-
-  // const { setSongs } = useContext(SongListContext)
-
-  // const fetchApi = useFetch()
-
-  // const logout = async () => {
-  //   const result = await fetchApi('/logout', 'get')
-  //   if (!result.error) {
-  //     setLoggedIn(false)
-  //     setUser('')
-  //     setSongs([])
-  //     setOpenSongId(false)
-  //     setTitle('New Song')
-  //     reset();
-  //     handleTempoChange(120);
-  //     setLoopLength(12)
-  //     setProg(['I', 'I', 'I', 'I']);
-  //     removeCookie('token');
-  //   } else {
-  //     message.error(result.message)
-  //     return 'error';
-  //   }
-  // }
 
   return (
     <Row

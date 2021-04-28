@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { Context } from '../context/context';
+import { ScreenContext } from '../context/ScreenContext';
 
 import Button from 'antd/es/button';
 import Space from 'antd/es/space';
@@ -12,7 +12,7 @@ import { ToneContext, usePlayControls, useTone } from '../context/ToneContext';
 
 export default function PrimaryButtons() {
 
-  const { isMobile } = useContext(Context);
+  const { isMobile } = useContext(ScreenContext);
 
   const { playStatus } = useContext(ToneContext)
 
@@ -49,7 +49,7 @@ export default function PrimaryButtons() {
 }
 
 function ControlButton({ icon, callback, danger }) {
-  const { isMobile } = useContext(Context);
+  const { isMobile } = useContext(ScreenContext);
 
   const { playStatus } = useContext(ToneContext)
   return <Button

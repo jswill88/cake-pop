@@ -1,13 +1,11 @@
 import { useContext } from 'react';
-import { Context } from '../context/context';
+import { ScreenContext } from '../context/ScreenContext';
 import Button from 'antd/es/button';
 import colors from '../lib/colors'
 import { useStoppingFunctions } from '../context/SongSettingsContext';
 
 export default function Reset() {
-  const {
-    isMobile
-  } = useContext(Context)
+  const { isMobile } = useContext(ScreenContext)
 
   const { reset } = useStoppingFunctions()
 

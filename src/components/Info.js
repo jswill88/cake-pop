@@ -1,12 +1,11 @@
-
 import { useContext, useEffect } from 'react';
-import { Context } from '../context/context'
 import Typography from 'antd/es/typography'
 import List from 'antd/es/list'
 import { createFromIconfontCN } from '@ant-design/icons';
 import { InlineIcon } from '@iconify/react';
 import musicClefBass from '@iconify-icons/mdi/music-clef-bass';
 import drumIcon from '@iconify-icons/la/drum';
+import { PageContext } from '../context/PageContext';
 
 const IconFont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/font_2398042_9b3z0yk2zqe.js',
@@ -15,7 +14,7 @@ const IconFont = createFromIconfontCN({
 const { Title, Link, Paragraph, Text } = Typography;
 
 export default function Info() {
-  const { setSelectedMenuItem } = useContext(Context)
+  const { setSelectedMenuItem } = useContext(PageContext)
 
   useEffect(() => setSelectedMenuItem('info'), [setSelectedMenuItem])
 

@@ -4,13 +4,12 @@ import Grid from 'antd/es/grid';
 
 const { useBreakpoint } = Grid;
 
-export const Context = createContext();
+export const ScreenContext = createContext();
 
-function ContextProvider(props) {
+function ScreenContextProvider(props) {
 
   const [screenSize, setScreenSize] = useState([]);
   const [isMobile, setIsMobile] = useState(false);
-  const [selectedMenuItem, setSelectedMenuItem] = useState('home')
 
   const screens = useBreakpoint();
 
@@ -31,14 +30,12 @@ function ContextProvider(props) {
     screenSize,
     screens,
     isMobile,
-    selectedMenuItem,
-    setSelectedMenuItem,
   }
 
   return (
-    <Context.Provider value={state}>
+    <ScreenContext.Provider value={state}>
       {props.children}
-    </Context.Provider>
+    </ScreenContext.Provider>
   )
 }
-export default ContextProvider;
+export default ScreenContextProvider;

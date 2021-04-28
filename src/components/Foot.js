@@ -1,6 +1,5 @@
 import { useContext } from 'react';
-import { Context } from '../context/context'
-
+import { ScreenContext } from '../context/ScreenContext'
 
 import GithubOutlined from '@ant-design/icons/GithubOutlined'
 import LinkedinOutlined from '@ant-design/icons/LinkedinOutlined'
@@ -12,9 +11,9 @@ import Typography from 'antd/es/typography';
 
 const { Text, Link } = Typography;
 
-
 export default function Foot() {
-  const { isMobile } = useContext(Context)
+  const { isMobile } = useContext(ScreenContext);
+
   return (
     <>
       <Row justify={isMobile ? "center" : "end"} style={{ maxWidth: '2000px', margin: '0 auto'}}>

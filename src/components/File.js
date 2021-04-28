@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { Context } from '../context/context'
+import { ScreenContext } from '../context/ScreenContext'
 import { OpenSongContext, useOpenSong } from '../context/OpenSongContext/';
 import SongDropDown from './SongDropDown';
 import Button from 'antd/es/button';
@@ -14,7 +14,7 @@ export default function File() {
 
   const [showSaveAsModal, setShowSaveAsModal] = useState(false)
 
-  const { isMobile } = useContext(Context)
+  const { isMobile } = useContext(ScreenContext)
 
   const { newSong, saveSong } = useOpenSong()
 

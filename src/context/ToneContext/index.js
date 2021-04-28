@@ -2,7 +2,8 @@ import { useState, useEffect, createContext } from 'react';
 import * as Tone from 'tone';
 import { startTempo } from '../../lib/constants';
 import { synthTypes, SYNTHS } from '../../lib/synthInfo';
-import { useTone, usePlayControls } from './useTone'
+import { useTone } from './useTone';
+import { usePlayControls } from './usePlayControls';
 
 const ToneContext = createContext();
 
