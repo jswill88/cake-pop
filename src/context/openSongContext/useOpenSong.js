@@ -2,8 +2,9 @@ import { createContext, useContext } from 'react';
 import useFetch from '../../hooks/ajax'
 import message from 'antd/es/message'
 import { useCookies } from 'react-cookie';
-import { useSongList }  from '../songListContext/'
-import { useSongSettings } from '../songSettingsContext';
+import { useSongList }  from '../SongListContext'
+import { useSongSettings, useStoppingFunctions } from '../SongSettingsContext';
+import { usePlayControls, useTone } from '../ToneContext';
 
 
 const OpenSongContext = createContext();
@@ -15,13 +16,16 @@ function useOpenSong() {
   const { songs, setSongs } = useSongList();
   const {
     setProg,
-    handleTempoChange,
     setLoopLength,
     buttons,
     setButtons,
     prog,
     loopLength
   } = useSongSettings();
+  const { reset } = useStoppingFunctions();
+  const { handleTempoChange, tempo } = useTone();
+  const { stopAudio } = usePlayControls();
+
 
   const deleteSong = async () => {
     const result = await fetchApi('/deletesong', 'delete', {
@@ -29,7 +33,7 @@ function useOpenSong() {
       token: cookies.token
     })
     if (!result.error) {
-      // reset();
+      reset();
       setSongs(arr => arr.filter(({ id }) => id !== openSongId))
       setOpenSongId(false);
       setTitle('New Song');
@@ -67,13 +71,13 @@ function useOpenSong() {
   }
 
   const open = async (songId) => {
-    // stopAudio()
+    stopAudio()
     const result = await fetchApi('/open', 'post', { token: cookies.token, songId })
     if (!result.error) {
 
       const { data: songObj } = result;
       setProg(songObj.chordProgression);
-      // handleTempoChange(songObj.bpm)
+      handleTempoChange(songObj.bpm)
       setLoopLength(songObj.numberOfBeats);
       setTitle(songObj.title)
       setOpenSongId(songObj._id)
@@ -86,9 +90,9 @@ function useOpenSong() {
   }
 
   const newSong = async () => {
-    // reset();
+    reset();
     setOpenSongId(false);
-    // handleTempoChange(120);
+    handleTempoChange(120);
     setProg(['I', 'I', 'I', 'I']);
     const titles = songs.map(({ title }) => title)
     let newTitle = 'New Song'
@@ -110,7 +114,7 @@ function useOpenSong() {
       const songObj = {
         title: newTitle || title,
         buttonsPressed: buttons,
-        // bpm: tempo,
+        bpm: tempo,
         numberOfBeats: loopLength,
         chordProgression: prog,
         token: cookies.token

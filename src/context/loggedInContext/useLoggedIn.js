@@ -2,13 +2,20 @@ import { createContext, useContext } from 'react';
 import message from 'antd/es/message'
 import useFetch from '../../hooks/ajax'
 import { useCookies } from 'react-cookie';
-import { useSongList }  from '../songListContext/'
+import { useSongList }  from '../SongListContext'
+import { useOpenSong } from '../OpenSongContext';
+import { useSongSettings, useStoppingFunctions } from '../SongSettingsContext';
+import { useTone } from '../ToneContext';
 
 const LoggedInContext = createContext();
 
 function useLoggedIn() {
   const { loggedIn, setLoggedIn, user, setUser } = useContext(LoggedInContext);
-  const [, setCookie,] = useCookies(['token']);
+  const { setOpenSongId, setTitle } = useOpenSong();
+  const { setLoopLength, setProg } = useSongSettings();
+  const { reset } = useStoppingFunctions();
+  const { handleTempoChange } = useTone();
+  const [, setCookie, removeCookie] = useCookies(['token']);
   const fetchApi = useFetch();
   const { setSongs } = useSongList();
 
@@ -39,6 +46,27 @@ function useLoggedIn() {
     }
   }
 
+  const logout = async () => {
+    const result = await fetchApi('/logout', 'get')
+    if (!result.error) {
+      setLoggedIn(false)
+      setUser('')
+      setSongs([])
+      setOpenSongId(false)
+      setTitle('New Song')
+      reset();
+      handleTempoChange(120);
+      setLoopLength(12)
+      setProg(['I', 'I', 'I', 'I']);
+      removeCookie('token');
+    } else {
+      message.error(result.message)
+      return 'error';
+    }
+  }
+
+  
+
   return {
     signIn,
     signUp,
@@ -46,6 +74,7 @@ function useLoggedIn() {
     loggedIn,
     setLoggedIn,
     setUser,
+    logout
   }
 }
 

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useLoggedIn } from '../context/loggedInContext/';
+import { useLoggedIn } from '../context/LoggedInContext/';
 
 import Modal from 'antd/es/modal';
 import Form from 'antd/es/form';

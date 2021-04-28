@@ -5,11 +5,11 @@ import Hamburger from './Hamburger';
 import './Header.css';
 import Logo from '../images/cake-pop.jpg';
 
-import { useLoggedIn } from '../context/loggedInContext/'
-import useFetch from '../hooks/ajax';
-import { SongListContext } from '../context/songListContext/'
-import { OpenSongContext } from '../context/openSongContext/';
-import { useCookies } from 'react-cookie';
+import { useLoggedIn } from '../context/LoggedInContext/'
+// import useFetch from '../hooks/ajax';
+// import { SongListContext } from '../context/SongListContext/'
+// import { OpenSongContext } from '../context/OpenSongContext/';
+// import { useCookies } from 'react-cookie';
 
 import { Link } from 'react-router-dom';
 
@@ -17,7 +17,7 @@ import LoginOutlined from '@ant-design/icons/LoginOutlined';
 import LogoutOutlined from '@ant-design/icons/LogoutOutlined';
 import HomeOutlined from '@ant-design/icons/HomeOutlined'
 import InfoCircleOutlined from '@ant-design/icons/InfoCircleOutlined'
-import message from 'antd/es/message'
+// import message from 'antd/es/message'
 
 import Row from 'antd/es/row';
 import Col from 'antd/es/col';
@@ -25,7 +25,8 @@ import Button from 'antd/es/button'
 import Typography from 'antd/es/typography';
 import Menu from 'antd/es/menu';
 import Image from 'antd/es/image';
-import { SongSettingsContext } from '../context/songSettingsContext';
+// import { SongSettingsContext, useStoppingFunctions } from '../context/SongSettingsContext';
+// import { useTone } from '../context/ToneContext/'
 
 const { Title } = Typography;
 
@@ -34,52 +35,53 @@ export default function Heading() {
   const [showForm, setShowForm] = useState(false);
 
   const {
-    // setShowForm,
     screenSize,
     isMobile,
     selectedMenuItem,
-
-    reset,
-    handleTempoChange,
   } = useContext(Context);
 
-  const { setProg, setLoopLength } = useContext(SongSettingsContext)
+  // const { handleTempoChange } = useTone()
+
+  // const { setProg, setLoopLength } = useContext(SongSettingsContext)
+
+  // const { reset } = useStoppingFunctions();
 
   const {
     loggedIn,
-    setLoggedIn,
-    setUser,
+    // setLoggedIn,
+    // setUser,
+    logout
   } = useLoggedIn()
 
-  const {
-    setTitle,
-    setOpenSongId,
-  } = useContext(OpenSongContext)
+  // const {
+  //   setTitle,
+  //   setOpenSongId,
+  // } = useContext(OpenSongContext)
 
-  const [,,removeCookie] = useCookies();
+  // const [,,removeCookie] = useCookies();
 
-  const { setSongs } = useContext(SongListContext)
+  // const { setSongs } = useContext(SongListContext)
 
-  const fetchApi = useFetch()
+  // const fetchApi = useFetch()
 
-  const logout = async () => {
-    const result = await fetchApi('/logout', 'get')
-    if (!result.error) {
-      setLoggedIn(false)
-      setUser('')
-      setSongs([])
-      setOpenSongId(false)
-      setTitle('New Song')
-      reset();
-      handleTempoChange(120);
-      setLoopLength(12)
-      setProg(['I', 'I', 'I', 'I']);
-      removeCookie('token');
-    } else {
-      message.error(result.message)
-      return 'error';
-    }
-  }
+  // const logout = async () => {
+  //   const result = await fetchApi('/logout', 'get')
+  //   if (!result.error) {
+  //     setLoggedIn(false)
+  //     setUser('')
+  //     setSongs([])
+  //     setOpenSongId(false)
+  //     setTitle('New Song')
+  //     reset();
+  //     handleTempoChange(120);
+  //     setLoopLength(12)
+  //     setProg(['I', 'I', 'I', 'I']);
+  //     removeCookie('token');
+  //   } else {
+  //     message.error(result.message)
+  //     return 'error';
+  //   }
+  // }
 
   return (
     <Row

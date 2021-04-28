@@ -14,8 +14,8 @@ import {
 import './App.less'
 import Layout from 'antd/es/layout';
 
-import { useLoggedIn } from './context/loggedInContext/'
-import { SongListContext } from './context/songListContext/'
+import { useLoggedIn } from './context/LoggedInContext/'
+import { SongListContext } from './context/SongListContext/'
 import { useCookies } from 'react-cookie';
 
 import axios from 'axios';

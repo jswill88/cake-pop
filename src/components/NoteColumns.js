@@ -15,7 +15,8 @@ import Card from 'antd/es/card';
 import Select from 'antd/es/select'
 
 import { createFromIconfontCN } from '@ant-design/icons';
-import { SongSettingsContext, useSongSettings } from '../context/songSettingsContext';
+import { SongSettingsContext, useSongSettings } from '../context/SongSettingsContext';
+import { ToneContext } from '../context/ToneContext';
 
 const IconFont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/font_2398042_9b3z0yk2zqe.js',
@@ -27,15 +28,16 @@ const { Option } = Select;
 export default function NoteColumns() {
   const {
     currentBeat,
-    NOTES,
-  } = useContext(Context)
+  } = useContext(ToneContext)
 
   const {
     noteSwitches,
     loopLength,
     buttons,
-    setButtons
+    setButtons,
   } = useContext(SongSettingsContext)
+
+  const { NOTES } = useSongSettings();
 
   const addSynth = (beat, note, row) => {
     if (!buttons[row][beat]) {

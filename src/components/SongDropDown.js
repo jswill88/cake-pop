@@ -1,7 +1,7 @@
 import { useContext, useEffect } from 'react';
 import { Context } from '../context/context';
-import { SongListContext } from '../context/songListContext/';
-import { useOpenSong } from '../context/openSongContext/'
+import { SongListContext } from '../context/SongListContext/';
+import { useOpenSong } from '../context/OpenSongContext/'
 
 import Menu from 'antd/es/menu';
 import Dropdown from 'antd/es/dropdown';

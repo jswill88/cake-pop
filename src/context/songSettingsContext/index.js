@@ -1,12 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, createContext } from 'react';
 import { startLength } from '../../lib/constants'
-import { useSongSettings, SongSettingsContext } from './useSongSettings';
+import { useSongSettings } from './useSongSettings';
+import { useStoppingFunctions } from './useStoppingFunctions';
+
+const SongSettingsContext = createContext()
 
 function SongSettingsContextProvider ({ children }) {
   const [noteSwitches, setNoteSwitches] = useState({})
   const [prog, setProg] = useState(['I', 'I', 'I', 'I'])
   const [loopLength, setLoopLength] = useState(startLength);
   const [buttons, setButtons] = useState({})
+  const loopDraw = useRef(null);
 
   useEffect(() => {
     const buttonObj = {};
@@ -24,8 +28,10 @@ function SongSettingsContextProvider ({ children }) {
     loopLength,
     setLoopLength,
     buttons,
-    setButtons
+    setButtons,
+    loopDraw
   }
+
   return (
     <SongSettingsContext.Provider value={state}>
       {children}
@@ -33,7 +39,6 @@ function SongSettingsContextProvider ({ children }) {
   )
 }
 
-export { SongSettingsContext }
-export { useSongSettings }
+export { SongSettingsContext, useSongSettings, useStoppingFunctions }
 
 export default SongSettingsContextProvider;

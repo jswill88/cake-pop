@@ -15,15 +15,15 @@ import Col from 'antd/es/col'
 import QuestionCircleOutlined from '@ant-design/icons/QuestionCircleOutlined';
 import CloseSquareOutlined from '@ant-design/icons/CloseCircleOutlined';
 import colors from '../lib/colors';
-import { SongSettingsContext, useSongSettings } from '../context/songSettingsContext';
+import { SongSettingsContext, useStoppingFunctions } from '../context/SongSettingsContext';
+import { ToneContext, useTone } from '../context/ToneContext';
 
 const { Option } = Select;
 const { Text } = Typography
 
 export default function Controls() {
-  const {
-    isMobile,
-  } = useContext(Context);
+  const { isMobile } = useContext(Context);
+  
   return (
     <>
       {isMobile ?
@@ -58,7 +58,7 @@ export default function Controls() {
 function LoopLength() {
   const { isMobile } = useContext(Context)
 
-  const { handleLoopLengthChange } = useSongSettings();
+  const { handleLoopLengthChange } = useStoppingFunctions();
   const { loopLength } = useContext(SongSettingsContext)
 
   return (
@@ -98,11 +98,11 @@ function LoopLength() {
 }
 
 function TempoSetter() {
-  const {
-    tempo,
-    handleTempoChange,
-    isMobile
-  } = useContext(Context)
+  const { isMobile } = useContext(Context)
+
+  const { tempo } = useContext(ToneContext);
+
+  const { handleTempoChange } = useTone()
 
   const [editTempo, setEditTempo] = useState(false);
   const [tempoError, setTempoError] = useState(false);

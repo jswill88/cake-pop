@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { Context } from '../context/context';
-import { useLoggedIn } from '../context/loggedInContext/';
+import { useLoggedIn } from '../context/LoggedInContext/';
 
 import PrimaryButtons from './PrimaryButtons';
 import Controls from './Controls';
@@ -17,7 +17,6 @@ export default function SubHeader() {
   const { isMobile } = useContext(Context)
 
   const { loggedIn } = useLoggedIn()
-
 
   return (
     <>

@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 import { Context } from '../context/context'
-import { OpenSongContext, useOpenSong } from '../context/openSongContext/';
+import { OpenSongContext, useOpenSong } from '../context/OpenSongContext/';
 import SongDropDown from './SongDropDown';
 import Button from 'antd/es/button';
 import Modal from 'antd/es/modal';

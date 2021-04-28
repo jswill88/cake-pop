@@ -1,4 +1,4 @@
-import { useLoggedIn } from '../context/loggedInContext/'
+import { useLoggedIn } from '../context/LoggedInContext/'
 import Typography from 'antd/es/typography'
 const { Paragraph } = Typography;
 
