@@ -6,7 +6,6 @@ import SongTitle from './SongTitle';
 import UserGreeting from './UserGreeting';
 import File from './File';
 import Reset from './Reset'
-
 import Row from 'antd/es/row';
 import Col from 'antd/es/col';
 import Divider from 'antd/es/divider';
@@ -54,11 +53,9 @@ export default function SubHeader() {
           style={{ margin: '.5rem 0' }}
         >
           <Col
-            // span={7}
             style={{ display: 'flex', justifyContent: 'flex-start', marginRight: '.5rem' }}
           >
             <PrimaryButtons />
-
           </Col>
           <Col>
             <UserGreeting />

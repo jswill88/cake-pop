@@ -8,6 +8,30 @@ import Typography from 'antd/es/typography';
 
 const { Link } = Typography;
 
+const passwordRules = [
+  {
+    required: true,
+    message: 'Please enter your password'
+  },
+  {
+    min: 8,
+    max: 32,
+    message: 'Password must be between 8 and 32 characters'
+  },
+  {
+    pattern:/[a-z]/g,
+    message: 'Password must contain a lowercase letter'
+  },
+  {
+    pattern:/[A-Z]/g,
+    message: 'Password must contain an uppercase letter'
+  },
+  {
+    pattern:/[0-9]/g,
+    message: 'Password must contain a number'
+  },
+]
+
 export default function SignInForm() {
   const [showSignUp, setShowSignUp] = useState(false)
   const [form] = Form.useForm();
@@ -26,7 +50,6 @@ export default function SignInForm() {
   const signUpHandler = async () => {
     try {
       const { email, username, signUpPassword: password, passwordVerify } = await form.validateFields();
-      console.log(email, username, password, passwordVerify)
       const result = await signUp({
         email, username, password, passwordVerify
       });
@@ -40,30 +63,6 @@ export default function SignInForm() {
     form.resetFields();
     setShowForm(false)
   }
-
-  const passwordRules = [
-    {
-      required: true,
-      message: 'Please enter your password'
-    },
-    {
-      min: 8,
-      max: 32,
-      message: 'Password must be between 8 and 32 characters'
-    },
-    {
-      pattern:/[a-z]/g,
-      message: 'Password must contain a lowercase letter'
-    },
-    {
-      pattern:/[A-Z]/g,
-      message: 'Password must contain an uppercase letter'
-    },
-    {
-      pattern:/[0-9]/g,
-      message: 'Password must contain a number'
-    },
-  ]
 
   return (
     <Modal
@@ -84,8 +83,6 @@ export default function SignInForm() {
           
           >
           <Form.Item
-            
-            
             label="Email"
             name="email"
             rules={[
@@ -99,13 +96,11 @@ export default function SignInForm() {
               }
             ]}
           >
-
             <Input />
           </Form.Item>
           <Form.Item
             label="Password"
             name="password"
-            
             rules={[
               {
                 required: true,
@@ -150,7 +145,12 @@ export default function SignInForm() {
           <Form.Item
             label="Username"
             name="username"
-            requiredMark="optional"
+            rules={[
+              {
+                required: true,
+                message: 'Required'
+              }
+            ]}
           >
             <Input />
           </Form.Item>
@@ -159,7 +159,6 @@ export default function SignInForm() {
             name="signUpPassword"
             rules={passwordRules}
             hasFeedback
-
           >
             <Input.Password
               minLength={8}

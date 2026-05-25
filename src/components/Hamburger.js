@@ -8,34 +8,31 @@ import HomeOutlined from '@ant-design/icons/HomeOutlined'
 import InfoCircleOutlined from '@ant-design/icons/InfoCircleOutlined'
 
 export default function Hamburger() {
-
   const menu = (
-    <Menu
-    >
+    <Menu>
       <Menu.Item
-        style={{ width: '50vw', fontSize: '1.2rem'}}
-        icon={<HomeOutlined style={{fontSize: '1.2rem' }}  />}
+        style={{ width: '50vw', fontSize: '1.2rem', position: 'relative' }}
+        icon={<HomeOutlined style={{ fontSize: '1.2rem' }}  />}
       >
         <Link to="/">
           Home
+          <div style={{ position: 'absolute', inset: 0 }} />
         </Link>
       </Menu.Item>
-      <Divider style={{margin: 0}}/>
+      <Divider style={{ margin: 0 }}/>
       <Menu.Item
-        style={{ width: '50vw', fontSize: '1.2rem' }}
+        style={{ width: '50vw', fontSize: '1.2rem', position: 'relative' }}
         icon={<InfoCircleOutlined style={{ fontSize: '1.2rem' }}  />}
       >
-        <Link
-        to="/info"
-        >
+        <Link to="/info">
           Info
+          <div style={{ position: 'absolute', inset: 0 }} />
         </Link>
       </Menu.Item>
     </Menu>
   )
 
   return (
-
     <Dropdown
       overlay={menu}
       trigger="click"
@@ -53,7 +50,6 @@ export default function Hamburger() {
           }}
         />
       </Button>
-    </Dropdown>
-
+    </Dropdown> 
   )
 }

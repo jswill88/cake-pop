@@ -2,8 +2,8 @@ import { Context } from '../context/context'
 import { useContext } from 'react'
 import { InlineIcon } from '@iconify/react';
 import he from 'he';
-import { CHORDS } from '../lib/noteInfo';
-import colors from '../lib/colors'
+import { CHORDS } from '../constants/noteInfo';
+import colors from '../constants/colors'
 import musicClefBass from '@iconify-icons/mdi/music-clef-bass';
 import drumIcon from '@iconify-icons/la/drum';
 
@@ -26,46 +26,24 @@ const { Option } = Select;
 export default function NoteColumns() {
   const {
     currentBeat,
-    NOTES,
+    notes,
     loopLength,
-    noteSwitches,
     buttons,
-    setButtons,
+    rows,
+    updateButtons
   } = useContext(Context)
 
-  const addSynth = (beat, note, row) => {
-    if (!buttons[row][beat]) {
-
-      if('high' in noteSwitches) {
-        const arr = [...noteSwitches[row].events]
-        arr[beat] = note;
-        noteSwitches[row].events = arr;
-      }
-
-      setButtons(obj => {
-        obj[row][beat] = note;
-        return { ...obj };
-      })
-    } else {
-
-      if('high' in noteSwitches) {
-        const arr = [...noteSwitches[row].events]
-        arr[beat] = [];
-        noteSwitches[row].events = arr;
-      }
-      setButtons(obj => {
-        obj[row][beat] = false;
-        return { ...obj };
-      })
-    }
+  const toggleNote = (beat, note, synth) => {
+    synth.toggleNote(beat, note);
+    updateButtons();
   }
 
   const getNote = (noteRow, i) => {
     let note;
     if (['bassDrum', 'snareDrum', 'cymbal'].includes(noteRow)) {
-      note = NOTES[noteRow][Math.floor(i / loopLength * 4)];
+      note = notes[noteRow][Math.floor(i / loopLength * 4)];
     } else {
-      note = NOTES[noteRow][Math.floor(i / loopLength * 4)] + (noteRow.includes('bass') ? '' : 4);
+      note = notes[noteRow][Math.floor(i / loopLength * 4)] + (noteRow.includes('bass') ? '' : 4);
     }
     return note;
   }
@@ -79,8 +57,7 @@ export default function NoteColumns() {
   }
 
   return (
-    <>
-      {('high' in buttons) &&
+
         <Row
           justify="space-around"
           gutter={[{ xs: 0, sm: 24 }, 18]}
@@ -103,7 +80,7 @@ export default function NoteColumns() {
                 bordered={false}
               >
 
-                {Object.keys(buttons).map((noteRow, j) =>
+                {rows.map((row, j) =>
                   <Row
                     key={j}
                     justify="space-around"
@@ -112,11 +89,10 @@ export default function NoteColumns() {
                     {chordLength(i).map(beat =>
 
                       <Button
-
                         shape="circle"
                         onClick={() => {
-                          const note = getNote(noteRow, beat)
-                          addSynth(beat, note, noteRow)
+                          const note = getNote(row.name, beat)
+                          toggleNote(beat, note, row)
                         }}
                         key={beat}
                         style={{
@@ -127,33 +103,33 @@ export default function NoteColumns() {
                           margin: '.2rem 0',
                           transition: 'none',
 
-                          color: buttons[noteRow][beat] ?
+                          color: buttons[row.name][beat] ?
                             colors.purple
                             : String(beat) === String(currentBeat) ?
                               colors.pink : colors.cyan,
 
                           backgroundColor: String(beat) === String(currentBeat) ?
                             '#ffa4cd'
-                            : !buttons[noteRow][beat] ? colors.cyan : '#24ddd8',
+                            : !buttons[row.name][beat] ? colors.cyan : '#24ddd8',
 
                           borderColor: String(beat) === String(currentBeat) ?
                             '#ffa4cd'
-                            : buttons[noteRow][beat] && '#24ddd8',
+                            : buttons[row.name][beat] && '#24ddd8',
 
                           borderWidth: '2px'
                         }}
                         className="note"
                         size="middle"
-                        ghost={!buttons[noteRow][beat] ? true : false}
+                        ghost={!buttons[row.name][beat] ? true : false}
 
-                        type={!buttons[noteRow][beat] ? 'default' : 'primary'}
+                        type={!buttons[row.name][beat] ? 'default' : 'primary'}
                       >
-                        <CustomIcon noteRow={noteRow} />
+                        <CustomIcon noteRow={row.name} />
 
                       </Button>
 
                     )}
-                    {['low', 'bassLow'].includes(noteRow) && <Divider style={{ width: '5px' }} />}
+                    {['low', 'bassLow'].includes(row.name) && <Divider style={{ width: '5px' }} />}
                   </Row>
                 )}
               </Card>
@@ -161,8 +137,6 @@ export default function NoteColumns() {
           )}
 
         </Row>
-      }
-    </>
   )
 }
 

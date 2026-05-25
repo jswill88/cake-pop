@@ -1,9 +1,10 @@
 import { createContext, useEffect, useState, useRef } from 'react';
-import useFetch from '../hooks/ajax'
+import useFetch from '../hooks/fetch'
 import axios from 'axios';
 import * as Tone from 'tone';
-import { BASS, CHORDS } from '../lib/noteInfo';
-import { SYNTHS, synthTypes } from '../lib/synthInfo';
+import { BASS, CHORDS } from '../constants/noteInfo';
+import { rows, stopAudio as stop } from '../audio';
+import { DEFAULT_LENGTH, DEFAULT_TEMPO } from '../constants/loopInfo';
 
 import message from 'antd/es/message'
 import Grid from 'antd/es/grid';
@@ -14,18 +15,19 @@ const { useBreakpoint } = Grid;
 
 export const Context = createContext();
 
-const extraTime = .1;
-const startLength = 12;
+const noteRows = rows.toSorted((a, b) => a.order - b.order).filter(({ dynamicPitch }) => dynamicPitch)
+
+const buttonObj =  {};
+rows.forEach(({ name }) => {
+  buttonObj[name] = new Array(DEFAULT_LENGTH).fill(false);
+});
 
 function ContextProvider(props) {
   const [prog, setProg] = useState(['I', 'I', 'I', 'I'])
-  const [tempo, setTempo] = useState(120);
+  const [tempo, setTempo] = useState(DEFAULT_TEMPO);
   const [title, setTitle] = useState('New Song')
-  const [noteSwitches, setNoteSwitches] = useState({});
-  const [buttons, setButtons] = useState({})
-  const [synths, setSynths] = useState({})
-
-  const [loopLength, setLoopLength] = useState(startLength);
+  const [buttons, setButtons] = useState(buttonObj)
+  const [loopLength, setLoopLength] = useState(DEFAULT_LENGTH);
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState('');
   const [songs, setSongs] = useState([]);
@@ -33,24 +35,20 @@ function ContextProvider(props) {
   const [openSongId, setOpenSongId] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [playStatus, setPlayStatus] = useState('stop');
-  const [screenSize, setScreenSize] = useState([]);
-  const [isMobile, setIsMobile] = useState(false);
   const [selectedMenuItem, setSelectedMenuItem] = useState('home')
 
-  const loopDraw = useRef(null)
+  const loopDraw = useRef(null);
 
   const [cookies, setCookie, removeCookie] = useCookies(['token'])
 
   const screens = useBreakpoint();
+  const isMobile = Object.entries(screens).reduce(
+    (acc, [size, bool]) => (size === "xs" || !bool) && acc,
+  true);
 
   const fetchApi = useFetch();
 
-  const makeSynth = type => {
-    const gainNode = new Tone.Gain(.2).toDestination();
-    return new Tone[synthTypes[type]](SYNTHS[type]).connect(gainNode)
-  };
-
-  const NOTES = {
+  const notes = {
     high: [CHORDS[prog[0]][2], CHORDS[prog[1]][2], CHORDS[prog[2]][2], CHORDS[prog[3]][2]],
     mid: [CHORDS[prog[0]][1], CHORDS[prog[1]][1], CHORDS[prog[2]][1], CHORDS[prog[3]][1]],
     low: [CHORDS[prog[0]][0], CHORDS[prog[1]][0], CHORDS[prog[2]][0], CHORDS[prog[3]][0]],
@@ -61,94 +59,46 @@ function ContextProvider(props) {
     bassDrum: ['C1', 'C1', 'C1', 'C1'],
   }
 
-
   useEffect(() => {
-    const updatedScreens = []
-    for (let key in screens) {
-      if (screens[key]) updatedScreens.push(key);
-    }
-    setScreenSize(updatedScreens)
-  }, [screens])
-
-  useEffect(() => {
-    if (screenSize.every(val => val === 'xs')) setIsMobile(true);
-    else setIsMobile(false)
-  }, [screenSize])
-
-  useEffect(() => {
-    const startTone = async () => {
-      console.log('audio started')
-      await Tone.start();
-      ['high', 'mid', 'low', 'bassHigh', 'bassLow', 'cymbal', 'snareDrum', 'bassDrum'].forEach(row => {
-        let type;
-        if (['bassHigh', 'bassLow'].includes(row)) type = 'bassSynth'
-        else if (['high', 'mid', 'low'].includes(row)) type = 'chordSynth'
-        else type = row;
-        const newSynth = makeSynth(type);
-        setSynths(synthObj => ({ ...synthObj, [row]: newSynth }))
-      });
-      window.removeEventListener('click', startTone)
-      window.removeEventListener('touchstart', startTone)
-    };
-    window.addEventListener('click', startTone)
-    window.addEventListener('touchstart', startTone)
-  }, [])
-
-  useEffect(() => {
-    const token = cookies.token
+    const token = cookies.token;
     const checkLoggedIn = async () => {
-      const result = await axios({
-        url: process.env.REACT_APP_URL + '/api/v1/loggedIn',
-        method: 'post',
-        data: { token }
-      })
+      try {
+        const result = await axios({
+          url: process.env.REACT_APP_URL + '/api/v1/loggedIn',
+          method: 'post',
+          data: { token }
+        });
 
-      if (result.data) {
-        setSongs(result.data.songList);
-        setUser(result.data.username);
-        setLoggedIn(true);
+        if (result.data) {
+          setSongs(result.data.songList);
+          setUser(result.data.username);
+          setLoggedIn(true);
+        }
+      } catch (e) {
+        console.error(e.message || e)
       }
     }
     checkLoggedIn();
   }, [cookies.token]);
 
-
-  useEffect(() => {
-    const buttonObj = {};
-    ['high', 'mid', 'low', 'bassHigh', 'bassLow', 'cymbal', 'snareDrum', 'bassDrum'].forEach(row => {
-      buttonObj[row] = new Array(startLength).fill(false);
-    })
-    setButtons(buttonObj);
-  }, [])
-
   const makeLoops = () => {
-
-    const noteObj = {};
-
-    ['high', 'mid', 'low', 'bassHigh', 'bassLow', 'cymbal', 'snareDrum', 'bassDrum'].forEach(row => {
-      let type;
-      if (['bassHigh', 'bassLow'].includes(row)) type = 'bassSynth'
-      else if (['high', 'mid', 'low'].includes(row)) type = 'chordSynth'
-      else type = row;
-
-      const synth = synths[row];
-
-      noteObj[row] = new Tone.Sequence((time, note) => {
-        if (type === 'snareDrum') synth.triggerAttackRelease('16n', time + extraTime)
-        else synth.triggerAttackRelease(note, '8n', time + extraTime)
-      }, buttons[row].map(note => note ? [note] : [])).start(0);
-    })
-
-    setNoteSwitches(noteObj)
-
     const arrOfIdx = new Array(loopLength).fill(0).map((_, i) => i);
-    loopDraw.current = new Tone.Sequence((time, note) => {
-      Tone.Draw.schedule(() => {
-        setCurrentBeat(note)
-      }, time)
+    loopDraw.current = new Tone.Sequence((time, beat) => {
+      Tone.getDraw().schedule(() => {
+        if (Tone.getTransport().state === 'started') {
+          setCurrentBeat(beat)
+        }
+      }, time);
     }, arrOfIdx).start(0);
   }
 
+  const updateButtons = () => {
+    const buttonObj = {};
+    rows.forEach(({ name, sequence }) => {
+      buttonObj[name] = sequence.events.map(arr => arr.length ? arr[0] : false);
+    });
+    setButtons(buttonObj);
+  }
 
   const signIn = async (userData) => {
     const result = await fetchApi('/signin', 'post', userData)
@@ -187,7 +137,7 @@ function ContextProvider(props) {
       setOpenSongId(false)
       setTitle('New Song')
       reset();
-      handleTempoChange(120);
+      handleTempoChange(DEFAULT_TEMPO);
       setLoopLength(12)
       setProg(['I', 'I', 'I', 'I']);
       removeCookie('token');
@@ -201,7 +151,6 @@ function ContextProvider(props) {
    * @param {String} type Should be 'new' or 'update'
    */
   const saveSong = async (type, newTitle) => {
-
     const songObj = {
       title: newTitle || title,
       buttonsPressed: buttons,
@@ -235,7 +184,7 @@ function ContextProvider(props) {
   const newSong = async () => {
     reset();
     setOpenSongId(false);
-    handleTempoChange(120);
+    handleTempoChange(DEFAULT_TEMPO);
     setProg(['I', 'I', 'I', 'I']);
     const titles = songs.map(({ title }) => title)
     let newTitle = 'New Song'
@@ -246,22 +195,23 @@ function ContextProvider(props) {
     }
     setTitle(newTitle);
     return 'success';
-
   }
 
   const open = async (songId) => {
     stopAudio()
     const result = await fetchApi('/open', 'post', { token: cookies.token, songId })
     if (!result.error) {
-
       const { data: songObj } = result;
       setProg(songObj.chordProgression);
       handleTempoChange(songObj.bpm)
       setLoopLength(songObj.numberOfBeats);
       setTitle(songObj.title)
       setOpenSongId(songObj._id)
-      setButtons({ ...songObj.buttonsPressed })
-      return 'success'
+      rows.forEach(row => {
+        row.setRow(songObj.buttonsPressed[row.name].map(note => note === false ? [] : [note]))
+      });
+      setButtons({ ...songObj.buttonsPressed });
+      return 'success';
     } else {
       message.error(result.message)
       return 'error';
@@ -277,25 +227,18 @@ function ContextProvider(props) {
 
     const start = i * loopLength / 4;
     const end = start + loopLength / 4
-    const noteRows = ['high', 'mid', 'low', 'bassHigh', 'bassLow']
-    noteRows.forEach(noteRow => {
+    noteRows.forEach((row) => {
       for (let i = start; i < end; i++) {
-        if (buttons[noteRow][i]) {
-          let note;
-          if (['bassLow', 'bassHigh'].includes(noteRow)) {
-            note = BASS[newChord][noteRow === 'bassLow' ? 0 : 1];
-          } else {
-            note = CHORDS[newChord][2 - Object.keys(NOTES).indexOf(noteRow)] + 4;
-          }
-          if (noteSwitches[noteRow]?.events[i]?.length) {
-            const newNoteArr = noteSwitches[noteRow].events;
-            newNoteArr[i] = note;
-            noteSwitches[noteRow].events = newNoteArr;
-          }
-          buttons[noteRow][i] = note;
+        let note;
+        if (['bassLow', 'bassHigh'].includes(row.name)) {
+          note = BASS[newChord][row.name === 'bassLow' ? 0 : 1];
+        } else {
+          note = CHORDS[newChord][2 - Object.keys(notes).indexOf(row.name)] + 4;
         }
+        row.updateNote(i, note);
       }
-    })
+    });
+    updateButtons();
   }
 
   const rename = async newTitle => {
@@ -334,67 +277,45 @@ function ContextProvider(props) {
       setSongs(arr => arr.filter(({ id }) => id !== openSongId))
       setOpenSongId(false);
       setTitle('New Song');
-      handleTempoChange(120);
+      handleTempoChange(DEFAULT_TEMPO);
       setProg(['I', 'I', 'I', 'I']);
       message.success(`${result.data.title} successfullly deleted`)
       return 'success';
     } else {
-      message.error(result.message)
-      return 'error'
+      message.error(result.message);
+      return 'error';
     }
   }
 
   const handleTempoChange = newTempo => {
-    const tempo = newTempo < 50 ? 50 : Math.min(320, newTempo)
-    Tone.Transport.bpm.rampTo(tempo, 1);
-    setTempo(tempo)
+    const tempo = Math.max(50, Math.min(320, newTempo));
+    Tone.getTransport().bpm.rampTo(tempo, 1);
+    setTempo(tempo);
   }
 
   const handleLoopLengthChange = newLength => {
     stopAudio();
     setLoopLength(newLength);
-    const buttonObj = {};
-    ['high', 'mid', 'low', 'bassHigh', 'bassLow', 'cymbal', 'snareDrum', 'bassDrum'].forEach(row => {
-      buttonObj[row] = new Array(newLength).fill(false);
-    })
-    setButtons(buttonObj);
-  }
-
-  const cleanUp = () => {
-    for (let noteRow in noteSwitches) {
-      noteSwitches[noteRow].cancel()
-      noteSwitches[noteRow].clear();
-      noteSwitches[noteRow].dispose();
-    }
-    if (loopDraw.current) {
-      loopDraw.current.cancel()
-      loopDraw.current.clear();
-      loopDraw.current.dispose();
-      loopDraw.current = null;
-    }
-
+    rows.forEach(synth => synth.setLength(newLength));
+    updateButtons();
   }
 
   const reset = async () => {
-    stopAudio()
+    stopAudio();
+    rows.forEach(synth => synth.clearNotes(loopLength));
     const buttonObj = {};
-    for (let noteRow in buttons) {
+    for (const noteRow in buttons) {
       buttonObj[noteRow] = new Array(loopLength).fill(false);
     }
-
-    setButtons(buttonObj)
+    setButtons(buttonObj);
   }
 
   const stopAudio = () => {
-    const waitTime = playStatus === 'start' ? Tone.Time("8n").toSeconds() : 0;
-    if (playStatus !== 'stop') {
-      Tone.Transport.stop('8n')
-      setPlayStatus('stop')
-    }
-    setTimeout(() => {
-      setCurrentBeat(-2)
-      cleanUp();
-    }, waitTime * 1000)
+    if (playStatus === 'stop') return;
+    stop(() => {
+      setPlayStatus('stop');
+      setCurrentBeat(-1);
+    });
   }
 
   const state = {
@@ -405,24 +326,17 @@ function ContextProvider(props) {
     saveSong,
     songs,
     user,
-    noteSwitches,
-    setNoteSwitches,
     prog,
-    setProg,
     loopLength,
-    setLoopLength,
     tempo,
-    setTempo,
     open,
     handleTempoChange,
     Tone,
     title,
     setTitle,
     currentBeat,
-    setCurrentBeat,
     reset,
-    NOTES,
-    makeSynth,
+    notes,
     rename,
     openSongId,
     deleteSong,
@@ -435,13 +349,13 @@ function ContextProvider(props) {
     buttons,
     setButtons,
     stopAudio,
-    screenSize,
-    screens,
     isMobile,
     selectedMenuItem,
     setSelectedMenuItem,
     makeLoops,
-    handleLoopLengthChange
+    handleLoopLengthChange,
+    rows,
+    updateButtons
   }
 
   return (

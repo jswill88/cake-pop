@@ -12,7 +12,6 @@ export default function PrimaryButtons() {
 
   const {
     Tone,
-    setCurrentBeat,
     tempo,
     playStatus,
     setPlayStatus,
@@ -23,7 +22,6 @@ export default function PrimaryButtons() {
 
   const startAudio = async () => {
     if (playStatus === 'stop') {
-      setCurrentBeat(-1)
       makeLoops()
     }
     setPlayStatus('start')
@@ -64,18 +62,19 @@ export default function PrimaryButtons() {
 
 function ControlButton({ icon, callback, danger }) {
   const { isMobile, playStatus } = useContext(Context);
-  return <Button
-    size="large"
-    style={{lineHeight: 1,
-      backgroundColor: !danger && (playStatus !== 'start' ? '#7ED957' : '#ffffff'),
-      borderColor: !danger && (playStatus !== 'start' ? '#7ED957' : '#ffffff'),
-      
-  }}
-    onClick={() => callback()}
-    icon={icon}
-    danger={danger ? true : false}
-    type="primary"
-    
-    shape={isMobile ? "circle" : "round"}
-  />
+  return (
+    <Button
+      size="large"
+      style={{
+        lineHeight: 1,
+        backgroundColor: !danger && (playStatus !== 'start' ? '#7ED957' : '#ffffff'),
+        borderColor: !danger && (playStatus !== 'start' ? '#7ED957' : '#ffffff'),
+      }}
+      onClick={() => callback()}
+      icon={icon}
+      danger={danger ? true : false}
+      type="primary"
+      shape={isMobile ? "circle" : "round"}
+    />
+  )
 }

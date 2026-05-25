@@ -13,17 +13,17 @@ export default function SongDropDown() {
     isMobile
   } = useContext(Context)
 
-  const handleSongChoice = e => open(songs[e.key].id);
+  const handleSongChoice = e => open(e.key);
 
   const buttonSize = () => isMobile ? "small" : "large";
 
   const menu = (
     <Menu
       onClick={handleSongChoice}
-      >
-      {songs.map(({ title, id }, i) =>
+    >
+      {songs.map(({ title, id }) =>
         <Menu.Item
-        key={i}
+          key={id}
         >
           {title}
         </Menu.Item>
@@ -32,15 +32,15 @@ export default function SongDropDown() {
   )
 
   return (
-
     <Dropdown
-    overlay={menu}
-    trigger="click"
+      overlay={menu}
+      trigger="click"
+      disabled={!songs.length}
     >
       <Button
         type="text"
         size={buttonSize()}
-        style={{paddingLeft: 0}}
+        style={{ paddingLeft: 0 }}
       >
         Open<DownOutlined />
       </Button>

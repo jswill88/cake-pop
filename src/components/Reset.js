@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { Context } from '../context/context';
 import Button from 'antd/es/button';
-import colors from '../lib/colors'
+import colors from '../constants/colors'
 
 export default function Reset() {
   const {
