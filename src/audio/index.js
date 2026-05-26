@@ -10,7 +10,12 @@ class Synth {
     this.dynamicPitch = dynamicPitch;
     this.synth = new Tone[type](settings).connect(new Tone.Gain(.2).toDestination());
     this.sequence = new Tone.Sequence((time, note) => {
-      this.synth.triggerAttackRelease(note, noteLength, time + extraTime)
+      const args = [note, noteLength, time + extraTime];
+      // NoiseSynth has no pitch
+      if (type === "NoiseSynth") {
+        args.shift();
+      }
+      this.synth.triggerAttackRelease(...args);
     }, new Array(DEFAULT_LENGTH).fill([])).start(0);
   }
 

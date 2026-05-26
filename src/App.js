@@ -1,10 +1,9 @@
-import { useContext } from 'react';
-import { Context } from './context/context';
 import NoteColumns from './components/NoteColumns'
 import Heading from './components/Header';
 import SubHeader from './components/SubHeader';
 import Foot from './components/Foot';
 import Info from './components/Info';
+import useIsMobile from './hooks/useIsMobile';
 import {
   BrowserRouter as Router,
   Switch,
@@ -20,10 +19,8 @@ axios.defaults.withCredentials = true;
 const { Header, Footer, Content } = Layout;
 
 function App() {
+  const isMobile = useIsMobile();
 
-  const {
-    isMobile
-  } = useContext(Context);
   return (
     <Router>
       <Layout style={{ minHeight: '100vh', minWidth: '280px'}}>

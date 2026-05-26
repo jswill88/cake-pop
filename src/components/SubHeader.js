@@ -6,15 +6,14 @@ import SongTitle from './SongTitle';
 import UserGreeting from './UserGreeting';
 import File from './File';
 import Reset from './Reset'
+import useIsMobile from '../hooks/useIsMobile';
 import Row from 'antd/es/row';
 import Col from 'antd/es/col';
 import Divider from 'antd/es/divider';
 
 export default function SubHeader() {
-  const {
-    loggedIn,
-    isMobile
-  } = useContext(Context)
+  const { loggedIn } = useContext(Context)
+  const isMobile = useIsMobile();
 
   return (
     <>

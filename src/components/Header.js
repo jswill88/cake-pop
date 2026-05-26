@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { Context } from '../context/context';
 import SignInForm from './SignInForm';
 import Hamburger from './Hamburger';
+import useIsMobile from '../hooks/useIsMobile';
 import './Header.css';
 import Logo from '../images/cake-pop.jpg';
 
@@ -27,9 +28,9 @@ export default function Heading() {
     logout,
     loggedIn,
     setShowForm,
-    isMobile,
     selectedMenuItem
   } = useContext(Context);
+  const isMobile = useIsMobile();
 
   return (
     <Row

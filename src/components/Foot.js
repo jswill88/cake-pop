@@ -1,6 +1,4 @@
-import { useContext } from 'react';
-import { Context } from '../context/context'
-
+import useIsMobile from '../hooks/useIsMobile';
 
 import GithubOutlined from '@ant-design/icons/GithubOutlined'
 import LinkedinOutlined from '@ant-design/icons/LinkedinOutlined'
@@ -14,7 +12,8 @@ const { Text, Link } = Typography;
 
 
 export default function Foot() {
-  const { isMobile } = useContext(Context)
+  const isMobile = useIsMobile();
+
   return (
     <>
       <Row justify={isMobile ? "center" : "end"} style={{ maxWidth: '2000px', margin: '0 auto'}}>

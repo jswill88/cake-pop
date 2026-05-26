@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import { Context } from '../context/context';
+import useIsMobile from '../hooks/useIsMobile';
 
 import Menu from 'antd/es/menu';
 import Dropdown from 'antd/es/dropdown';
@@ -9,9 +10,9 @@ import DownOutlined from '@ant-design/icons/DownOutlined';
 export default function SongDropDown() {
   const {
     songs,
-    open,
-    isMobile
+    open
   } = useContext(Context)
+  const isMobile = useIsMobile();
 
   const handleSongChoice = e => open(e.key);
 

@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react';
 import { Context } from '../context/context'
 import SongDropDown from './SongDropDown';
+import useIsMobile from '../hooks/useIsMobile';
 import Button from 'antd/es/button';
 import Modal from 'antd/es/modal';
 import Form from 'antd/es/form';
@@ -18,9 +19,9 @@ export default function File() {
     saveSong,
     title,
     newSong,
-    deleteSong,
-    isMobile
+    deleteSong
   } = useContext(Context)
+  const isMobile = useIsMobile();
 
   const [form] = Form.useForm();
 

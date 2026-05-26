@@ -1,5 +1,6 @@
 import { useContext, useState } from 'react';
 import { Context } from '../context/context';
+import useIsMobile from '../hooks/useIsMobile';
 
 import Reset from './Reset';
 
@@ -20,9 +21,8 @@ const { Option } = Select;
 const { Text } = Typography
 
 export default function Controls() {
-  const {
-    isMobile,
-  } = useContext(Context);
+  const isMobile = useIsMobile();
+
   return (
     <>
       {isMobile ?
@@ -85,7 +85,7 @@ function LoopLength() {
       >
         {[8, 12, 16, 20, 24].map((beats, i) =>
           <Option
-            key={i}
+            key={beats}
             value={beats}
           >
             {beats}
@@ -99,9 +99,9 @@ function LoopLength() {
 function TempoSetter() {
   const {
     tempo,
-    handleTempoChange,
-    isMobile
+    handleTempoChange
   } = useContext(Context)
+  const isMobile = useIsMobile();
 
   const [editTempo, setEditTempo] = useState(false);
   const [tempoError, setTempoError] = useState(false);

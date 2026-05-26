@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState, useRef } from 'react';
-import useFetch from '../hooks/fetch'
+import useFetch from '../hooks/useFetch'
 import axios from 'axios';
 import * as Tone from 'tone';
 import { BASS, CHORDS } from '../constants/noteInfo';
@@ -7,11 +7,8 @@ import { rows, stopAudio as stop } from '../audio';
 import { DEFAULT_LENGTH, DEFAULT_TEMPO } from '../constants/loopInfo';
 
 import message from 'antd/es/message'
-import Grid from 'antd/es/grid';
 
 import { useCookies } from 'react-cookie';
-
-const { useBreakpoint } = Grid;
 
 export const Context = createContext();
 
@@ -41,11 +38,6 @@ function ContextProvider(props) {
 
   const [cookies, setCookie, removeCookie] = useCookies(['token'])
 
-  const screens = useBreakpoint();
-  const isMobile = Object.entries(screens).reduce(
-    (acc, [size, bool]) => (size === "xs" || !bool) && acc,
-  true);
-
   const fetchApi = useFetch();
 
   const notes = {
@@ -55,7 +47,7 @@ function ContextProvider(props) {
     bassHigh: [BASS[prog[0]][1], BASS[prog[1]][1], BASS[prog[2]][1], BASS[prog[3]][1]],
     bassLow: [BASS[prog[0]][0], BASS[prog[1]][0], BASS[prog[2]][0], BASS[prog[3]][0]],
     cymbal: ['C1', 'C1', 'C1', 'C1'],
-    snareDrum: ['S', 'S', 'S', 'S'],
+    snareDrum: [true, true, true, true],
     bassDrum: ['C1', 'C1', 'C1', 'C1'],
   }
 
@@ -349,7 +341,6 @@ function ContextProvider(props) {
     buttons,
     setButtons,
     stopAudio,
-    isMobile,
     selectedMenuItem,
     setSelectedMenuItem,
     makeLoops,

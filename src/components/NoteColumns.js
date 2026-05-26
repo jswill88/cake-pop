@@ -4,6 +4,7 @@ import { InlineIcon } from '@iconify/react';
 import he from 'he';
 import { CHORDS } from '../constants/noteInfo';
 import colors from '../constants/colors'
+import useIsMobile from '../hooks/useIsMobile';
 import musicClefBass from '@iconify-icons/mdi/music-clef-bass';
 import drumIcon from '@iconify-icons/la/drum';
 
@@ -33,8 +34,8 @@ export default function NoteColumns() {
     updateButtons
   } = useContext(Context)
 
-  const toggleNote = (beat, note, synth) => {
-    synth.toggleNote(beat, note);
+  const toggleNote = (beat, row) => {
+    row.toggleNote(beat, getNote(row.name, beat));
     updateButtons();
   }
 
@@ -57,87 +58,78 @@ export default function NoteColumns() {
   }
 
   return (
-
-        <Row
-          justify="space-around"
-          gutter={[{ xs: 0, sm: 24 }, 18]}
+    <Row
+      justify="space-around"
+      gutter={[{ xs: 0, sm: 24 }, 18]}
+    >
+      {[0, 1, 2, 3].map(num =>
+        <Col
+          key={num}
+          xs={loopLength <= 12 ? 12 : 24}
+          sm={loopLength <= 8 ? 6 : 12}
+          md={loopLength <= 12 ? 6 : 12}
+          lg={6}
+          style={{
+            boxSizing: 'border-box',
+            borderRadius: '3%',
+          }}
         >
+          <Card
+            title={<ChordDropDown i={num} />}
+            bordered={false}
+          >
 
-          {[0, 1, 2, 3].map(i =>
-            < Col
-              key={i}
-              xs={loopLength <= 12 ? 12 : 24}
-              sm={loopLength <= 8 ? 6 : 12}
-              md={loopLength <= 12 ? 6 : 12}
-              lg={6}
-              style={{
-                boxSizing: 'border-box',
-                borderRadius: '3%',
-              }}
-            >
-              <Card
-                title={<ChordDropDown i={i} />}
-                bordered={false}
+            {rows.map((row, j) =>
+              <Row
+                key={row.name}
+                justify="space-around"
+                gutter={16}
               >
+                {chordLength(num).map(beat =>
 
-                {rows.map((row, j) =>
-                  <Row
-                    key={j}
-                    justify="space-around"
-                    gutter={16}
+                  <Button
+                    shape="circle"
+                    onClick={() => toggleNote(beat, row)}
+                    key={beat}
+                    style={{
+                      overflow: 'hidden',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      display: 'flex',
+                      margin: '.2rem 0',
+                      transition: 'none',
+
+                      color: buttons[row.name][beat] ?
+                        colors.purple
+                        : String(beat) === String(currentBeat) ?
+                          colors.pink : colors.cyan,
+
+                      backgroundColor: String(beat) === String(currentBeat) ?
+                        '#ffa4cd'
+                        : !buttons[row.name][beat] ? colors.cyan : '#24ddd8',
+
+                      borderColor: String(beat) === String(currentBeat) ?
+                        '#ffa4cd'
+                        : buttons[row.name][beat] && '#24ddd8',
+
+                      borderWidth: '2px'
+                    }}
+                    className="note"
+                    size="middle"
+                    ghost={!buttons[row.name][beat] ? true : false}
+                    type={!buttons[row.name][beat] ? 'default' : 'primary'}
                   >
-                    {chordLength(i).map(beat =>
-
-                      <Button
-                        shape="circle"
-                        onClick={() => {
-                          const note = getNote(row.name, beat)
-                          toggleNote(beat, note, row)
-                        }}
-                        key={beat}
-                        style={{
-                          overflow: 'hidden',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          display: 'flex',
-                          margin: '.2rem 0',
-                          transition: 'none',
-
-                          color: buttons[row.name][beat] ?
-                            colors.purple
-                            : String(beat) === String(currentBeat) ?
-                              colors.pink : colors.cyan,
-
-                          backgroundColor: String(beat) === String(currentBeat) ?
-                            '#ffa4cd'
-                            : !buttons[row.name][beat] ? colors.cyan : '#24ddd8',
-
-                          borderColor: String(beat) === String(currentBeat) ?
-                            '#ffa4cd'
-                            : buttons[row.name][beat] && '#24ddd8',
-
-                          borderWidth: '2px'
-                        }}
-                        className="note"
-                        size="middle"
-                        ghost={!buttons[row.name][beat] ? true : false}
-
-                        type={!buttons[row.name][beat] ? 'default' : 'primary'}
-                      >
-                        <CustomIcon noteRow={row.name} />
-
-                      </Button>
-
-                    )}
-                    {['low', 'bassLow'].includes(row.name) && <Divider style={{ width: '5px' }} />}
-                  </Row>
+                    <CustomIcon noteRow={row.name} />
+                  </Button>
                 )}
-              </Card>
-            </Col>
-          )}
-
-        </Row>
-  )
+                {['low', 'bassLow'].includes(row.name) && <Divider style={{ width: '5px' }} />}
+              </Row>
+            )}
+          </Card>
+        </Col>
+      )}
+    </Row>
+  );
 }
 
 
@@ -145,9 +137,9 @@ function ChordDropDown({ i }) {
 
   const {
     prog,
-    isMobile,
     handleChordChange
   } = useContext(Context);
+  const isMobile = useIsMobile();
 
   return (
     <Select

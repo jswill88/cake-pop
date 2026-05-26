@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import { Context } from '../context/context';
+import useIsMobile from '../hooks/useIsMobile';
 
 import Button from 'antd/es/button';
 import Space from 'antd/es/space';
@@ -16,9 +17,9 @@ export default function PrimaryButtons() {
     playStatus,
     setPlayStatus,
     stopAudio,
-    isMobile,
     makeLoops
   } = useContext(Context);
+  const isMobile = useIsMobile();
 
   const startAudio = async () => {
     if (playStatus === 'stop') {
@@ -61,7 +62,9 @@ export default function PrimaryButtons() {
 }
 
 function ControlButton({ icon, callback, danger }) {
-  const { isMobile, playStatus } = useContext(Context);
+  const { playStatus } = useContext(Context);
+  const isMobile = useIsMobile();
+
   return (
     <Button
       size="large"
