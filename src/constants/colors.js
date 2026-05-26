@@ -1,9 +1,5 @@
-
-const colors = {
-  purple: '#251738',
-  cyan: '#24ddd8',
-  white: '#f0eaf4',
-  pink: '#ffa4cd',
-  yellow: '#f9d673'
-}
-export default colors;
+export const PURPLE = '#251738';
+export const CYAN = '#24ddd8';
+export const WHITE = '#f0eaf4';
+export const PINK = '#ffa4cd';
+export const YELLOW = '#f9d673';

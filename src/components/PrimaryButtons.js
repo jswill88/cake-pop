@@ -46,7 +46,6 @@ export default function PrimaryButtons() {
             icon={<CaretRightOutlined />}
           />
           :
-
           <ControlButton
             callback={pauseAudio}
             icon={<PauseOutlined />}

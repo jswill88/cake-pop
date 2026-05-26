@@ -15,7 +15,7 @@ import Col from 'antd/es/col'
 
 import QuestionCircleOutlined from '@ant-design/icons/QuestionCircleOutlined';
 import CloseSquareOutlined from '@ant-design/icons/CloseCircleOutlined';
-import colors from '../constants/colors';
+import { COLORS } from '../constants';
 
 const { Option } = Select;
 const { Text } = Typography
@@ -69,7 +69,7 @@ function LoopLength() {
           placement="bottom"
         >
           <QuestionCircleOutlined
-            style={{ color: colors.white }}
+            style={{ color: COLORS.WHITE }}
           />
         </Tooltip>&nbsp;:&nbsp;
         </Text>
@@ -187,7 +187,7 @@ function TempoSetter() {
                 setEditTempo(false)
                 form.resetFields();
               }}
-              icon={<CloseSquareOutlined style={{color: colors.white}} />}
+              icon={<CloseSquareOutlined style={{ color: COLORS.WHITE }} />}
               danger
               type="text"
            />

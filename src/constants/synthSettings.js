@@ -65,7 +65,8 @@ export const synthObjs = [
     type: 'Synth',
     order: 3,
     noteLength: '8n',
-    settings: sharedSettings.chordSynth
+    settings: sharedSettings.chordSynth,
+    dynamicPitch: true
 
   },
   {
@@ -129,7 +130,7 @@ export const synthObjs = [
     },
     dynamicPitch: false
   }
-]
+];
 
 export const extraTime = .1;
 

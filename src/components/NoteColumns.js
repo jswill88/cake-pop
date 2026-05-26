@@ -2,8 +2,7 @@ import { Context } from '../context/context'
 import { useContext } from 'react'
 import { InlineIcon } from '@iconify/react';
 import he from 'he';
-import { CHORDS } from '../constants/noteInfo';
-import colors from '../constants/colors'
+import { COLORS, NOTES } from '../constants'
 import useIsMobile from '../hooks/useIsMobile';
 import musicClefBass from '@iconify-icons/mdi/music-clef-bass';
 import drumIcon from '@iconify-icons/la/drum';
@@ -23,6 +22,8 @@ const IconFont = createFromIconfontCN({
 
 const { Option } = Select;
 
+const { CHORDS } = NOTES;
+
 
 export default function NoteColumns() {
   const {
@@ -34,27 +35,17 @@ export default function NoteColumns() {
     updateButtons
   } = useContext(Context)
 
-  const toggleNote = (beat, row) => {
-    row.toggleNote(beat, getNote(row.name, beat));
+  const toggleNote = (beat, idx, row) => {
+    row.toggleNote(idx, notes[row.name][beat]);
     updateButtons();
   }
 
-  const getNote = (noteRow, i) => {
-    let note;
-    if (['bassDrum', 'snareDrum', 'cymbal'].includes(noteRow)) {
-      note = notes[noteRow][Math.floor(i / loopLength * 4)];
-    } else {
-      note = notes[noteRow][Math.floor(i / loopLength * 4)] + (noteRow.includes('bass') ? '' : 4);
-    }
-    return note;
-  }
-
-  const chordLength = i => {
-    let start = i * loopLength / 4;
+  const getSubdivisionIndicies = beat => {
+    let start = beat * loopLength / 4;
     const end = start + loopLength / 4;
-    const chordLength = [];
-    for (; start < end; start++) chordLength.push(start)
-    return chordLength
+    const indices = [];
+    for (let i = start; i < end; i++) indices.push(i);
+    return indices;
   }
 
   return (
@@ -62,9 +53,9 @@ export default function NoteColumns() {
       justify="space-around"
       gutter={[{ xs: 0, sm: 24 }, 18]}
     >
-      {[0, 1, 2, 3].map(num =>
+      {[0, 1, 2, 3].map(beat =>
         <Col
-          key={num}
+          key={beat}
           xs={loopLength <= 12 ? 12 : 24}
           sm={loopLength <= 8 ? 6 : 12}
           md={loopLength <= 12 ? 6 : 12}
@@ -75,22 +66,21 @@ export default function NoteColumns() {
           }}
         >
           <Card
-            title={<ChordDropDown i={num} />}
+            title={<ChordDropDown beat={beat} />}
             bordered={false}
           >
-
             {rows.map((row, j) =>
               <Row
                 key={row.name}
                 justify="space-around"
                 gutter={16}
               >
-                {chordLength(num).map(beat =>
+                {getSubdivisionIndicies(beat).map(idx =>
 
                   <Button
                     shape="circle"
-                    onClick={() => toggleNote(beat, row)}
-                    key={beat}
+                    onClick={() => toggleNote(beat, idx, row)}
+                    key={row.name + idx}
                     style={{
                       overflow: 'hidden',
                       alignItems: 'center',
@@ -99,25 +89,25 @@ export default function NoteColumns() {
                       margin: '.2rem 0',
                       transition: 'none',
 
-                      color: buttons[row.name][beat] ?
-                        colors.purple
-                        : String(beat) === String(currentBeat) ?
-                          colors.pink : colors.cyan,
+                      color: buttons[row.name][idx] ?
+                        COLORS.PURPLE
+                        : String(idx) === String(currentBeat) ?
+                          COLORS.PINK : COLORS.CYAN,
 
-                      backgroundColor: String(beat) === String(currentBeat) ?
+                      backgroundColor: String(idx) === String(currentBeat) ?
                         '#ffa4cd'
-                        : !buttons[row.name][beat] ? colors.cyan : '#24ddd8',
+                        : !buttons[row.name][idx] ? COLORS.CYAN : '#24ddd8',
 
-                      borderColor: String(beat) === String(currentBeat) ?
+                      borderColor: String(idx) === String(currentBeat) ?
                         '#ffa4cd'
-                        : buttons[row.name][beat] && '#24ddd8',
+                        : buttons[row.name][idx] && '#24ddd8',
 
                       borderWidth: '2px'
                     }}
                     className="note"
                     size="middle"
-                    ghost={!buttons[row.name][beat] ? true : false}
-                    type={!buttons[row.name][beat] ? 'default' : 'primary'}
+                    ghost={!buttons[row.name][idx]}
+                    type={!buttons[row.name][idx] ? 'default' : 'primary'}
                   >
                     <CustomIcon noteRow={row.name} />
                   </Button>
@@ -133,8 +123,7 @@ export default function NoteColumns() {
 }
 
 
-function ChordDropDown({ i }) {
-
+function ChordDropDown({ beat }) {
   const {
     prog,
     handleChordChange
@@ -143,14 +132,14 @@ function ChordDropDown({ i }) {
 
   return (
     <Select
-      value={he.decode(prog[i])}
-      onChange={val => handleChordChange(val, i)}
+      value={he.decode(prog[beat])}
+      onChange={val => handleChordChange(val, beat)}
       size={isMobile ? "middle" : "small"}
       style={{ minWidth: '4rem' }}
     >
-      {CHORDS && Object.keys(CHORDS).map((chord, j) =>
+      {CHORDS && Object.keys(CHORDS).map(chord =>
         <Option
-          key={j}
+          key={chord}
           value={chord}
         >{he.decode(chord)}</Option>
       )}

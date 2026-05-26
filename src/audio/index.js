@@ -1,6 +1,7 @@
-import { synthObjs, extraTime } from "../constants/synthInfo";
-import { DEFAULT_LENGTH } from "../constants/loopInfo";
+import { DEFAULTS, SYNTH_SETTINGS } from "../constants";
 import * as Tone from 'tone';
+
+const { synthObjs, extraTime } = SYNTH_SETTINGS;
 
 class Synth {
   constructor({ name, type, order, noteLength, settings, dynamicPitch }) {
@@ -16,11 +17,11 @@ class Synth {
         args.shift();
       }
       this.synth.triggerAttackRelease(...args);
-    }, new Array(DEFAULT_LENGTH).fill([])).start(0);
+    }, new Array(DEFAULTS.LENGTH).fill([])).start(0);
   }
 
-  clearNotes(length) {
-    this.sequence.events = new Array(length).fill([]);
+  clearNotes() {
+    this.setLength(this.sequence.events.length);
   }
 
   setLength(length) {

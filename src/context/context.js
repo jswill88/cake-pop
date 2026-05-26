@@ -1,30 +1,29 @@
-import { createContext, useEffect, useState, useRef } from 'react';
+import { createContext, useEffect, useState, useRef, useMemo } from 'react';
 import useFetch from '../hooks/useFetch'
 import axios from 'axios';
 import * as Tone from 'tone';
-import { BASS, CHORDS } from '../constants/noteInfo';
 import { rows, stopAudio as stop } from '../audio';
-import { DEFAULT_LENGTH, DEFAULT_TEMPO } from '../constants/loopInfo';
-
-import message from 'antd/es/message'
-
+import { DEFAULTS, NOTES } from '../constants';
+import message from 'antd/es/message';
 import { useCookies } from 'react-cookie';
 
 export const Context = createContext();
 
+const { TEMPO, TITLE, PROGRESSION, LENGTH } = DEFAULTS;
+const { CHORDS } = NOTES;
 const noteRows = rows.toSorted((a, b) => a.order - b.order).filter(({ dynamicPitch }) => dynamicPitch)
 
 const buttonObj =  {};
 rows.forEach(({ name }) => {
-  buttonObj[name] = new Array(DEFAULT_LENGTH).fill(false);
+  buttonObj[name] = new Array(LENGTH).fill(false);
 });
 
 function ContextProvider(props) {
-  const [prog, setProg] = useState(['I', 'I', 'I', 'I'])
-  const [tempo, setTempo] = useState(DEFAULT_TEMPO);
-  const [title, setTitle] = useState('New Song')
+  const [prog, setProg] = useState(PROGRESSION)
+  const [tempo, setTempo] = useState(TEMPO);
+  const [title, setTitle] = useState(TITLE)
   const [buttons, setButtons] = useState(buttonObj)
-  const [loopLength, setLoopLength] = useState(DEFAULT_LENGTH);
+  const [loopLength, setLoopLength] = useState(LENGTH);
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState('');
   const [songs, setSongs] = useState([]);
@@ -40,16 +39,16 @@ function ContextProvider(props) {
 
   const fetchApi = useFetch();
 
-  const notes = {
-    high: [CHORDS[prog[0]][2], CHORDS[prog[1]][2], CHORDS[prog[2]][2], CHORDS[prog[3]][2]],
-    mid: [CHORDS[prog[0]][1], CHORDS[prog[1]][1], CHORDS[prog[2]][1], CHORDS[prog[3]][1]],
-    low: [CHORDS[prog[0]][0], CHORDS[prog[1]][0], CHORDS[prog[2]][0], CHORDS[prog[3]][0]],
-    bassHigh: [BASS[prog[0]][1], BASS[prog[1]][1], BASS[prog[2]][1], BASS[prog[3]][1]],
-    bassLow: [BASS[prog[0]][0], BASS[prog[1]][0], BASS[prog[2]][0], BASS[prog[3]][0]],
+  const notes = useMemo(() => ({
+    high: prog.map(chord => CHORDS[chord].high),
+    mid: prog.map(chord => CHORDS[chord].mid),
+    low: prog.map(chord => CHORDS[chord].low),
+    bassHigh: prog.map(chord => CHORDS[chord].bassHigh),
+    bassLow: prog.map(chord => CHORDS[chord].bassLow),
     cymbal: ['C1', 'C1', 'C1', 'C1'],
     snareDrum: [true, true, true, true],
     bassDrum: ['C1', 'C1', 'C1', 'C1'],
-  }
+  }), [prog]);
 
   useEffect(() => {
     const token = cookies.token;
@@ -102,7 +101,7 @@ function ContextProvider(props) {
       setCookie('token', result.data.token);
       return 'success';
     } else {
-      message.error(result.message)
+      message.error(result.message);
       return 'error';
     }
   }
@@ -112,10 +111,10 @@ function ContextProvider(props) {
     if (!result.error) {
       setLoggedIn(true)
       setUser(userData.username || userData.email);
-      setCookie('token', result.data.token)
+      setCookie('token', result.data.token);
       return 'success';
     } else {
-      message.error(result.message)
+      message.error(result.message);
       return 'error';
     }
   }
@@ -123,18 +122,18 @@ function ContextProvider(props) {
   const logout = async () => {
     const result = await fetchApi('/logout', 'get')
     if (!result.error) {
-      setLoggedIn(false)
-      setUser('')
-      setSongs([])
-      setOpenSongId(false)
-      setTitle('New Song')
+      setLoggedIn(false);
+      setUser('');
+      setSongs([]);
+      setOpenSongId(false);
+      setTitle(TITLE);
       reset();
-      handleTempoChange(DEFAULT_TEMPO);
-      setLoopLength(12)
-      setProg(['I', 'I', 'I', 'I']);
+      handleTempoChange(TEMPO);
+      setLoopLength(LENGTH)
+      setProg(PROGRESSION);
       removeCookie('token');
     } else {
-      message.error(result.message)
+      message.error(result.message);
       return 'error';
     }
   }
@@ -176,13 +175,13 @@ function ContextProvider(props) {
   const newSong = async () => {
     reset();
     setOpenSongId(false);
-    handleTempoChange(DEFAULT_TEMPO);
-    setProg(['I', 'I', 'I', 'I']);
+    handleTempoChange(TEMPO);
+    setProg(PROGRESSION);
     const titles = songs.map(({ title }) => title)
-    let newTitle = 'New Song'
+    let newTitle = TITLE
     let i = 1;
     while (titles.includes(newTitle)) {
-      newTitle = `New Song ${i}`;
+      newTitle = `${TITLE} ${i}`;
       i++;
     }
     setTitle(newTitle);
@@ -193,16 +192,16 @@ function ContextProvider(props) {
     stopAudio()
     const result = await fetchApi('/open', 'post', { token: cookies.token, songId })
     if (!result.error) {
-      const { data: songObj } = result;
-      setProg(songObj.chordProgression);
-      handleTempoChange(songObj.bpm)
-      setLoopLength(songObj.numberOfBeats);
-      setTitle(songObj.title)
-      setOpenSongId(songObj._id)
+      const { data: loop } = result;
+      setProg(loop.chordProgression);
+      handleTempoChange(loop.bpm)
+      setLoopLength(loop.numberOfBeats);
+      setTitle(loop.title)
+      setOpenSongId(loop._id)
       rows.forEach(row => {
-        row.setRow(songObj.buttonsPressed[row.name].map(note => note === false ? [] : [note]))
+        row.setRow(loop.buttonsPressed[row.name].map(note => note === false ? [] : [note]))
       });
-      setButtons({ ...songObj.buttonsPressed });
+      setButtons({ ...loop.buttonsPressed });
       return 'success';
     } else {
       message.error(result.message)
@@ -221,13 +220,7 @@ function ContextProvider(props) {
     const end = start + loopLength / 4
     noteRows.forEach((row) => {
       for (let i = start; i < end; i++) {
-        let note;
-        if (['bassLow', 'bassHigh'].includes(row.name)) {
-          note = BASS[newChord][row.name === 'bassLow' ? 0 : 1];
-        } else {
-          note = CHORDS[newChord][2 - Object.keys(notes).indexOf(row.name)] + 4;
-        }
-        row.updateNote(i, note);
+        row.updateNote(i, CHORDS[newChord][row.name]);
       }
     });
     updateButtons();
@@ -268,9 +261,9 @@ function ContextProvider(props) {
       reset();
       setSongs(arr => arr.filter(({ id }) => id !== openSongId))
       setOpenSongId(false);
-      setTitle('New Song');
-      handleTempoChange(DEFAULT_TEMPO);
-      setProg(['I', 'I', 'I', 'I']);
+      setTitle(TITLE);
+      handleTempoChange(TEMPO);
+      setProg(PROGRESSION);
       message.success(`${result.data.title} successfullly deleted`)
       return 'success';
     } else {
@@ -294,7 +287,7 @@ function ContextProvider(props) {
 
   const reset = async () => {
     stopAudio();
-    rows.forEach(synth => synth.clearNotes(loopLength));
+    rows.forEach(synth => synth.clearNotes());
     const buttonObj = {};
     for (const noteRow in buttons) {
       buttonObj[noteRow] = new Array(loopLength).fill(false);
@@ -355,4 +348,5 @@ function ContextProvider(props) {
     </Context.Provider>
   )
 }
+
 export default ContextProvider;
