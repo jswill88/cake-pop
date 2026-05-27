@@ -45,6 +45,22 @@ class Synth {
   }
 }
 
+export class DrawScheduler {
+  constructor(cb, length) {
+    this.sequence = new Tone.Sequence((time, beat) => {
+      Tone.getDraw().schedule(() => {
+        if (Tone.getTransport().state === 'started') {
+          cb(beat);
+        }
+      }, time);
+    }, new Array(length).fill(0).map((_, i) => i)).start(0);
+  }
+
+  setLength(length) {
+    this.sequence.events = new Array(length).fill(0).map((_, i) => i)
+  }
+}
+
 export const rows = synthObjs.map(obj => new Synth(obj));
 
 export const startAudio = (tempo) => {
@@ -55,6 +71,15 @@ export const startAudio = (tempo) => {
 export const stopAudio = (cb) => {
   Tone.getTransport().once('stop', cb);
   Tone.getTransport().stop('8n')
+}
+
+export const pauseAudio = () => {
+  Tone.Transport.pause('+8n');
+}
+
+export const updateTempo = newTempo => {
+  const tempo = Math.max(50, Math.min(320, newTempo));
+  Tone.getTransport().bpm.rampTo(tempo, 1);
 }
 
 const startTone = async () => {

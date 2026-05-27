@@ -100,7 +100,7 @@ function TempoSetter() {
   const {
     tempo,
     handleTempoChange
-  } = useContext(Context)
+  } = useContext(Context);
   const isMobile = useIsMobile();
 
   const [editTempo, setEditTempo] = useState(false);
@@ -155,7 +155,6 @@ function TempoSetter() {
           <Text
             editable
             onClick={() => setEditTempo(true)}
-            
           >
             {tempo}
           </Text>

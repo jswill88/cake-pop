@@ -1,8 +1,7 @@
 import { createContext, useEffect, useState, useRef, useMemo } from 'react';
 import useFetch from '../hooks/useFetch'
 import axios from 'axios';
-import * as Tone from 'tone';
-import { rows, stopAudio as stop } from '../audio';
+import { rows, stopAudio as stop, updateTempo, DrawScheduler } from '../audio';
 import { DEFAULTS, NOTES } from '../constants';
 import message from 'antd/es/message';
 import { useCookies } from 'react-cookie';
@@ -33,7 +32,7 @@ function ContextProvider(props) {
   const [playStatus, setPlayStatus] = useState('stop');
   const [selectedMenuItem, setSelectedMenuItem] = useState('home')
 
-  const loopDraw = useRef(null);
+  const drawScheduleRef = useRef(new DrawScheduler(setCurrentBeat, loopLength));
 
   const [cookies, setCookie, removeCookie] = useCookies(['token'])
 
@@ -66,22 +65,15 @@ function ContextProvider(props) {
           setLoggedIn(true);
         }
       } catch (e) {
-        console.error(e.message || e)
+        console.error(e.message || e);
       }
     }
     checkLoggedIn();
   }, [cookies.token]);
 
-  const makeLoops = () => {
-    const arrOfIdx = new Array(loopLength).fill(0).map((_, i) => i);
-    loopDraw.current = new Tone.Sequence((time, beat) => {
-      Tone.getDraw().schedule(() => {
-        if (Tone.getTransport().state === 'started') {
-          setCurrentBeat(beat)
-        }
-      }, time);
-    }, arrOfIdx).start(0);
-  }
+  useEffect(() => {
+    drawScheduleRef.current.setLength(loopLength);
+  }, [loopLength]);
 
   const updateButtons = () => {
     const buttonObj = {};
@@ -92,7 +84,7 @@ function ContextProvider(props) {
   }
 
   const signIn = async (userData) => {
-    const result = await fetchApi('/signin', 'post', userData)
+    const result = await fetchApi('/signin', 'post', userData);
 
     if (!result.error) {
       setLoggedIn(true)
@@ -273,9 +265,8 @@ function ContextProvider(props) {
   }
 
   const handleTempoChange = newTempo => {
-    const tempo = Math.max(50, Math.min(320, newTempo));
-    Tone.getTransport().bpm.rampTo(tempo, 1);
-    setTempo(tempo);
+    updateTempo(newTempo);
+    setTempo(newTempo);
   }
 
   const handleLoopLengthChange = newLength => {
@@ -316,7 +307,6 @@ function ContextProvider(props) {
     tempo,
     open,
     handleTempoChange,
-    Tone,
     title,
     setTitle,
     currentBeat,
@@ -336,7 +326,6 @@ function ContextProvider(props) {
     stopAudio,
     selectedMenuItem,
     setSelectedMenuItem,
-    makeLoops,
     handleLoopLengthChange,
     rows,
     updateButtons

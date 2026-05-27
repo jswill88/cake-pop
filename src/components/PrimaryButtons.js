@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { Context } from '../context/context';
 import useIsMobile from '../hooks/useIsMobile';
+import { startAudio as start, pauseAudio as pause } from '../audio';
 
 import Button from 'antd/es/button';
 import Space from 'antd/es/space';
@@ -12,28 +13,21 @@ import PauseOutlined from '@ant-design/icons/PauseOutlined';
 export default function PrimaryButtons() {
 
   const {
-    Tone,
     tempo,
     playStatus,
     setPlayStatus,
-    stopAudio,
-    makeLoops
+    stopAudio
   } = useContext(Context);
   const isMobile = useIsMobile();
 
   const startAudio = async () => {
-    if (playStatus === 'stop') {
-      makeLoops()
-    }
-    setPlayStatus('start')
-
-    Tone.Transport.bpm.value = tempo;
-    Tone.Transport.start('+0.1');
+    setPlayStatus('start');
+    start(tempo);
   }
 
   const pauseAudio = () => {
-    Tone.Transport.pause('+8n');
-    setPlayStatus('pause')
+    pause();
+    setPlayStatus('pause');
   }
 
   return (
