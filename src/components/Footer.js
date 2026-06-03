@@ -10,8 +10,7 @@ import Typography from 'antd/es/typography';
 
 const { Text, Link } = Typography;
 
-
-export default function Foot() {
+export default function Footer() {
   const isMobile = useIsMobile();
 
   return (
@@ -34,7 +33,7 @@ export default function Foot() {
             style={{marginRight: '.4rem'}}
           >
             Portfolio
-        </Tag>
+          </Tag>
         </Link>
         <Link
           style={{ margin: '.2rem 0' }}
@@ -46,7 +45,7 @@ export default function Foot() {
             style={{marginRight: '.4rem'}}
           >
             GitHub
-        </Tag>
+          </Tag>
         </Link>
         <Link
           style={{ margin: '.2rem 0' }}
@@ -58,10 +57,9 @@ export default function Foot() {
             style={{marginRight: 0}}
           >
             LinkedIn
-        </Tag>
+          </Tag>
         </Link>
       </Row>
-      
     </>
   )
 }

@@ -30,7 +30,6 @@ function ContextProvider(props) {
   const [openSongId, setOpenSongId] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [playStatus, setPlayStatus] = useState('stop');
-  const [selectedMenuItem, setSelectedMenuItem] = useState('home')
 
   const drawScheduleRef = useRef(new DrawScheduler(setCurrentBeat, loopLength));
 
@@ -324,8 +323,6 @@ function ContextProvider(props) {
     buttons,
     setButtons,
     stopAudio,
-    selectedMenuItem,
-    setSelectedMenuItem,
     handleLoopLengthChange,
     rows,
     updateButtons

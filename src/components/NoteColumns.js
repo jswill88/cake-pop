@@ -2,7 +2,7 @@ import { Context } from '../context/context'
 import { useContext } from 'react'
 import { InlineIcon } from '@iconify/react';
 import he from 'he';
-import { COLORS, NOTES } from '../constants'
+import { NOTES } from '../constants'
 import useIsMobile from '../hooks/useIsMobile';
 import musicClefBass from '@iconify-icons/mdi/music-clef-bass';
 import drumIcon from '@iconify-icons/la/drum';
@@ -13,7 +13,6 @@ import Divider from 'antd/es/divider';
 import Col from 'antd/es/col';
 import Card from 'antd/es/card';
 import Select from 'antd/es/select'
-
 import { createFromIconfontCN } from '@ant-design/icons';
 
 const IconFont = createFromIconfontCN({
@@ -74,40 +73,20 @@ export default function NoteColumns() {
                 key={row.name}
                 justify="space-around"
                 gutter={16}
+                style={{ marginBlock: '.4rem' }}
               >
                 {getSubdivisionIndicies(beat).map(idx =>
-
                   <Button
                     shape="circle"
                     onClick={() => toggleNote(beat, idx, row)}
                     key={row.name + idx}
+                    color={String(idx) === String(currentBeat) ? 'pink' : 'cyan'}
                     style={{
-                      overflow: 'hidden',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      display: 'flex',
-                      margin: '.2rem 0',
-                      transition: 'none',
-
-                      color: buttons[row.name][idx] ?
-                        COLORS.PURPLE
-                        : String(idx) === String(currentBeat) ?
-                          COLORS.PINK : COLORS.CYAN,
-
-                      backgroundColor: String(idx) === String(currentBeat) ?
-                        '#ffa4cd'
-                        : !buttons[row.name][idx] ? COLORS.CYAN : '#24ddd8',
-
-                      borderColor: String(idx) === String(currentBeat) ?
-                        '#ffa4cd'
-                        : buttons[row.name][idx] && '#24ddd8',
-
-                      borderWidth: '2px'
+                      transition: 'none'
                     }}
                     className="note"
                     size="middle"
-                    ghost={!buttons[row.name][idx]}
-                    type={!buttons[row.name][idx] ? 'default' : 'primary'}
+                    variant={!buttons[row.name][idx] ? 'outlined' : 'solid'}
                   >
                     <CustomIcon noteRow={row.name} />
                   </Button>

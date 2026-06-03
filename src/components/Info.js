@@ -1,6 +1,3 @@
-
-import { useContext, useEffect } from 'react';
-import { Context } from '../context/context'
 import Typography from 'antd/es/typography'
 import List from 'antd/es/list'
 import { createFromIconfontCN } from '@ant-design/icons';
@@ -15,10 +12,6 @@ const IconFont = createFromIconfontCN({
 const { Title, Link, Paragraph, Text } = Typography;
 
 export default function Info() {
-  const { setSelectedMenuItem } = useContext(Context)
-
-  useEffect(() => setSelectedMenuItem('info'), [setSelectedMenuItem])
-
   const pStyle = {
     fontSize: '1rem'
   }
@@ -102,7 +95,7 @@ export default function Info() {
           <List.Item>
             <List.Item.Meta 
               title={item.title}
-              description={<Text style={{color: '#FFFFFF'}}>{item.chords}</Text>}
+              description={<Text style={{ color: '#FFFFFF' }}>{item.chords}</Text>}
             />
           </List.Item>
         }

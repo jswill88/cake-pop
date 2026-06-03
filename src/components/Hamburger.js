@@ -1,40 +1,27 @@
 import UnorderedListOutlined from '@ant-design/icons/UnorderedListOutlined';
-import Menu from 'antd/es/menu';
 import Dropdown from 'antd/es/dropdown';
-import Divider from 'antd/es/divider'
 import Button from 'antd/es/button';
-import { Link } from 'react-router-dom'
-import HomeOutlined from '@ant-design/icons/HomeOutlined'
-import InfoCircleOutlined from '@ant-design/icons/InfoCircleOutlined'
+import { Link } from 'react-router-dom';
+import HomeOutlined from '@ant-design/icons/HomeOutlined';
+import InfoCircleOutlined from '@ant-design/icons/InfoCircleOutlined';
 
 export default function Hamburger() {
-  const menu = (
-    <Menu>
-      <Menu.Item
-        style={{ width: '50vw', fontSize: '1.2rem', position: 'relative' }}
-        icon={<HomeOutlined style={{ fontSize: '1.2rem' }}  />}
-      >
-        <Link to="/">
-          Home
-          <div style={{ position: 'absolute', inset: 0 }} />
-        </Link>
-      </Menu.Item>
-      <Divider style={{ margin: 0 }}/>
-      <Menu.Item
-        style={{ width: '50vw', fontSize: '1.2rem', position: 'relative' }}
-        icon={<InfoCircleOutlined style={{ fontSize: '1.2rem' }}  />}
-      >
-        <Link to="/info">
-          Info
-          <div style={{ position: 'absolute', inset: 0 }} />
-        </Link>
-      </Menu.Item>
-    </Menu>
-  )
+  const items = [
+  {
+    key: '1',
+    label: <Link to="/">Home</Link>,
+    icon: <HomeOutlined />
+  },
+  {
+    key: '2',
+    label: <Link to="/info">Info</Link>,
+    icon: <InfoCircleOutlined />
+  },
+];
 
   return (
     <Dropdown
-      overlay={menu}
+      menu={{ items }}
       trigger="click"
     >
       <Button

@@ -37,39 +37,39 @@ export default function PrimaryButtons() {
         {['pause', 'stop'].includes(playStatus) ?
           <ControlButton
             callback={startAudio}
-            icon={<CaretRightOutlined />}
+            icon={<CaretRightOutlined aria-hidden />}
+            color="green"
+            label="play"
           />
           :
           <ControlButton
             callback={pauseAudio}
-            icon={<PauseOutlined />}
+            icon={<PauseOutlined aria-hidden />}
+            color="white"
+            label="pause"
           />
         }
         <ControlButton
-            callback={stopAudio}
-            icon={<BorderOutlined />}
-            danger={true}
-          />
+          callback={stopAudio}
+          icon={<BorderOutlined aria-hidden />}
+          color="red"
+          label="stop"
+        />
       </Space>
   )
 }
 
-function ControlButton({ icon, callback, danger }) {
-  const { playStatus } = useContext(Context);
+function ControlButton({ icon, callback, color, label }) {
   const isMobile = useIsMobile();
 
   return (
     <Button
       size="large"
-      style={{
-        lineHeight: 1,
-        backgroundColor: !danger && (playStatus !== 'start' ? '#7ED957' : '#ffffff'),
-        borderColor: !danger && (playStatus !== 'start' ? '#7ED957' : '#ffffff'),
-      }}
       onClick={() => callback()}
       icon={icon}
-      danger={danger ? true : false}
-      type="primary"
+      color={"pink"}
+      variant="outlined"
+      aria-label={label}
       shape={isMobile ? "circle" : "round"}
     />
   )

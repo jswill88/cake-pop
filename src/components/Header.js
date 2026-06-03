@@ -6,14 +6,11 @@ import useIsMobile from '../hooks/useIsMobile';
 import './Header.css';
 import Logo from '../images/cake-pop.jpg';
 
-import { Link } from 'react-router-dom';
-
+import { Link, useLocation } from 'react-router-dom';
 import LoginOutlined from '@ant-design/icons/LoginOutlined';
 import LogoutOutlined from '@ant-design/icons/LogoutOutlined';
 import HomeOutlined from '@ant-design/icons/HomeOutlined'
 import InfoCircleOutlined from '@ant-design/icons/InfoCircleOutlined'
-
-
 import Row from 'antd/es/row';
 import Col from 'antd/es/col';
 import Button from 'antd/es/button'
@@ -23,14 +20,14 @@ import Image from 'antd/es/image';
 
 const { Title } = Typography;
 
-export default function Heading() {
+export default function Header() {
   const {
     logout,
     loggedIn,
-    setShowForm,
-    selectedMenuItem
+    setShowForm
   } = useContext(Context);
   const isMobile = useIsMobile();
+  const { pathname } = useLocation();
 
   return (
     <Row
@@ -62,11 +59,10 @@ export default function Heading() {
         {!isMobile &&
           <Menu
             mode="horizontal"
-            theme="dark"
-            defaultSelectedKeys={[selectedMenuItem]}
+            defaultSelectedKeys={[pathname]}
           >
             <Menu.Item
-              key="home"
+              key="/"
               icon={<HomeOutlined />}
             >
               <Link to="/">
@@ -74,7 +70,7 @@ export default function Heading() {
               </Link>
             </Menu.Item>
             <Menu.Item
-              key="info"
+              key="/info"
               icon={<InfoCircleOutlined />}
             >
               <Link to="/info">
@@ -89,12 +85,13 @@ export default function Heading() {
           <>
             <Button
               style={{ minWidth: '100%' }}
-              type="primary"
               onClick={() => {
                 setShowForm(true)
               }}
               icon={<LoginOutlined />}
               size="large"
+              color="yellow"
+              variant="solid"
             >
               {!isMobile && 'Sign In'}
             </Button>
@@ -103,12 +100,13 @@ export default function Heading() {
           :
           <Button
             style={{ minWidth: '100%' }}
-            type="primary"
             onClick={() => {
               logout();
             }}
             icon={<LogoutOutlined />}
             size="middle"
+            color="yellow"
+            variant="solid"
           >
             {!isMobile && 'Log Out'}
           </Button>
